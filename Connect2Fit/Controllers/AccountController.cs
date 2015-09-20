@@ -232,9 +232,7 @@ namespace Connect2Fit.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                
-                
-                
+ 
 
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
