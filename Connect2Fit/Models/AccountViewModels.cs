@@ -64,9 +64,10 @@ namespace Connect2Fit.Models
 
     public class RegisterViewModel
     {
+        //[System.Web.Mvc.Remote("checkEmailUsed", "Account", HttpMethod = "POST", ErrorMessage = "Email already in use")]
         [Required]
-        [EmailAddress]
         [Display(Name = "Email")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]

@@ -29,6 +29,23 @@ namespace Connect2Fit.Controllers
             SignInManager = signInManager;
         }
 
+
+        //check if email has already been used to sign up semi client side
+        [AllowAnonymous]
+        public JsonResult checkEmailUsed(string Email)
+        {
+            var user = UserManager.FindByEmail(Email);
+            if (user == null)
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
