@@ -216,6 +216,10 @@
     <Content Include="Content\fullcalendar\lib\jquery.min.js" />
     <Content Include="Content\fullcalendar\lib\moment.min.js" />
     <Content Include="Content\fullcalendar\license.txt" />
+    <Content Include="Content\img\1.jpg" />
+    <Content Include="Content\img\2.jpg" />
+    <Content Include="Content\img\3.jpg" />
+    <Content Include="Content\img\4.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
