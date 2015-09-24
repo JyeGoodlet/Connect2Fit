@@ -13,5 +13,17 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
+        // GET: Research
+        public ActionResult Motioncap()
+        {
+            return View();
+        }
+        // GET: Research
+        public ActionResult Trackerjs()
+        {
+            return View();
+        }
+
+
     }
 }
