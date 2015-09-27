@@ -223,11 +223,6 @@
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\Research\assets\demo.css" />
     <Content Include="Content\Research\assets\stats.min.js" />
-    <Content Include="Content\Research\build\dat.gui.min.js" />
-    <Content Include="Content\Research\build\eye.js" />
-    <Content Include="Content\Research\build\face.js" />
-    <Content Include="Content\Research\build\mouth.js" />
-    <Content Include="Content\Research\build\tracking.js" />
     <Content Include="Content\Research\main.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -235,6 +230,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\connect2fit.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
