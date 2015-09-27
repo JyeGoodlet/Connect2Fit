@@ -25,6 +25,8 @@ namespace Connect2Fit.Models
         {
         }
 
+        public DbSet<ScheduleItem> scheduleItems { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

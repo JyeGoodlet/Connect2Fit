@@ -135,3 +135,5 @@ C:\Users\sinisterdeath\Documents\Connect2Fit\Connect2Fit\bin\Microsoft.Owin.Secu
 C:\Users\sinisterdeath\Documents\Connect2Fit\Connect2Fit\obj\Debug\Connect2Fit.csprojResolveAssemblyReference.cache
 C:\Users\sinisterdeath\Documents\Connect2Fit\Connect2Fit\obj\Debug\Connect2Fit.dll
 C:\Users\sinisterdeath\Documents\Connect2Fit\Connect2Fit\obj\Debug\Connect2Fit.pdb
+C:\Users\sinisterdeath\Documents\Connect2Fit\Connect2Fit\obj\Debug\Connect2Fit.Migrations.InitialCreate.resources
+C:\Users\sinisterdeath\Documents\Connect2Fit\Connect2Fit\obj\Debug\Connect2Fit.csproj.GenerateResource.Cache

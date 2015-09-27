@@ -91,3 +91,9 @@
 
 <div id='calendar'></div>
 
+@if (Request.IsAuthenticated && User.IsInRole("Instructor"))
+{
+<div>
+    @Html.ActionLink("Schedule New Class", "ScheduleClass")
+</div>
+}
