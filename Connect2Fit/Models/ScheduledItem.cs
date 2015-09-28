@@ -10,7 +10,7 @@ namespace Connect2Fit.Models
     {
         public int id { get; set; }
 
-        public ApplicationUser instructor { get; set; }
+        public virtual ApplicationUser instructor { get; set; }
 
         public DateTime ClassDateTime { get; set; }
 

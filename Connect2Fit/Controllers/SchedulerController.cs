@@ -11,6 +11,13 @@ namespace Connect2Fit.Controllers
     public class SchedulerController : Controller
     {
 
+        private ApplicationDbContext db;
+
+        public SchedulerController()
+        {
+            db = new ApplicationDbContext();
+
+        }
 
 
 
@@ -40,7 +47,6 @@ namespace Connect2Fit.Controllers
         [Authorize(Roles = "Instructor")]
         public ActionResult ScheduleClass(ScheduleItem item)
         {
-            var db = new ApplicationDbContext();
 
             //set instructor to be logged in user
             item.instructor = db.Users.Where(x => x.Email == User.Identity.Name).ToList()[0];
@@ -49,6 +55,31 @@ namespace Connect2Fit.Controllers
             db.SaveChanges();
 
             return View(item);
+        }
+
+
+        public JsonResult ScheduledClasses(DateTime start, DateTime end)
+        {
+
+            //get all scheduled Classes in date range from the database
+            var items = (from item in db.scheduleItems
+                        where item.ClassDateTime > start
+                        && item.ClassDateTime < end
+                        select item).ToList();
+
+            //create CalandarEvent Items
+            List<CalendarEvent> calEventItems = new List<CalendarEvent>();
+            foreach(var item in items)
+            {
+                calEventItems.Add(new CalendarEvent{ title = item.instructor.Email, allDay = false, start = item.ClassDateTime });
+
+            }
+
+
+
+            //return them as a json object.
+            return Json(calEventItems, JsonRequestBehavior.AllowGet);
+
         }
 
 
