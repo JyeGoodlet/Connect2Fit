@@ -13,17 +13,26 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
-        // GET: Research
+        // GET: Motioncap
         public ActionResult Motioncap()
         {
             return View();
         }
-        // GET: Research
+        // GET: Trackerjs
         public ActionResult Trackerjs()
         {
             return View();
         }
-
+        // GET: objectTracker
+        public ActionResult ObjectTracker()
+        {
+            return View();
+        }
+        // GET: auto colour picker tracker
+        public ActionResult ColorTracker()
+        {
+            return View();
+        }
 
     }
 }

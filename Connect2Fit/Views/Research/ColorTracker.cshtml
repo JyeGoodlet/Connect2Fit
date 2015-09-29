@@ -1,0 +1,81 @@
+﻿<link rel="stylesheet" href="~/Content/Research/assets/demo.css">
+@{
+    ViewBag.Title = "Colour Tracker";
+}
+<style>
+    video, canvas {
+    margin-left: 60px;
+    margin-top: 15px;
+    position: absolute;
+  }
+    #canvas-source {
+        background-color: blue;
+        display:none;
+    }
+</style>
+<div class="demo-title">
+    <p>make sure to have custom selected then click anyway in the video to pick that colour to track</p>
+    <p>you may need to double click</p>
+</div>
+
+<div class="demo-frame">
+    <div class="demo-container">
+        <video id="video" width="640" height="480" preload autoplay loop muted controls></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <canvas id="canvas-source" width="640" height="480"></canvas>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/Content/Research/assets/tracking.js"></script>
+    <script src="~/Content/Research/assets/color_camera_gui.js"></script>
+    <script src="~/Content/Research/assets/dat.gui.min.js"></script>
+    <script src="~/Content/Research/assets/stats.min.js"></script>
+    <script>
+        window.onload = function () {
+            function rgbToHex(r, g, b) {
+                if (r > 255 || g > 255 || b > 255)
+                    throw "Invalid color component";
+                return ((r << 16) | (g << 8) | b).toString(16);
+            }
+        var video = document.getElementById('video');
+        var canvas = $("#canvas")[0];
+        var context = canvas.getContext('2d');
+        canvas.addEventListener('click', function (event) {
+            $("#canvas-source").show();
+            var canvasSource = $("#canvas-source")[0];
+            var contextSource = canvasSource.getContext('2d');
+            // added a colour picker
+            contextSource.drawImage(video, 0, 0, video.width, video.height);
+            // get mouse pointer pos relative to canvas pos
+            var rect = canvasSource.getBoundingClientRect();
+            var x = event.clientX - rect.left;
+            var y = event.clientY - rect.top;
+            var p = contextSource.getImageData(x, y, 1, 1).data;
+            // this line not needed
+            var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+            // make a custom colour tracker
+            $("li.color > div:first input").val(hex).focus();
+
+            $("#canvas-source").hide();
+        });
+        var tracker = new tracking.ColorTracker();
+        tracking.track('#video', tracker, { camera: true });
+        tracker.on('track', function (event) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            event.data.forEach(function (rect) {
+                if (rect.color === 'custom') {
+                    rect.color = tracker.customColor;
+                }
+                context.strokeStyle = rect.color;
+                context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                context.font = '11px Helvetica';
+                context.fillStyle = "#fff";
+                context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+                context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+            });
+        });
+        initGUIControllers(tracker);
+        
+    };
+    </script>
+}
