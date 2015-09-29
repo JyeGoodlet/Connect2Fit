@@ -179,6 +179,10 @@
     <Compile Include="Migrations\201509271221025_InitialCreate.Designer.cs">
       <DependentUpon>201509271221025_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509290158307_expandingAccount.cs" />
+    <Compile Include="Migrations\201509290158307_expandingAccount.Designer.cs">
+      <DependentUpon>201509290158307_expandingAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CalendarEvent.cs" />
@@ -389,6 +393,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201509271221025_InitialCreate.resx">
       <DependentUpon>201509271221025_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509290158307_expandingAccount.resx">
+      <DependentUpon>201509290158307_expandingAccount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

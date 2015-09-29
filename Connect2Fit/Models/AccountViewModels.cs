@@ -71,6 +71,11 @@ namespace Connect2Fit.Models
         [System.Web.Mvc.Remote("checkEmailUsed", "Account", HttpMethod = "POST", ErrorMessage = "Sorry Email already in use")]
         public string Email { get; set; }
 
+
+       
+        [Display(Name = "Instructor Name")]
+        public string name { get; set; }
+
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
