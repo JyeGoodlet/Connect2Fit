@@ -33,6 +33,12 @@ namespace Connect2Fit.Controllers
             return View();
         }
 
+        //changing from calendar based system to a 7 day list system
+        public ActionResult Schedule()
+        {
+            return View();
+        }
+
 
         [Authorize(Roles = "Instructor")]
         public ActionResult ScheduleClass()
@@ -50,9 +56,11 @@ namespace Connect2Fit.Controllers
 
             //set instructor to be logged in user
             item.instructor = db.Users.Where(x => x.Email == User.Identity.Name).ToList()[0];
-
-            db.scheduleItems.Add(item);
-            db.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                db.scheduleItems.Add(item);
+                db.SaveChanges();
+            }
 
             return View(item);
         }

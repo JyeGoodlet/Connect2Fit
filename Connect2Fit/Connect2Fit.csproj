@@ -183,6 +183,18 @@
     <Compile Include="Migrations\201509290158307_expandingAccount.Designer.cs">
       <DependentUpon>201509290158307_expandingAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509290319544_expandingScheduleItem.cs" />
+    <Compile Include="Migrations\201509290319544_expandingScheduleItem.Designer.cs">
+      <DependentUpon>201509290319544_expandingScheduleItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509290330186_expandingScheduleItem2.cs" />
+    <Compile Include="Migrations\201509290330186_expandingScheduleItem2.Designer.cs">
+      <DependentUpon>201509290330186_expandingScheduleItem2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509290403451_expandingScheduleItem3.cs" />
+    <Compile Include="Migrations\201509290403451_expandingScheduleItem3.Designer.cs">
+      <DependentUpon>201509290403451_expandingScheduleItem3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CalendarEvent.cs" />
@@ -378,6 +390,7 @@
     <Content Include="Views\Research\Motioncap.cshtml" />
     <Content Include="Views\Research\Trackerjs.cshtml" />
     <Content Include="Views\Scheduler\ScheduleClass.cshtml" />
+    <Content Include="Views\Scheduler\Schedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
@@ -396,6 +409,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509290158307_expandingAccount.resx">
       <DependentUpon>201509290158307_expandingAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509290319544_expandingScheduleItem.resx">
+      <DependentUpon>201509290319544_expandingScheduleItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509290330186_expandingScheduleItem2.resx">
+      <DependentUpon>201509290330186_expandingScheduleItem2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509290403451_expandingScheduleItem3.resx">
+      <DependentUpon>201509290403451_expandingScheduleItem3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
