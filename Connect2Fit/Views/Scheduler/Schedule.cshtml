@@ -2,38 +2,85 @@
 @{
     ViewBag.Title = "Schedule";
 }
+<script src='~/Scripts/angular.js'></script>
+<div ng-app="schedule" ng-controller="controller">
+    <h2>Schedule</h2>
 
-<h2>Schedule</h2>
+    <span style="margin-right:5px" ng-repeat="day in week"  class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.format('LL')}}</span> 
 
-<span class="label label-primary">Today</span> <span  class="label label-default">Tomorrow</span> <span  class="label label-default">Etc</span>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> Time</th>
+                <th> Duration</th>
+                <th> Class </th>
+                <th> Instructor</th>
+                <th> Spaces </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> </td>
+                <td > </td>
+                <td> Class </td>
+                <td> Instructor</td>
+                <td> Spaces </td>
+                <td></td>
+            </tr>
+        </tbody>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th> Time</th>
-            <th> Duration</th>
-            <th> Class </th>
-            <th> Instructor</th>
-            <th> Spaces </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td> Time</td>
-            <td> Duration</td>
-            <td> Class </td>
-            <td> Instructor</td>
-            <td> Spaces </td>
-            <td></td>
-        </tr>
-    </tbody>
+    </table>
+    <div>
+        {{firstName}}
+    </div>
 
-</table>
+</div>
+
+
 
 @section scripts {
 
     <script>
+
+        var app = angular.module('schedule', []);
+        app.controller('controller', function ($scope) {
+            $scope.week = [];
+            $scope.selected = function (day) {
+                return day.selected == true ? "label-primary" : "label-default";
+            }
+            $scope.dayPicked = function (day) {
+                //set other days selected to false
+                for (var dayX in $scope.week) {
+                    
+                    $scope.week[dayX].selected = false;
+                }
+                //set current day to day selected
+                day.selected = true;
+
+                //TODO Load day selected data
+            }
+            //on load populate week
+            var init = function () {
+                for (var x = 0; x < 7; x++) {
+                    
+                    var item = { date: moment().add(x, 'days'), selected: false }
+                    if (x == 0) {
+                        item.selected = true;
+                    }
+                    $scope.week.push(item);
+                    
+                }
+                
+
+            }();
+            
+
+
+        });
+
+
+
 
 
 
