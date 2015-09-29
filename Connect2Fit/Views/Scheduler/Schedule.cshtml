@@ -6,7 +6,7 @@
 <div ng-app="schedule" ng-controller="controller">
     <h2>Schedule</h2>
 
-    <span style="margin-right:5px" ng-repeat="day in week"  class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.format('LL')}}</span> 
+    <span style="margin-right:5px;cursor: pointer;" ng-repeat="day in week"  class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.format('LL')}}</span> 
 
     <table class="table table-striped">
         <thead>
