@@ -6,7 +6,7 @@
 <div ng-app="schedule" ng-controller="controller">
     <h2>Schedule</h2>
 
-    <span style="margin-right:5px;cursor: pointer;" ng-repeat="day in week"  class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.format('LL')}}</span> 
+    <span style="margin-right:5px;cursor: pointer;" ng-repeat="day in week"  class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.calendar()}}</span> 
 
     <table class="table table-striped">
         <thead>
@@ -20,10 +20,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td> </td>
+            <tr ng-repeat="class in classes">
+                <td>{{class.start}}</td>
                 <td > </td>
-                <td> Class </td>
+                <td>{{class.title}}</td>
                 <td> Instructor</td>
                 <td> Spaces </td>
                 <td></td>
@@ -42,13 +42,38 @@
 @section scripts {
 
     <script>
-
+        moment.locale('en', {
+            calendar: {
+                lastDay: '[Yesterday]',
+                sameDay: '[Today]',
+                nextDay: '[Tomorrow]',
+                lastWeek: '[last] dddd [at] LT',
+                nextWeek: 'dddd',
+                sameElse: 'L'
+            }
+        });
         var app = angular.module('schedule', []);
-        app.controller('controller', function ($scope) {
+        app.controller('controller', function ($scope, $http) {
+            //hold week days in advance
             $scope.week = [];
+
+            //selected day show a different label
             $scope.selected = function (day) {
                 return day.selected == true ? "label-primary" : "label-default";
             }
+
+            //hold a list of all the classes
+            $scope.classes = [];
+            $scope.classesDataLink =  "/Scheduler/scheduledClasses";
+
+            $scope.getData = function (date) {
+                $http({
+                    url: $scope.classesDataLink,
+                    method: "GET",
+                    params: { day: date.format("YYYY-MM-DD") }
+                }).success(function (response) { $scope.classes = response });
+            }
+
             $scope.dayPicked = function (day) {
                 //set other days selected to false
                 for (var dayX in $scope.week) {
@@ -59,7 +84,13 @@
                 day.selected = true;
 
                 //TODO Load day selected data
+                $scope.getData(day.date);
             }
+
+
+
+
+
             //on load populate week
             var init = function () {
                 for (var x = 0; x < 7; x++) {
@@ -72,7 +103,9 @@
                     
                 }
                 
-
+                //load first days data
+                $scope.getData(moment());
+             
             }();
             
 

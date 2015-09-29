@@ -12,7 +12,6 @@ namespace Connect2Fit.Models
 
         public DateTime start { get; set; }
 
-        public bool allDay { get; set; }
 
 
     }

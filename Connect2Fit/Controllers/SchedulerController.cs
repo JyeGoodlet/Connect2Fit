@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -66,20 +67,19 @@ namespace Connect2Fit.Controllers
         }
 
 
-        public JsonResult ScheduledClasses(DateTime start, DateTime end)
+        public JsonResult ScheduledClasses(DateTime day)
         {
 
             //get all scheduled Classes in date range from the database
             var items = (from item in db.scheduleItems
-                        where item.ClassDateTime > start
-                        && item.ClassDateTime < end
+                        where (EntityFunctions.TruncateTime(item.ClassDateTime)  == day.Date)
                         select item).ToList();
 
             //create CalandarEvent Items
             List<CalendarEvent> calEventItems = new List<CalendarEvent>();
             foreach(var item in items)
             {
-                calEventItems.Add(new CalendarEvent{ title = item.instructor.Email, allDay = false, start = item.ClassDateTime });
+                calEventItems.Add(new CalendarEvent{ title = item.instructor.Email, start = item.ClassDateTime });
 
             }
 
