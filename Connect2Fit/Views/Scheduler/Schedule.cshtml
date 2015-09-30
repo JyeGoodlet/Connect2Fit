@@ -23,11 +23,11 @@
         </thead>
         <tbody>
             <tr ng-repeat="class in classes">
-                <td>{{class.start}}</td>
-                <td > </td>
+                <td>{{class.time}}</td>
+                <td > {{class.duration}}</td>
                 <td>{{class.title}}</td>
-                <td> Instructor</td>
-                <td> Spaces </td>
+                <td>{{class.instructor}}</td>
+                <td>{{5 - class.attendiesCount}}</td>
                 <td></td>
             </tr>
         </tbody>

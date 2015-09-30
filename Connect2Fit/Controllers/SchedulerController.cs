@@ -79,7 +79,8 @@ namespace Connect2Fit.Controllers
             List<CalendarEvent> calEventItems = new List<CalendarEvent>();
             foreach(var item in items)
             {
-                calEventItems.Add(new CalendarEvent{ title = item.instructor.Email, start = item.ClassDateTime });
+                calEventItems.Add(new CalendarEvent{ time = item.ClassDateTime.ToShortTimeString(), duration = "15 minutes",
+                    title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.Attendies.Count() });
 
             }
 
