@@ -1,12 +1,12 @@
 ﻿
 @{
-    ViewBag.Title = "Schedule";
+    ViewBag.Title = "Book A Class";
 }
 
 
 <script src='~/Scripts/angular.js'></script>
 <div ng-app="schedule" ng-controller="controller"  class="ng-cloak">
-    <h2>Schedule</h2>
+    <h2>Book A Class</h2>
 
     <span style="margin-right:5px;cursor: pointer;" ng-repeat="day in week"  class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.calendar()}}</span>
 
