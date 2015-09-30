@@ -27,8 +27,15 @@
                 <td > {{class.duration}}</td>
                 <td>{{class.title}}</td>
                 <td>{{class.instructor}}</td>
-                <td>{{5 - class.attendiesCount}}</td>
-                <td></td>
+                <td>
+                    <div style="width: 80%; margin-right:3px" class="progress pull-left">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" ng-class="progressbarColor(class)" ng-style="{ 'width': ( class.attendiesCount /5 * 100) + '%' }">
+                            
+                        </div>
+                    </div>
+                    <div class="pull-right">{{ class.attendiesCount}}/5</div>
+               </td>
+                <td><button ng-disabled="class.attendiesCount == 5" ng-click="bookClass(class)"  type="button" class="btn btn-primary pull-right">Book Class</button></td>
             </tr>
         </tbody>
 
@@ -64,6 +71,20 @@
                 return day.selected == true ? "label-primary" : "label-default";
             }
 
+            $scope.progressbarColor = function (classItem) {
+                if (classItem.attendiesCount <= 2) {
+                    return "progress-bar-success";
+                }
+                else if (classItem.attendiesCount == 3 || classItem.attendiesCount == 4) {
+                    return "progress-bar-warning";
+                }
+                else if (classItem.attendiesCount == 5) {
+                    return "progress-bar-danger";
+                }
+
+
+            }
+
             //hold a list of all the classes
             $scope.classes = [];
             $scope.classesDataLink =  "/Scheduler/scheduledClasses";
@@ -85,8 +106,15 @@
                 //set current day to day selected
                 day.selected = true;
 
-                //TODO Load day selected data
+                //Load day selected data
                 $scope.getData(day.date);
+            }
+
+
+            $scope.bookClass = function (classItem) {
+                classItem.attendiesCount++;
+                
+                //TODO back end stuff
             }
 
 
