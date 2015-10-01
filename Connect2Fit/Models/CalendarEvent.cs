@@ -7,6 +7,9 @@ namespace Connect2Fit.Models
 {
     public class CalendarEvent
     {
+
+        public int id { get; set; }
+
         public string time { get; set; }
 
         public string duration { get; set; }

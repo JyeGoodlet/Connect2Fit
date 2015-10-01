@@ -1,4 +1,4 @@
-﻿
+﻿@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Book A Class";
 }
@@ -63,6 +63,7 @@
         });
         var app = angular.module('schedule', []);
         app.controller('controller', function ($scope, $http) {
+            var userId = "@User.Identity.GetUserId()";
             //hold week days in advance
             $scope.week = [];
 
@@ -97,6 +98,24 @@
                 }).success(function (response) { $scope.classes = response });
             }
 
+            var attendClass = function(classEvent) {
+                $http(
+                    {
+                        url: "/Scheduler/classEvent",
+                        method: "POST",
+                        data: {classEvent: classEvent}
+                    }).success(function(respone) {
+                        if (respone.message == "success") {
+                            classEvent.attendiesCount++;
+                            alert("Class Booked");
+                        }
+                        else {
+                            alert(respone.message);
+                        }
+                    });
+
+            }
+
             $scope.dayPicked = function (day) {
                 //set other days selected to false
                 for (var dayX in $scope.week) {
@@ -110,11 +129,12 @@
                 $scope.getData(day.date);
             }
 
-
+            //book a class
             $scope.bookClass = function (classItem) {
-                classItem.attendiesCount++;
+                
                 
                 //TODO back end stuff
+                attendClass(classItem);
             }
 
 
