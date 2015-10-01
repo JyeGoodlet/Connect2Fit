@@ -22,7 +22,7 @@ namespace Connect2Fit.Models
         public DateTime ClassDateTime { get; set; }
 
 
-        public virtual List<ApplicationUser> Attendies { get; set; }
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
 
     }
 }

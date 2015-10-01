@@ -82,7 +82,7 @@ namespace Connect2Fit.Controllers
             foreach(var item in items)
             {
                 calEventItems.Add(new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = "15 minutes",
-                    title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.Attendies.Count() });
+                    title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count() });
 
             }
 
@@ -108,13 +108,13 @@ namespace Connect2Fit.Controllers
 
 
             //check if user is already in class
-            if (classX.Attendies.Any(x => x.Id == User.Identity.GetUserId() ))
+            if (classX.ApplicationUsers.Any(x => x.Id == User.Identity.GetUserId() ))
             {
                 return Json(new { message = "Error: Already Attending Class" });
             }
 
             //check if class is full
-            if (classX.Attendies.Count == 5)
+            if (classX.ApplicationUsers.Count == 5)
             {
                 return Json(new { message = "Error: Class Full" });
 
@@ -125,7 +125,7 @@ namespace Connect2Fit.Controllers
             
 
             //if everything is ok book the the class
-            classX.Attendies.Add(db.Users.Find(User.Identity.GetUserId()));
+            classX.ApplicationUsers.Add(db.Users.Find(User.Identity.GetUserId()));
             db.Entry(classX).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
 

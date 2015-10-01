@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 
 namespace Connect2Fit.Models
 {
@@ -11,6 +12,8 @@ namespace Connect2Fit.Models
     {
 
         public string Name { get; set; }
+
+        public virtual ICollection<ScheduleItem> ScheduleItems { get; set; } 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -34,5 +37,14 @@ namespace Connect2Fit.Models
         {
             return new ApplicationDbContext();
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>().HasMany(x => x.ScheduleItems).WithMany();
+            modelBuilder.Entity<ScheduleItem>().HasMany(x => x.ApplicationUsers).WithMany();
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }
