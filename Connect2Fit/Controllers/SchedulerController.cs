@@ -47,7 +47,7 @@ namespace Connect2Fit.Controllers
         public ActionResult ScheduleClass()
         {
 
-            return View();
+            return PartialView();
 
         }
 
@@ -65,7 +65,7 @@ namespace Connect2Fit.Controllers
                 db.SaveChanges();
             }
 
-            return View(item);
+            return Redirect(ControllerContext.HttpContext.Request.UrlReferrer.ToString());
         }
 
         [HttpGet]
@@ -81,7 +81,7 @@ namespace Connect2Fit.Controllers
             List<CalendarEvent> calEventItems = new List<CalendarEvent>();
             foreach(var item in items)
             {
-                calEventItems.Add(new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = "15 minutes",
+                calEventItems.Add(new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = item.sessionTime, maxAttendies = item.maxAttendies,
                     title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count(), LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId())) });
 
             }
@@ -114,7 +114,7 @@ namespace Connect2Fit.Controllers
             }
 
             //check if class is full
-            if (classX.ApplicationUsers.Count == 5)
+            if (classX.ApplicationUsers.Count == classX.maxAttendies)
             {
                 return Json(new { message = "Error: Class Full" });
 

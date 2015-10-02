@@ -4,54 +4,76 @@
     ViewBag.Title = "Schedule Class";
 }
 
-<h2>Schedule New Class</h2>
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.ClassName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.ClassName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ClassName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.ClassDateTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.ClassDateTime, new { @class = "form-control datepicker"  })
-                @Html.ValidationMessageFor(model => model.ClassDateTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            @using (Ajax.BeginForm("ScheduleClass", "Scheduler",
+            new AjaxOptions
+            {
+                UpdateTargetId = "",
+                HttpMethod = "POST",
+                OnSuccess = "closeModal"
+               
+            }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Schedule A Class</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ClassName, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ClassName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ClassName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ClassDateTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ClassDateTime, new { @class = "form-control datepicker" })
+                                @Html.ValidationMessageFor(model => model.ClassDateTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.maxAttendies, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.maxAttendies, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.maxAttendies, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.sessionTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.sessionTime, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.sessionTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+            }
+  
 
 
-
-
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-@section scripts {
-   
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <script type="text/javascript">
-            $(function () {
-                $('.datepicker').datetimepicker(
-                    {
-                        format: 'DD/MM/YYYY hh:mm A',
-                        sideBySide: true
-                    });
+    $(document).ready(function() {
+        
+        $('.datepicker').datetimepicker(
+            {
+                format: 'DD/MM/YYYY hh:mm A',
+                sideBySide: true
             });
+    });
 </script>
-}
+
