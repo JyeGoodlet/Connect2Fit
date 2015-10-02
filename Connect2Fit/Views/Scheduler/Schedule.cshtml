@@ -3,11 +3,37 @@
     ViewBag.Title = "Book A Class";
 }
 
+<!-- testing ng-animate -->
+<style type="text/css">
+.animation {
+  -webkit-transition: 0.3s;
+}
+
+.animation.ng-enter {
+  opacity: 0;
+}
+
+.animation.ng-leave {
+  opacity: 1;
+}
+
+.animation.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.animation.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+
+</style>
+
 <script src='~/Scripts/angular.js'></script>
+<script src="~/Scripts/angular-animate.js"></script>
 <div ng-app="schedule" ng-controller="controller" class="ng-cloak">
     <h2>Book A Class</h2>
 
-    <span style="margin-right:5px;cursor: pointer;" ng-repeat="day in week" class="label" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.calendar()}}</span>
+    <span  style="margin-right:5px;cursor: pointer;" ng-repeat="day in week" class="label animation" ng-class="selected(day)" ng-click="dayPicked(day)">{{day.date.calendar()}}</span>
 
     <table class="table table-striped">
         <thead>
@@ -21,7 +47,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="class in classes">
+            <tr class="animation" ng-repeat="class in classes">
                 <td>{{class.time}}</td>
                 <td> {{class.duration}}</td>
                 <td>{{class.title}}</td>
@@ -96,7 +122,7 @@
                 sameElse: 'L'
             }
         });
-        var app = angular.module('schedule', []);
+        var app = angular.module('schedule', ['ngAnimate']);
         app.controller('controller', function ($scope, $http) {
             $scope.userId = "@User.Identity.GetUserId()";
             //hold week days in advance
