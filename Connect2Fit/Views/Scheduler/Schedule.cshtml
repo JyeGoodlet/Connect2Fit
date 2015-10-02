@@ -35,7 +35,12 @@
                     </div>
                     <div class="pull-right">{{ class.attendiesCount}}/5</div>
                </td>
-                <td><button ng-disabled="class.attendiesCount == 5" ng-click="bookClass(class)"  type="button" class="btn btn-primary pull-right">Book Class</button></td>
+                <td>
+                    <span  ng-if="class.LoggedInUserAttending" class="label label-success pull-right">Attending Class</span>
+
+                <button ng-if="class.LoggedInUserAttending == false" ng-disabled="class.attendiesCount == 5" ng-click="bookClass(class)"  type="button" class="btn btn-primary pull-right">Book Class</button>
+                
+                </td>
             </tr>
         </tbody>
 
@@ -107,6 +112,7 @@
                     }).success(function(respone) {
                         if (respone.message == "success") {
                             classEvent.attendiesCount++;
+                            classEvent.LoggedInUserAttending = true;
                             alert("Class Booked");
                         }
                         else {

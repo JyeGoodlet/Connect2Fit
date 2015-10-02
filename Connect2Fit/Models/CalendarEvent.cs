@@ -20,6 +20,7 @@ namespace Connect2Fit.Models
 
         public int attendiesCount { get; set; }
 
+        public bool LoggedInUserAttending { get; set; }
        
 
 

@@ -82,7 +82,7 @@ namespace Connect2Fit.Controllers
             foreach(var item in items)
             {
                 calEventItems.Add(new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = "15 minutes",
-                    title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count() });
+                    title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count(), LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId())) });
 
             }
 
