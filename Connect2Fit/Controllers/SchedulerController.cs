@@ -135,5 +135,44 @@ namespace Connect2Fit.Controllers
         }
 
 
+       
+        [HttpPost]
+        public JsonResult classEventLeave(CalendarEvent classEvent)
+        {
+            //check if user is logged in
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Json(new { message = "Error: User Not Logged In" });
+            }
+
+            //get class from database
+            var classX = db.scheduleItems.Find(classEvent.id);
+
+
+            //check if user is in class
+            if (classX.ApplicationUsers.Any(x => x.Id == User.Identity.GetUserId()))
+            {
+                //delete user
+                classX.ApplicationUsers.Remove(db.Users.Find(User.Identity.GetUserId()));
+                db.Entry(classX).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return Json(new { message = "success" });
+            }
+            else
+            {
+
+                return Json(new { message = "Error: User not in class" });
+            }
+
+
+           
+
+
+            
+        }
+
+
+
     }
 }

@@ -36,10 +36,10 @@
                     <div class="pull-right">{{ class.attendiesCount}}/5</div>
                </td>
                 <td>
-                    <span  ng-if="class.LoggedInUserAttending" class="label label-success pull-right">Attending Class</span>
+                    
 
                 <button ng-if="class.LoggedInUserAttending == false" ng-disabled="class.attendiesCount == 5" ng-click="bookClass(class)"  type="button" class="btn btn-primary pull-right">Book Class</button>
-                
+                    <button ng-if="class.LoggedInUserAttending == true"  ng-click="leaveClass(class)" type="button" class="btn btn btn-danger pull-right">Leave Class</button>
                 </td>
             </tr>
         </tbody>
@@ -68,7 +68,7 @@
         });
         var app = angular.module('schedule', []);
         app.controller('controller', function ($scope, $http) {
-            var userId = "@User.Identity.GetUserId()";
+            $scope.userId = "@User.Identity.GetUserId()";
             //hold week days in advance
             $scope.week = [];
 
@@ -141,6 +141,27 @@
                 
                 //TODO back end stuff
                 attendClass(classItem);
+            }
+
+            $scope.leaveClass = function (classItem) {
+
+                $http(
+                    {
+                        url: "/Scheduler/classEventLeave",
+                        method: "POST",
+                        data: { classEvent: classItem }
+                    }).success(function (respone) {
+                        if (respone.message == "success") {
+                            classItem.attendiesCount--;
+                            classItem.LoggedInUserAttending = false;
+                            alert("Class Left");
+                        }
+                        else {
+                            alert(respone.message);
+                        }
+                    });
+
+
             }
 
 
