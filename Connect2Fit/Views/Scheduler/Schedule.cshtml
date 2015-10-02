@@ -148,7 +148,7 @@
                             classEvent.attendiesCount++;
                             classEvent.LoggedInUserAttending = true;
                             alert("Class Booked");
-                            chat.server.helloServer();
+                            chat.server.updateDataServer();
                         }
                         else {
                             alert(respone.message);
@@ -190,6 +190,7 @@
                         if (respone.message == "success") {
                             classItem.attendiesCount--;
                             classItem.LoggedInUserAttending = false;
+                            chat.server.updateDataServer();
                             alert("Class Left");
                         }
                         else {
@@ -238,8 +239,8 @@
             }();
 
             //signalr functions
-            chat.client.helloClient = function () {
-                console.log("recieve");
+            chat.client.updateDataClient = function () {
+                $scope.getData($scope.selectedDay.date);
                 
             }
 

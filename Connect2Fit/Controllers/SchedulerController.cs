@@ -1,4 +1,5 @@
-﻿using Connect2Fit.Models;
+﻿using Connect2Fit.hubs;
+using Connect2Fit.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -61,6 +62,16 @@ namespace Connect2Fit.Controllers
             item.instructor = db.Users.Where(x => x.Email == User.Identity.Name).ToList()[0];
             if (ModelState.IsValid)
             {
+
+                //signalR
+                //signalR
+                // Get the context for the Pusher hub
+                Microsoft.AspNet.SignalR.IHubContext hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ScheduleItemHub>();
+
+                // Notify clients in the group
+                hubContext.Clients.All.updateDataClient();
+
+
                 db.scheduleItems.Add(item);
                 db.SaveChanges();
             }

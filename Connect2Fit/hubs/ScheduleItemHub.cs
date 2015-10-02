@@ -8,9 +8,9 @@ namespace Connect2Fit.hubs
 {
     public class ScheduleItemHub : Hub
     {
-        public void HelloServer()
+        public void updateDataServer()
         {
-            Clients.All.helloClient();
+            Clients.Others.updateDataClient();
         }
     }
 }
