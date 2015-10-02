@@ -89,10 +89,11 @@ namespace Connect2Fit.Controllers
                         select item).ToList();
 
             //create CalandarEvent Items
-            List<CalendarEvent> calEventItems = new List<CalendarEvent>();
-            foreach(var item in items)
+            //List<CalendarEvent> calEventItems = new List<CalendarEvent>();
+            Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
+            foreach (var item in items)
             {
-                calEventItems.Add(new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = item.sessionTime, maxAttendies = item.maxAttendies,
+                calEventItems.Add(item.id.ToString(), new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = item.sessionTime, maxAttendies = item.maxAttendies,
                     title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count(), LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId())) });
 
             }
