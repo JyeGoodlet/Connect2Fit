@@ -4,7 +4,6 @@
 }
 
 
-<script src='~/Scripts/angular.js'></script>
 <div ng-app="schedule" ng-controller="controller" class="ng-cloak">
     <h2>Book A Class</h2>
 
@@ -59,8 +58,8 @@
     <!-- Modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
-                <div  class="modal-content">
-                    
+                <div class="modal-content">
+
 
 
                 </div>
@@ -70,170 +69,190 @@
     }
 
 </div>
-    @section scripts {
+@section scripts {
 
-        <script>
-                        moment.locale('en', {
-                            calendar: {
-                                lastDay: '[Yesterday]',
-                                sameDay: '[Today]',
-                                nextDay: '[Tomorrow]',
-                                lastWeek: '[last] dddd [at] LT',
-                                nextWeek: 'dddd',
-                                sameElse: 'L'
-                            }
-                        });
-                        var app = angular.module('schedule', []);
-                        app.controller('controller', function ($scope, $http) {
-                            $scope.userId = "@User.Identity.GetUserId()";
-                            //hold week days in advance
-                            $scope.week = [];
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/hubs"></script>
 
-                            //selected day show a different label
-                            $scope.selected = function (day) {
+    <script src='~/Scripts/angular.js'></script>
+    <script>
 
-                                return day.selected == true ? "label-primary" : "label-default";
-                            }
-
-                            $scope.selectedDay;
-
-                            $scope.progressbarColor = function (classItem) {
-                                if ( classItem.attendiesCount / classItem.maxAttendies * 100 <= 50) {
-                                    return "progress-bar-success";
-                                }
-                                else if (classItem.attendiesCount / classItem.maxAttendies * 100 > 50 && classItem.attendiesCount / classItem.maxAttendies * 100 < 80) {
-                                    return "progress-bar-warning";
-                                }
-                                else if (classItem.attendiesCount / classItem.maxAttendies * 100 >= 80) {
-                                    return "progress-bar-danger";
-                                }
+       
+        //signalr connection
+        chat = $.connection.scheduleItemHub;
+        $.connection.hub.start().done(function () {
+            //closing stuff here
+        });
 
 
-                            }
+       
+        moment.locale('en', {
+            calendar: {
+                lastDay: '[Yesterday]',
+                sameDay: '[Today]',
+                nextDay: '[Tomorrow]',
+                lastWeek: '[last] dddd [at] LT',
+                nextWeek: 'dddd',
+                sameElse: 'L'
+            }
+        });
+        var app = angular.module('schedule', []);
+        app.controller('controller', function ($scope, $http) {
+            $scope.userId = "@User.Identity.GetUserId()";
+            //hold week days in advance
+            $scope.week = [];
 
-                            //hold a list of all the classes
-                            $scope.classes = [];
-                            $scope.classesDataLink = "/Scheduler/scheduledClasses";
+            //selected day show a different label
+            $scope.selected = function (day) {
 
-                            $scope.getData = function (date) {
-                                $http({
-                                    url: $scope.classesDataLink,
-                                    method: "GET",
-                                    params: { day: date.format("YYYY-MM-DD") }
-                                }).success(function (response) { $scope.classes = response });
-                            }
+                return day.selected == true ? "label-primary" : "label-default";
+            }
 
-                            var attendClass = function (classEvent) {
-                                
-                                $http(
-                                    {
-                                        url: "/Scheduler/classEvent",
-                                        method: "POST",
-                                        data: { classEvent: classEvent }
-                                    }).success(function (respone) {
-                                        if (respone.message == "success") {
-                                            classEvent.attendiesCount++;
-                                            classEvent.LoggedInUserAttending = true;
-                                            alert("Class Booked");
-                                        }
-                                        else {
-                                            alert(respone.message);
-                                        }
-                                    });
-                                    
+            $scope.selectedDay;
 
-                            }
-
-                            $scope.dayPicked = function (day) {
-                                //set other days selected to false
-                                for (var dayX in $scope.week) {
-
-                                    $scope.week[dayX].selected = false;
-                                }
-                                //set current day to day selected
-                                day.selected = true;
-                                $scope.selectedDay = day;
-                                //Load day selected data
-                                $scope.getData(day.date);
-                            }
-
-                            //book a class
-                            $scope.bookClass = function (classItem) {
+            $scope.progressbarColor = function (classItem) {
+                if (classItem.attendiesCount / classItem.maxAttendies * 100 <= 50) {
+                    return "progress-bar-success";
+                }
+                else if (classItem.attendiesCount / classItem.maxAttendies * 100 > 50 && classItem.attendiesCount / classItem.maxAttendies * 100 < 80) {
+                    return "progress-bar-warning";
+                }
+                else if (classItem.attendiesCount / classItem.maxAttendies * 100 >= 80) {
+                    return "progress-bar-danger";
+                }
 
 
-                                //TODO back end stuff
-                                attendClass(classItem);
-                            }
+            }
 
-                            $scope.leaveClass = function (classItem) {
+            //hold a list of all the classes
+            $scope.classes = [];
+            $scope.classesDataLink = "/Scheduler/scheduledClasses";
 
-                                $http(
-                                    {
-                                        url: "/Scheduler/classEventLeave",
-                                        method: "POST",
-                                        data: { classEvent: classItem }
-                                    }).success(function (respone) {
-                                        if (respone.message == "success") {
-                                            classItem.attendiesCount--;
-                                            classItem.LoggedInUserAttending = false;
-                                            alert("Class Left");
-                                        }
-                                        else {
-                                            alert(respone.message);
-                                        }
-                                    });
+            $scope.getData = function (date) {
+                $http({
+                    url: $scope.classesDataLink,
+                    method: "GET",
+                    params: { day: date.format("YYYY-MM-DD") }
+                }).success(function (response) { $scope.classes = response });
+            }
 
-                            }
-                            $scope.createClassModal = "test";
+            var attendClass = function (classEvent) {
 
-                            $scope.createClass = function (day) {
-                                console.log(day);
-                                $.get("/Scheduler/ScheduleClass", function (data) {
-                                    //had to use jquery here to load the script
-                                    $(".modal-content").empty();
-                                    $(".modal-content").html(data);
-                                    $('#myModal').modal('toggle')
-                                });
-
-                                //pop a modal box
-                                
+                $http(
+                    {
+                        url: "/Scheduler/classEvent",
+                        method: "POST",
+                        data: { classEvent: classEvent }
+                    }).success(function (respone) {
+                        if (respone.message == "success") {
+                            classEvent.attendiesCount++;
+                            classEvent.LoggedInUserAttending = true;
+                            alert("Class Booked");
+                            chat.server.helloServer();
+                        }
+                        else {
+                            alert(respone.message);
+                        }
+                    });
 
 
+            }
 
-                            }
+            $scope.dayPicked = function (day) {
+                //set other days selected to false
+                for (var dayX in $scope.week) {
 
+                    $scope.week[dayX].selected = false;
+                }
+                //set current day to day selected
+                day.selected = true;
+                $scope.selectedDay = day;
+                //Load day selected data
+                $scope.getData(day.date);
+            }
 
+            //book a class
+            $scope.bookClass = function (classItem) {
 
+                //back end stuff
+                attendClass(classItem);
 
-                            //on load populate week
-                            var init = function () {
-                                for (var x = 0; x < 7; x++) {
+            }
 
-                                    var item = { date: moment().add(x, 'days'), selected: false }
-                                    if (x == 0) {
-                                        item.selected = true;
-                                        $scope.selectedDay = item;
-                                    }
-                                    $scope.week.push(item);
+            $scope.leaveClass = function (classItem) {
 
-                                }
+                $http(
+                    {
+                        url: "/Scheduler/classEventLeave",
+                        method: "POST",
+                        data: { classEvent: classItem }
+                    }).success(function (respone) {
+                        if (respone.message == "success") {
+                            classItem.attendiesCount--;
+                            classItem.LoggedInUserAttending = false;
+                            alert("Class Left");
+                        }
+                        else {
+                            alert(respone.message);
+                        }
+                    });
 
-                                //load first days data
-                                $scope.getData(moment());
+            }
+            $scope.createClassModal;
 
-                            }();
+            $scope.createClass = function (day) {
+                console.log(day);
+                $.get("/Scheduler/ScheduleClass", function (data) {
+                    //had to use jquery here to load the script
+                    $(".modal-content").empty();
+                    $(".modal-content").html(data);
+                    $('#myModal').modal('toggle')
+                });
 
-
-
-                        });
+                //pop a modal box
 
 
 
 
+            }
 
 
-        </script>
+
+
+            //on load populate week
+            var init = function () {
+                for (var x = 0; x < 7; x++) {
+
+                    var item = { date: moment().add(x, 'days'), selected: false }
+                    if (x == 0) {
+                        item.selected = true;
+                        $scope.selectedDay = item;
+                    }
+                    $scope.week.push(item);
+
+                }
+
+                //load first days data
+                $scope.getData(moment());
+
+            }();
+
+            //signalr functions
+            chat.client.helloClient = function () {
+                console.log("recieve");
+                
+            }
+
+
+        });
 
 
 
-    }
+
+
+
+    </script>
+
+
+
+}
