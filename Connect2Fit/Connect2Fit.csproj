@@ -1229,6 +1229,8 @@
     <Content Include="Views\Research\ObjectTracker.cshtml" />
     <Content Include="Views\Research\ColorTracker.cshtml" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\Scheduler\ClientClasses.cshtml" />
+    <Content Include="Views\Scheduler\InstructorClasses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />

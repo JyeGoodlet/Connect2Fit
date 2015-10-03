@@ -43,6 +43,19 @@ namespace Connect2Fit.Controllers
             return View();
         }
 
+        //get a logged in client class they are attending
+        public ActionResult ClientClasses()
+        {
+
+            return View();
+        }
+
+        //get a logged in instructors classes they are hosting
+        public ActionResult InstructorClasses()
+        {
+            return View();
+        } 
+
 
         [Authorize(Roles = "Instructor")]
         public ActionResult ScheduleClass()
@@ -80,6 +93,69 @@ namespace Connect2Fit.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Instructor")]
+        public JsonResult InstructorsClasses()
+        {
+            string instructorId = User.Identity.GetUserId();
+            var items = (from item in db.scheduleItems
+                        where (item.instructor.Id == instructorId)
+                        select item).ToList();
+
+
+            Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
+            foreach (var item in items)
+            {
+                calEventItems.Add(item.id.ToString(), new CalendarEvent
+                {
+                    id = item.id,
+                    time = item.ClassDateTime.ToShortTimeString(),
+                    duration = item.sessionTime,
+                    maxAttendies = item.maxAttendies,
+                    title = item.ClassName,
+                    instructor = item.instructor.Name,
+                    attendiesCount = item.ApplicationUsers.Count(),
+                   
+                });
+
+            }
+
+            //return them as a json object.
+            return Json(calEventItems, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ClientsClasses()
+        {
+            var clientId = User.Identity.GetUserId();
+            /* var items = (from item in db.scheduleItems
+                         where item.ApplicationUsers.Contains(ClientId) == true
+                         select item).ToList(); */
+            var items = db.scheduleItems.Where(x => x.ApplicationUsers.Select(c => c.Id).Contains(clientId)).ToList();
+
+            Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
+            foreach (var item in items)
+            {
+                calEventItems.Add(item.id.ToString(), new CalendarEvent
+                {
+                    id = item.id,
+                    time = item.ClassDateTime.ToShortTimeString(),
+                    duration = item.sessionTime,
+                    maxAttendies = item.maxAttendies,
+                    title = item.ClassName,
+                    instructor = item.instructor.Name,
+                    attendiesCount = item.ApplicationUsers.Count(),
+                    LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId()))
+                });
+
+            }
+
+            //return them as a json object.
+            return Json(calEventItems, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [HttpGet]
         public JsonResult ScheduledClasses(DateTime day)
         {
 
@@ -105,7 +181,7 @@ namespace Connect2Fit.Controllers
 
         }
 
-        //book class
+        //book a class
         [HttpPost]
         public JsonResult classEvent(CalendarEvent classEvent)
         {
