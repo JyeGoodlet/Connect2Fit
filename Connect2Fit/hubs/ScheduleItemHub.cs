@@ -10,7 +10,7 @@ namespace Connect2Fit.hubs
     {
         public void updateDataServer()
         {
-            Clients.Others.updateDataClient();
+            Clients.All.updateDataClient();
         }
     }
 }

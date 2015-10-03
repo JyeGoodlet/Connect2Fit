@@ -62,7 +62,8 @@
                     <div class="modal-footer">
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Create" class="btn btn-default" />
+                                <input  type="submit" value="Create" class="btn btn-default" />
+                                
                             </div>
                         </div>
                     </div>
@@ -71,10 +72,17 @@
 
 
 @Scripts.Render("~/bundles/jqueryval")
-<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script type="text/javascript">
+
+    function closeModal() {
+        $('#myModal').modal('toggle');
+    }
+
     $(document).ready(function() {
-        
+       
+
+
         $('.datepicker').datetimepicker(
             {
                 format: 'DD/MM/YYYY hh:mm A',
