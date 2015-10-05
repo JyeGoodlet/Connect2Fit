@@ -179,6 +179,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1231,6 +1232,7 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Scheduler\ClientClasses.cshtml" />
     <Content Include="Views\Scheduler\InstructorClasses.cshtml" />
+    <Content Include="Views\Room\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
