@@ -26,5 +26,10 @@ namespace Connect2Fit.hubs
             //Clients.Others.message(message);
 
         }
+
+        public void Sendpoint(string roomId, ClientPoint3D point)
+        {
+            Clients.OthersInGroup(roomId).recievePoint(point);
+        }
     }
 }

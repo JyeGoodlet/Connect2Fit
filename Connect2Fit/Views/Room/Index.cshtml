@@ -92,8 +92,20 @@
 
             }
 
+            chat.client.recievePoint = function(point) {
+                console.log(point);
+
+            }
+
 
         });
+
+        function testSendingPoint() {
+            point = {clientId: 1, pointId: 2, x: 3, y: 4, z: 5 }
+            chat.server.sendpoint(@Model, point);
+            return "sent";
+
+        }
 
 
     </script>
