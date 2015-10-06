@@ -1236,6 +1236,7 @@
     <Content Include="Views\Scheduler\ClientClasses.cshtml" />
     <Content Include="Views\Scheduler\InstructorClasses.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />
+    <Content Include="Views\Research\ArmTracker.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
