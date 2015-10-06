@@ -33,6 +33,10 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
-
+        // GET: arm tracker
+        public ActionResult ArmTracker()
+        {
+            return View();
+        }
     }
 }
