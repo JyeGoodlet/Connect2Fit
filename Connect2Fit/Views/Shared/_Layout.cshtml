@@ -26,8 +26,10 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Research", "Index", "Research")</li>
-                    <li>@Html.ActionLink("Calendar", "Index", "Scheduler")</li>
-                    <li>@Html.ActionLink("Schedule", "Schedule", "Scheduler")</li>
+                    
+                    <li>@Html.ActionLink("Book A  Class", "Schedule", "Scheduler")</li>
+                    <li>@Html.ActionLink("Instructors Classes", "InstructorClasses", "Scheduler")</li>
+                    <li>@Html.ActionLink("Clients Classes", "ClientClasses", "Scheduler")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
