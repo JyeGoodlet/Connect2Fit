@@ -43,18 +43,29 @@ namespace Connect2Fit.Controllers
             return View();
         }
 
-        //get a logged in client class they are attending
-        public ActionResult ClientClasses()
-        {
 
-            return View();
+
+        //instead of having seperate functions for instructor and client i an instead going to have one controller and return a 
+        //different view bad on if they are a client or instructor
+        [Authorize(Roles = "Instructor,Client")]
+        public ActionResult MyClasses()
+        {
+            //Instructor role
+            if (User.IsInRole("Instructor"))
+            {
+                return View("InstructorClasses");
+            }
+            else if (User.IsInRole("Client"))
+            {
+                return View("ClientClasses");
+            }
+            else
+            {
+                throw new HttpException("Role Not Found");
+            }
+
+            //client role
         }
-
-        //get a logged in instructors classes they are hosting
-        public ActionResult InstructorClasses()
-        {
-            return View();
-        } 
 
 
         [Authorize(Roles = "Instructor")]
