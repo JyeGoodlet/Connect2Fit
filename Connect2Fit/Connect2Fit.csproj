@@ -1239,6 +1239,9 @@
     <Content Include="Views\Scheduler\InstructorClasses.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Research\ArmTracker.cshtml" />
+    <Content Include="Views\Room\InstructorRoom.cshtml" />
+    <Content Include="Views\Room\ClientRoom.cshtml" />
+    <Content Include="Views\Room\WebRtcTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
