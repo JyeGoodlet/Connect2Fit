@@ -27,7 +27,7 @@ namespace Connect2Fit.Controllers
 
         public ActionResult WebRtcTest(int id = 1)
         {
-            return View();
+            return View(id);
 
         }
 

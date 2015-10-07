@@ -1,4 +1,4 @@
-﻿
+﻿@model int
 @{
     ViewBag.Title = "WebRtcTest";
     Layout = null;
@@ -13,7 +13,7 @@
     <!-- Assumes global locations for socket.io.js and easyrtc.js -->
     <script src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.js"></script>
-    <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/demos/js/demo_audio_video_simple.js"></script>
+    <!-- <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/demos/js/demo_audio_video_simple.js"></script> -->
 
 </head>
 <body onload="connect();">
@@ -32,6 +32,67 @@
             <!-- each caller video needs to be in it"s own div so it"s close button can be positioned correctly -->
         </div>
     </div>
+
+<script type="text/javascript">
+
+    var selfEasyrtcid = "";
+
+
+    function connect() {
+        easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/");
+        easyrtc.setVideoDims(640, 480);
+        easyrtc.joinRoom("@Model", null, null, null)
+        easyrtc.setRoomOccupantListener(convertListToButtons);
+        easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["callerVideo"], loginSuccess, loginFailure);
+    }
+
+
+    function clearConnectList() {
+        var otherClientDiv = document.getElementById('otherClients');
+        while (otherClientDiv.hasChildNodes()) {
+            otherClientDiv.removeChild(otherClientDiv.lastChild);
+        }
+    }
+
+
+    function convertListToButtons(roomName, data, isPrimary) {
+        clearConnectList();
+        var otherClientDiv = document.getElementById('otherClients');
+        for (var easyrtcid in data) {
+            var button = document.createElement('button');
+            button.onclick = function (easyrtcid) {
+                return function () {
+                    performCall(easyrtcid);
+                };
+            }(easyrtcid);
+
+            var label = document.createTextNode(easyrtc.idToName(easyrtcid));
+            button.appendChild(label);
+            otherClientDiv.appendChild(button);
+        }
+    }
+
+
+    function performCall(otherEasyrtcid) {
+        easyrtc.hangupAll();
+
+        var successCB = function () { };
+        var failureCB = function () { };
+        easyrtc.call(otherEasyrtcid, successCB, failureCB);
+    }
+
+
+    function loginSuccess(easyrtcid) {
+        selfEasyrtcid = easyrtcid;
+        document.getElementById("iam").innerHTML = "I am " + easyrtc.cleanId(easyrtcid);
+    }
+
+
+    function loginFailure(errorCode, message) {
+        easyrtc.showError(errorCode, message);
+    }
+
+</script>
 </body>
 </html>
 
