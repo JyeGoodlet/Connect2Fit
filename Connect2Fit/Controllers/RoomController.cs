@@ -15,12 +15,12 @@ namespace Connect2Fit.Controllers
         }
 
         //after the views have been created this can be merged into a single Room action. with different views
-        public ActionResult InstructorRoom(int id)
+        public ActionResult InstructorRoom(int id = 1)
         {
             return View(id);
         }
 
-        public ActionResult ClientRoom(int id)
+        public ActionResult ClientRoom(int id = 1)
         {
             return View(id);
         }

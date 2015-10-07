@@ -6,3 +6,108 @@
 
 <h2>ClientRoom</h2>
 
+
+<div id="demoContainer">
+    <div id="connectControls">
+        <div id="iam">Not yet connected...</div>
+        <br />
+        <strong>Connected users:</strong>
+        <div id="otherClients"></div>
+    </div>
+    <div id="videos">
+        <!--<video autoplay="autoplay" class="easyrtcMirror" id="selfVideo" muted="muted" volume="0"></video>-->
+        <div style="position:relative;float:left;">
+            <video autoplay="autoplay" id="callerVideo"></video>
+        </div>
+        <!-- each caller video needs to be in it"s own div so it"s close button can be positioned correctly -->
+    </div>
+</div>
+
+
+@section scripts {
+
+    <link rel="stylesheet" type="text/css" href="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.css" />
+
+    <!-- Assumes global locations for socket.io.js and easyrtc.js -->
+    <script src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.js"></script>
+    <!-- <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/demos/js/demo_audio_video_simple.js"></script> -->
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+        connect();
+
+    })
+
+    var selfEasyrtcid = "";
+
+
+    function connect() {
+        easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/");
+        //easyrtc.setVideoDims(640, 480);
+        easyrtc.enableAudio(false);
+        easyrtc.enableVideo(false);
+        easyrtc.enableDataChannels(true);
+        easyrtc.joinRoom("@Model", null, null, null)
+        easyrtc.setRoomOccupantListener(convertListToButtons);
+        //easyrtc.easyApp("easyrtc.audioVideoSimple", null, ["callerVideo"], loginSuccess, loginFailure);
+        easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
+    }
+
+        easyrtc.setStreamAcceptor(function (easyrtcid, stream) {
+            //setUpMirror();
+            var video = document.getElementById("callerVideo");
+            easyrtc.setVideoObjectSrc(video, stream);
+            //enable("hangupButton");
+        });
+
+
+    function clearConnectList() {
+        var otherClientDiv = document.getElementById('otherClients');
+        while (otherClientDiv.hasChildNodes()) {
+            otherClientDiv.removeChild(otherClientDiv.lastChild);
+        }
+    }
+
+
+    function convertListToButtons(roomName, data, isPrimary) {
+        clearConnectList();
+        var otherClientDiv = document.getElementById('otherClients');
+        for (var easyrtcid in data) {
+            var button = document.createElement('button');
+            button.onclick = function (easyrtcid) {
+                return function () {
+                    performCall(easyrtcid);
+                };
+            }(easyrtcid);
+
+            var label = document.createTextNode(easyrtc.idToName(easyrtcid));
+            button.appendChild(label);
+            otherClientDiv.appendChild(button);
+            performCall(easyrtcid);
+        }
+    }
+
+
+    function performCall(otherEasyrtcid) {
+        easyrtc.hangupAll();
+
+        var successCB = function () { };
+        var failureCB = function () { };
+        easyrtc.call(otherEasyrtcid, successCB, failureCB);
+    }
+
+
+    function loginSuccess(easyrtcid) {
+        selfEasyrtcid = easyrtcid;
+        document.getElementById("iam").innerHTML = "I am " + easyrtc.cleanId(easyrtcid);
+    }
+
+
+    function loginFailure(errorCode, message) {
+        easyrtc.showError(errorCode, message);
+    }
+
+    </script>
+
+}
