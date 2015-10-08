@@ -2,11 +2,6 @@
 var canvas = null;
 var context = null;
 
-// Buttons
-var moveOneBut = document.images["moveOneButton"];
-var animateBut = document.images["animateButton"];
-var resetBut = document.images["resetButton"];
-
 // Iterator to animate temp data
 var counter = 0;
 
@@ -150,8 +145,8 @@ function update(Point) {
     }  
 }
 
-function animate() {
-
+function animation() {
+    
     interval = setInterval(function () {        
         blank();
         drawBody();
@@ -159,7 +154,7 @@ function animate() {
         counter++;
         update(testDataPoints[counter]);
     }, 10);
-        
+    
 }
 
 function moveOne() {
