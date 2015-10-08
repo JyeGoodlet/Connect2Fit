@@ -287,6 +287,7 @@
     <Content Include="Content\img\3.jpg" />
     <Content Include="Content\img\4.jpg" />
     <Content Include="Content\img\logo.png" />
+    <Content Include="Content\Research\assets\armWaving.js" />
     <Content Include="Content\Research\assets\dat.gui.min.js" />
     <Content Include="Content\Research\assets\demo.css" />
     <Content Include="Content\Research\assets\eye.js" />
@@ -295,6 +296,10 @@
     <Content Include="Content\Research\assets\mouth.js" />
     <Content Include="Content\Research\assets\stats.min.js" />
     <Content Include="Content\Research\assets\tracking.js" />
+    <Content Include="Content\Research\images\Animate.jpg" />
+    <Content Include="Content\Research\images\moveOnce.jpg" />
+    <Content Include="Content\Research\images\Reset.jpg" />
+    <Content Include="Content\Research\images\Start.jpg" />
     <Content Include="Content\Research\main.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -1242,6 +1247,7 @@
     <Content Include="Views\Room\InstructorRoom.cshtml" />
     <Content Include="Views\Room\ClientRoom.cshtml" />
     <Content Include="Views\Room\WebRtcTest.cshtml" />
+    <Content Include="Views\Research\ArmWaving.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />

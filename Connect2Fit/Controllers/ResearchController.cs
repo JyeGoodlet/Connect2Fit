@@ -38,5 +38,10 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
+        // GET: Arm Waving Animation
+        public ActionResult ArmWaving()
+        {
+            return View();
+        }
     }
 }

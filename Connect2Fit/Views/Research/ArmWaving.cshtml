@@ -1,0 +1,56 @@
+﻿<link href="~/Content/Research/main.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Arm Waving Animation";
+}
+
+<table onload="init()">
+    <tr>
+        <td>
+            <canvas id="myCanvas" width="500" height="500"></canvas>
+        </td>
+        <td>
+            <table>
+                <tr>
+                    <td>
+                        <h1>Arm Animation</h1>
+                        <p>Very Rough. Takes co-ordinate information from a set of test data and draws the body each time.</p>
+                        <p><b>Start</b> to initiate. Then <b>Move Once</b> takes a single joint data point (clientID, jointID, x, y) adjusts the position and repaints all of the body parts. <b>Animate</b> plays through all of the test data at once and <b>Reset</b> starts again.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#" onclick="return init()">
+                            <img name="startButton" src="~/Content/Research/images/start.jpg" width="110" height="20" border="0" alt="Start" />
+                        </a>
+                    </td>                   
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#" onclick="return moveOne()">
+                            <img name="moveOneButton" src="~/Content/Research/images/moveOnce.jpg" width="110" height="20" border="0" alt="Move One" />
+                        </a>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#" onclick="return animate()">
+                            <img name="animateButton" src="~/Content/Research/images/Animate.jpg" width="110" height="20" border="0" alt="Animate" />
+                        </a>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#" onclick="return reset()">
+                            <img name="resetButton" src="~/Content/Research/images/Reset.jpg" width="110" height="20" border="0" alt="Reset" />
+                        </a>
+                    </td>                   
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+@section Scripts {
+    <script src="~/Content/Research/assets/armWaving.js"></script>        
+}
