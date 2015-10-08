@@ -4,26 +4,54 @@
     ViewBag.Title = "InstructorRoom";
 }
 
-<h2>InstructorRoom</h2>
+<h2>Instructor Room</h2>
 
 <div id="demoContainer">
     <div id="connectControls">
-        <div id="iam">Not yet connected...</div>
+        <div id="status">Connecting</div>
         <br />
-        <strong>Connected users:</strong>
-        <div id="otherClients"></div>
+        
+        
     </div>
     <div id="videos">
-        <video autoplay="autoplay" class="easyrtcMirror" id="selfVideo" muted="muted" volume="0"></video>
-        <div style="position:relative;float:left;">
-            <video autoplay="autoplay" id="callerVideo"></video>
-        </div>
-        <!-- each caller video needs to be in it"s own div so it"s close button can be positioned correctly -->
+        <video autoplay="autoplay"  id="selfVideo" muted="muted" volume="0"></video>
+
     </div>
 </div>
 
+<div ng-app="Room" ng-controller="Chat" class="ng-cloak">
+    <h2>Client Classes</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Person</th>
+                <th>Message</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="animation" ng-repeat="message in messages">
+                <td>{{message.person}}</td>
+                <td>{{message.text}}</td>
+
+            </tr>
+        </tbody>
+
+    </table>
+    <form>
+        <input type="text" ng-model="newMessage" />
+        <input type="submit" ng-click="addMessage()" value="Save" />
+    </form>
+
+
+</div>
+
+
 
 @section scripts {
+<script src='~/Scripts/angular.js'></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+<script src="~/signalr/hubs"></script>
 
 <link rel="stylesheet" type="text/css" href="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.css" />
 
@@ -33,6 +61,72 @@
 <!-- <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/demos/js/demo_audio_video_simple.js"></script> -->
 <script type="text/javascript">
 
+    //signalr connection
+    chat = $.connection.roomHub;
+    $.connection.hub.start(
+        function () {
+            chat.server.joinRoom(@Model);
+        }).done(function () {
+            //closing stuff here
+            //chat.server.leaveRoom(@Model);
+        });
+
+
+
+    var app = angular.module('Room', []);
+    app.controller('Chat', function ($scope, $http) {
+        var groupId = @Model;
+        $scope.userId = "@User.Identity.Name";
+
+
+
+        //hold a list of all the classes
+        $scope.messages = [];
+
+        $scope.addMessage = function () {
+            //add message
+            var newMessage = { person: $scope.userId, text: $scope.newMessage }
+            $scope.messages.push(newMessage);
+            chat.server.message(groupId, newMessage);
+            $scope.newMessage = "";
+        }
+
+        //onload
+        var init = function() {
+            //DO STUFF HERE
+
+        }();
+
+        //signalr functions
+        chat.client.message = function (message) {
+
+            console.log(message);
+            $scope.messages.push(message);
+            $scope.$apply();
+
+        }
+
+        chat.client.recievePoint = function(point) {
+            console.log(point);
+
+        }
+
+
+    });
+
+    function testSendingPoint() {
+        point = {clientId: 1, pointId: 2, x: 3, y: 4, z: 5 }
+        chat.server.sendpoint(@Model, point);
+        return "sent";
+
+    }
+
+
+
+
+
+
+
     $(document).ready(function() {
         connect();
 
@@ -40,21 +134,19 @@
 
     var selfEasyrtcid = "";
 
-
     function connect() {
         easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
-        easyrtc.setVideoDims(640, 480);
+        easyrtc.setVideoDims(320, 240);
+        easyrtc.setUsername("@User.Identity.Name");
         easyrtc.joinRoom("@Model", null, null, null)
         easyrtc.setRoomOccupantListener(convertListToButtons);
-        easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["callerVideo"], loginSuccess, loginFailure);
+
+        easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
     }
 
 
     function clearConnectList() {
-        var otherClientDiv = document.getElementById('otherClients');
-        while (otherClientDiv.hasChildNodes()) {
-            otherClientDiv.removeChild(otherClientDiv.lastChild);
-        }
+
     }
 
 
@@ -62,16 +154,10 @@
         clearConnectList();
         var otherClientDiv = document.getElementById('otherClients');
         for (var easyrtcid in data) {
-            var button = document.createElement('button');
-            button.onclick = function (easyrtcid) {
-                return function () {
-                    performCall(easyrtcid);
-                };
-            }(easyrtcid);
 
-            var label = document.createTextNode(easyrtc.idToName(easyrtcid));
-            button.appendChild(label);
-            otherClientDiv.appendChild(button);
+            //add each id to angularjs array
+
+            performCall(easyrtcid);
         }
     }
 
@@ -87,7 +173,7 @@
 
     function loginSuccess(easyrtcid) {
         selfEasyrtcid = easyrtcid;
-        document.getElementById("iam").innerHTML = "I am " + easyrtc.cleanId(easyrtcid);
+        document.getElementById("status").innerHTML = "Connected";
     }
 
 
