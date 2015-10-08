@@ -1,25 +1,31 @@
 ﻿@using Microsoft.AspNet.Identity
-@model int
+@using Connect2Fit.Models;
+@model  ScheduleItem
 @{
     ViewBag.Title = "InstructorRoom";
 }
 
 <h2>Instructor Room</h2>
+<div ng-app="Room" class="ng-cloak"  >
+<div id="status">Connecting</div>
+<div class="row">
+    
+    <div class="col-md-4" id="videos">
+        <video autoplay="autoplay" id="selfVideo" muted="muted" volume="0"></video>
 
-<div id="demoContainer">
-    <div id="connectControls">
-        <div id="status">Connecting</div>
-        <br />
-        
-        
     </div>
-    <div id="videos">
-        <video autoplay="autoplay"  id="selfVideo" muted="muted" volume="0"></video>
 
+    <div ng-controller="WebRTC"  class="col-md-7 .col-md-offset-1">
+        <h4>Clients</h4>
+        <table class="table table-striped">
+            <tr ng-repeat="client in clients">
+                <td>{{client.name}}</td>
+                <td>{{client.name | selectedTags:getConnectedClients()}}</td>
+            </tr>
+        </table>
     </div>
 </div>
-
-<div ng-app="Room" ng-controller="Chat" class="ng-cloak">
+<div ng-controller="Chat" >
     <h2>Client Classes</h2>
     <table class="table table-striped">
         <thead>
@@ -45,7 +51,11 @@
 
 
 </div>
-
+</div>
+@foreach(var item in Model.ApplicationUsers)
+{
+    <div>@item.Email</div>
+}
 
 
 @section scripts {
@@ -65,21 +75,21 @@
     chat = $.connection.roomHub;
     $.connection.hub.start(
         function () {
-            chat.server.joinRoom(@Model);
+            chat.server.joinRoom(@Model.id);
         }).done(function () {
             //closing stuff here
-            //chat.server.leaveRoom(@Model);
+            //chat.server.leaveRoom(@Model.id);
         });
 
 
 
     var app = angular.module('Room', []);
     app.controller('Chat', function ($scope, $http) {
-        var groupId = @Model;
+        var groupId = @Model.id;
         $scope.userId = "@User.Identity.Name";
 
 
-
+         
         //hold a list of all the classes
         $scope.messages = [];
 
@@ -116,7 +126,7 @@
 
     function testSendingPoint() {
         point = {clientId: 1, pointId: 2, x: 3, y: 4, z: 5 }
-        chat.server.sendpoint(@Model, point);
+        chat.server.sendpoint(@Model.id, point);
         return "sent";
 
     }
@@ -124,62 +134,128 @@
 
 
 
-
-
-
-    $(document).ready(function() {
-        connect();
-
-    })
-
-    var selfEasyrtcid = "";
-
-    function connect() {
-        easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
-        easyrtc.setVideoDims(320, 240);
-        easyrtc.setUsername("@User.Identity.Name");
-        easyrtc.joinRoom("@Model", null, null, null)
-        easyrtc.setRoomOccupantListener(convertListToButtons);
-
-        easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
-    }
-
-
-    function clearConnectList() {
-
-    }
-
-
-    function convertListToButtons(roomName, data, isPrimary) {
-        clearConnectList();
-        var otherClientDiv = document.getElementById('otherClients');
-        for (var easyrtcid in data) {
-
-            //add each id to angularjs array
-
-            performCall(easyrtcid);
+    app.controller('WebRTC', function ($scope, $http) {
+        $scope.clients;
+        $scope.connectedClients = [];
+        
+        $scope.getConnectedClients = function() {
+            return $scope.connectedClients;
         }
-    }
+
+        $scope.getUsers = function() {
+            $http.get('/Room/GetAttendies/' + @Model.id).then(function(response) {
+                //console.log(response.data)
+                $scope.clients = response.data;
+            });
+        }
+
+        $scope.online = function(id) {
+            id = id;
+            items = $scope.connectedClients;
+
+            for (var x = 0; x < items.length;x++) {
+
+                //console.log(item);
+                if (items[x] == id) {
+                    return "Connected";
+                } 
+            }
+            return "Not Connected"
+        }
+
+        var init = function() {
+            $scope.clients = [{name: "test", online: false}]
+            $scope.getUsers();
+        }();
 
 
-    function performCall(otherEasyrtcid) {
-        easyrtc.hangupAll();
 
-        var successCB = function () { };
-        var failureCB = function () { };
-        easyrtc.call(otherEasyrtcid, successCB, failureCB);
-    }
+        
+        $(document).ready(function() {
+            connect();
+
+        })
+
+        var selfEasyrtcid = "";
+
+        function connect() {
+            easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
+            easyrtc.setVideoDims(320, 240);
+            easyrtc.setUsername("@User.Identity.Name");
+            easyrtc.joinRoom("@Model.id", null, null, null)
+            easyrtc.setRoomOccupantListener(convertListToButtons);
+
+            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
+        }
 
 
-    function loginSuccess(easyrtcid) {
-        selfEasyrtcid = easyrtcid;
-        document.getElementById("status").innerHTML = "Connected";
-    }
+        function clearConnectList() {
+            $scope.connectedClients = [];
+        }
 
 
-    function loginFailure(errorCode, message) {
-        easyrtc.showError(errorCode, message);
-    }
+        function convertListToButtons(roomName, data, isPrimary) {
+            clearConnectList();
+            var otherClientDiv = document.getElementById('otherClients');
+            //console.log(data);
+            for (var easyrtcid in data) {
+
+                //add each id to angularjs array
+                $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
+                //console.log($scope.connectedClients);
+                //console.log(easyrtc.idToName(easyrtcid) + " connected")
+               
+                performCall(easyrtcid);
+            }
+            $scope.$apply();
+        }
+
+
+        function performCall(otherEasyrtcid) {
+            easyrtc.hangupAll();
+
+            var successCB = function () { };
+            var failureCB = function () { };
+            easyrtc.call(otherEasyrtcid, successCB, failureCB);
+        }
+
+
+        function loginSuccess(easyrtcid) {
+            selfEasyrtcid = easyrtcid;
+            document.getElementById("status").innerHTML = "Connected";
+        }
+
+
+        function loginFailure(errorCode, message) {
+            easyrtc.showError(errorCode, message);
+        }
+
+
+    });
+
+    angular.module('Room').filter('selectedTags', function() {
+        return function(tasks, tags) {
+            console.log(tasks);
+            //console.log("here");
+            console.log(tags);
+           
+
+            for (var i in tags) {
+                //console.log(tasks[i]);
+                //console.log(tasks[i]);
+                if (tags[i] == tasks) {
+                        
+                        return "Connected";
+                    }
+                }
+                return "Not Connected";
+
+           
+        };
+    });
+
+       
+    
 
 </script>
 
