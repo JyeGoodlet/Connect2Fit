@@ -1,52 +1,54 @@
 ﻿@using Microsoft.AspNet.Identity
-@model int
+@using Connect2Fit.Models;
+@model ScheduleItem
 @{
-    ViewBag.Title = "ClientRoom";
+    ViewBag.Title = "Client Room";
 }
 
-<h2>ClientRoom</h2>
+<h2>Client Room</h2>
+<div ng-app="Room" class="ng-cloak" ng-controller="webRTC">
+    <div id="status">Connecting.</div>
+    <div class="row">
+        <div class="col-md-4" id="intructorVideos">
 
-
-<div id="demoContainer">
-    <div id="connectControls">
-        <div id="status">Connecting.</div>
-        <br />
-     
-    </div>
-    <div id="videos">
-       
             <video autoplay="autoplay" id="callerVideo"></video>
-        
+            <span>{{ instructor | InstructorConnected:connectedClients }}</span>
+        </div>
+        <div id="" class="col-md-7 .col-md-offset-1">
+            <span>Clients avatar to go here</span>
+        </div>
+    </div>
+    <div id="connectedUsers">
+        <h4>Connected Users</h4>
+        <span ng-repeat="client in connectedClients">{{client}}</span>
+    </div>
+    <div  ng-controller="Chat" >
+        <h2>Client Classes</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Person</th>
+                    <th>Message</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animation" ng-repeat="message in messages">
+                    <td>{{message.person}}</td>
+                    <td>{{message.text}}</td>
+
+                </tr>
+            </tbody>
+
+        </table>
+        <form>
+            <input type="text" ng-model="newMessage" />
+            <input type="submit" ng-click="addMessage()" value="Save" />
+        </form>
+
+
     </div>
 </div>
-
-<div ng-app="Room" ng-controller="Chat" class="ng-cloak">
-    <h2>Client Classes</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Person</th>
-                <th>Message</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="animation" ng-repeat="message in messages">
-                <td>{{message.person}}</td>
-                <td>{{message.text}}</td>
-
-            </tr>
-        </tbody>
-
-    </table>
-    <form>
-        <input type="text" ng-model="newMessage" />
-        <input type="submit" ng-click="addMessage()" value="Save" />
-    </form>
-
-
-</div>
-
 
 
 @section scripts {
@@ -66,17 +68,17 @@
         chat = $.connection.roomHub;
         $.connection.hub.start(
             function () {
-                chat.server.joinRoom(@Model);
+                chat.server.joinRoom(@Model.id);
             }).done(function () {
                 //closing stuff here
-                //chat.server.leaveRoom(@Model);
+                //chat.server.leaveRoom(@Model.id);
             });
 
 
 
         var app = angular.module('Room', []);
         app.controller('Chat', function ($scope, $http) {
-            var groupId = @Model;
+            var groupId = @Model.id;
             $scope.userId = "@User.Identity.Name";
 
 
@@ -117,77 +119,106 @@
 
         function testSendingPoint() {
             point = {clientId: 1, pointId: 2, x: 3, y: 4, z: 5 }
-            chat.server.sendpoint(@Model, point);
+            chat.server.sendpoint(@Model.id, point);
             return "sent";
 
         }
 
 
+        app.controller('webRTC', function ($scope, $http) {
+            $scope.instructor = "@Model.instructor.Email";
+            $scope.connectedClients = []
+
+            $(document).ready(function() {
+                connect();
+
+            })
+
+            var selfEasyrtcid = "";
 
 
-    $(document).ready(function() {
-        connect();
+            function connect() {
+                easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
+                //easyrtc.setVideoDims(640, 480);
+                easyrtc.enableAudio(false);
+                easyrtc.enableVideo(false);
+                easyrtc.enableDataChannels(false);
+                easyrtc.setUsername("@User.Identity.Name");
+                easyrtc.joinRoom("@Model.id", null, null, null)
+                easyrtc.setRoomOccupantListener(convertListToButtons);
 
-    })
+                //easyrtc.easyApp("easyrtc.audioVideoSimple", null, ["callerVideo"], loginSuccess, loginFailure);
+                easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
+            }
 
-    var selfEasyrtcid = "";
+            easyrtc.setStreamAcceptor(function (easyrtcid, stream) {
+                //setUpMirror();
+                var video = document.getElementById("callerVideo");
+                easyrtc.setVideoObjectSrc(video, stream);
+                //enable("hangupButton");
+            });
 
 
-    function connect() {
-        easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
-        //easyrtc.setVideoDims(640, 480);
-        easyrtc.enableAudio(false);
-        easyrtc.enableVideo(false);
-        easyrtc.enableDataChannels(false);
-        easyrtc.setUsername("@User.Identity.Name");
-        easyrtc.joinRoom("@Model", null, null, null)
-        easyrtc.setRoomOccupantListener(convertListToButtons);
+            function clearConnectList() {
+                $scope.connectedClients = [];
+            }
 
-        //easyrtc.easyApp("easyrtc.audioVideoSimple", null, ["callerVideo"], loginSuccess, loginFailure);
-        easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
-    }
 
-        easyrtc.setStreamAcceptor(function (easyrtcid, stream) {
-            //setUpMirror();
-            var video = document.getElementById("callerVideo");
-            easyrtc.setVideoObjectSrc(video, stream);
-            //enable("hangupButton");
+            function convertListToButtons(roomName, data, isPrimary) {
+                console.log(roomName);
+                console.log(data);
+                console.log(isPrimary);
+                clearConnectList();
+                for (var easyrtcid in data) {
+
+                    $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
+                    
+                }
+                $scope.$apply();
+
+            }
+
+
+            function performCall(otherEasyrtcid) {
+                easyrtc.hangupAll();
+
+                var successCB = function () { };
+                var failureCB = function () { };
+                easyrtc.call(otherEasyrtcid, successCB, failureCB);
+            }
+
+
+            function loginSuccess(easyrtcid) {
+                selfEasyrtcid = easyrtcid;
+                document.getElementById("status").innerHTML = "Connected";
+            }
+
+
+            function loginFailure(errorCode, message) {
+                easyrtc.showError(errorCode, message);
+            }
+        })
+
+        angular.module('Room').filter('InstructorConnected', function() {
+            return function(user, onlineUsers) {
+                console.log(user);
+                //console.log("here");
+                console.log(onlineUsers);
+           
+
+                for (var i in onlineUsers) {
+
+                    if (onlineUsers[i] == user) {
+                        
+                        return "Instructor Connected";
+                    }
+                }
+                return "Instructor Not Connected";
+
+           
+            };
         });
 
-
-    function clearConnectList() {
-
-    }
-
-
-    function convertListToButtons(roomName, data, isPrimary) {
-        console.log(roomName);
-        console.log(data);
-        console.log(isPrimary);
-        clearConnectList();
-
-
-    }
-
-
-    function performCall(otherEasyrtcid) {
-        easyrtc.hangupAll();
-
-        var successCB = function () { };
-        var failureCB = function () { };
-        easyrtc.call(otherEasyrtcid, successCB, failureCB);
-    }
-
-
-    function loginSuccess(easyrtcid) {
-        selfEasyrtcid = easyrtcid;
-        document.getElementById("status").innerHTML = "Connected";
-    }
-
-
-    function loginFailure(errorCode, message) {
-        easyrtc.showError(errorCode, message);
-    }
 
     </script>
 

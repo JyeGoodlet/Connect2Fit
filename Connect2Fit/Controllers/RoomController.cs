@@ -36,7 +36,10 @@ namespace Connect2Fit.Controllers
 
         public ActionResult ClientRoom(int id = 1)
         {
-            return View(id);
+
+            //get schedule details
+            ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);
+            return View(scheduleItem);
         }
 
         public ActionResult WebRtcTest(int id = 1)
@@ -55,6 +58,9 @@ namespace Connect2Fit.Controllers
             return Json(attendies, JsonRequestBehavior.AllowGet);
            
         }
+
+
+       
 
 
 
