@@ -11,8 +11,10 @@
 <div class="row">
     <div class="col-sm-8">
         <h3>Image frame</h3>
-        <video id="sourceVideo" width="640" height="480" preload autoplay loop muted controls></video>
-        <canvas id="canvas" width="600" height="450"></canvas>
+        <video id="sourceVideo" width="640" height="480" preload  loop muted controls>
+            <source src="~/Content/Research/images/Fallback.mp4" type="video/mp4" />
+        </video>
+        <canvas id="canvas" width="640" height="480"></canvas>
     </div>
     <div class="col-sm-4">
         <h3>Points detecting</h3>
@@ -46,6 +48,7 @@
             this.x = startX;
             this.y = startY;
         };
+        
         var vm = {
             character: ko.observableArray(),
             updatePoints: function (newPoint) {
@@ -56,7 +59,7 @@
                     diffX = Math.abs(point.x - newPoint.x);
                     diffY = Math.abs(point.y - newPoint.y);
                     // 20 is the tracking number, increase it if you want to track faster moving targets
-                    if (diffX < 20 && diffY < 20)
+                    if (diffX < 15 && diffY < 15)
                     {
                         newPoint.name = point.name;
                         vm.character.remove(point);
@@ -81,13 +84,19 @@
         // after page loads
         $(function () {
             // load dummy data into data bind       
-            vm.character.push(new trackingPoint('L Hand', 20, 140));         
-            vm.character.push(new trackingPoint('L Elbow', 150, 140));          
-            vm.character.push(new trackingPoint('L Shoulder', 300, 140));                    
+            vm.character.push(new trackingPoint('L Hand', 180, 240));         
+            vm.character.push(new trackingPoint('L Elbow', 220, 180));          
+            vm.character.push(new trackingPoint('L Shoulder', 265, 115));
+            vm.character.push(new trackingPoint('R Shoulder', 380, 115));
+            vm.character.push(new trackingPoint('R Elbow', 420, 180));
+            vm.character.push(new trackingPoint('R Hand', 440, 240));
+            
+            
             // tracker setup
             var trackYellow = new tracking.ColorTracker(['yellow']);
             // config tracker
-            trackYellow.setMinDimension(5);
+            trackYellow.setMinDimension(1);
+            trackYellow.setMinGroupSize(1);
             trackYellow.on('track', function (event) {
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 if (event.data.length === 0) {
@@ -96,7 +105,8 @@
                     event.data.forEach(function (rect) {
                         context.strokeStyle = rect.color;
                         context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                        vm.updatePoints(new trackingPoint('new', rect.x + rect.width / 2, rect.y + rect.height / 2));
+                        vm.updatePoints(new trackingPoint('new', rect.x + (rect.width / 2), rect.y + rect.height));
+                        //vm.updatePoints(new trackingPoint('new', rect.x, rect.y));
                     });
                 }
                 vm.paintPoints(context);
