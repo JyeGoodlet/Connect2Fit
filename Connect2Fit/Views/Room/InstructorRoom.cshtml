@@ -20,7 +20,7 @@
         <table class="table table-striped">
             <tr ng-repeat="client in clients">
                 <td>{{client.name}}</td>
-                <td>{{client.name | selectedTags:getConnectedClients()}}</td>
+                <td>{{client.name | onlineUsers:getConnectedClients()}}</td>
             </tr>
         </table>
     </div>
@@ -233,17 +233,16 @@
 
     });
 
-    angular.module('Room').filter('selectedTags', function() {
-        return function(tasks, tags) {
-            console.log(tasks);
+    angular.module('Room').filter('onlineUsers', function() {
+        return function(user, onlineUsers) {
+            console.log(user);
             //console.log("here");
-            console.log(tags);
+            console.log(onlineUsers);
            
 
-            for (var i in tags) {
-                //console.log(tasks[i]);
-                //console.log(tasks[i]);
-                if (tags[i] == tasks) {
+            for (var i in onlineUsers) {
+
+                if (onlineUsers[i] == user) {
                         
                         return "Connected";
                     }
