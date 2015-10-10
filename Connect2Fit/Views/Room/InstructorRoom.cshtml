@@ -20,7 +20,10 @@
         <table class="table table-striped">
             <tr ng-repeat="client in clients">
                 <td>{{client.name}}</td>
-                <td>{{client.name | onlineUsers:getConnectedClients()}}</td>
+                <td>
+                    <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
+                    <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
+                </td>
             </tr>
         </table>
     </div>
@@ -229,7 +232,7 @@
 
     });
 
-    angular.module('Room').filter('onlineUsers', function() {
+    angular.module('Room').filter('userOnline', function() {
         return function(user, onlineUsers) {
             console.log(user);
             //console.log("here");
@@ -240,10 +243,10 @@
 
                 if (onlineUsers[i] == user) {
                         
-                        return "Connected";
+                        return true;
                     }
                 }
-                return "Not Connected";
+                return false;
 
            
         };
