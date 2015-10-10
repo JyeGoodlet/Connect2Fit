@@ -12,7 +12,9 @@
         <div class="col-md-4" id="intructorVideos">
 
             <video autoplay="autoplay" id="callerVideo"></video>
-            <span>{{ instructor | InstructorConnected:connectedClients }}</span>
+            <span> Instructor 
+            <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
+            <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span> 
         </div>
         <div id="" class="col-md-7 .col-md-offset-1">
             <span>Clients avatar to go here</span>
@@ -210,10 +212,10 @@
 
                     if (onlineUsers[i] == user) {
                         
-                        return "Instructor Connected";
+                        return true;
                     }
                 }
-                return "Instructor Not Connected";
+                return false;
 
            
             };
