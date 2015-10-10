@@ -2,5 +2,6 @@
 
     <ul  class="list-unstyled" >
         <li ng-repeat="item in class.attendies">{{item}}</li>
+        <li ng-if="class.attendiesCount == 0" >No Attendies</li>
     </ul>
 
