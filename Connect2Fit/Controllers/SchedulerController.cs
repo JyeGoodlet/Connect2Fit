@@ -125,6 +125,8 @@ namespace Connect2Fit.Controllers
                     title = item.ClassName,
                     instructor = item.instructor.Name,
                     attendiesCount = item.ApplicationUsers.Count(),
+                    attendies = (from email in item.ApplicationUsers
+                                 select  email.Email ).ToArray()
                    
                 });
 

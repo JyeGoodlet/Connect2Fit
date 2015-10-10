@@ -20,9 +20,13 @@ namespace Connect2Fit.Models
 
         public int attendiesCount { get; set; }
 
+        public string[] attendies { get; set; }
+
         public bool LoggedInUserAttending { get; set; }
 
         public int maxAttendies { get; set; }
+
+        
        
 
 
