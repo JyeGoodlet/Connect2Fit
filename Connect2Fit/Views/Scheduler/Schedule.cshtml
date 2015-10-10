@@ -30,6 +30,7 @@
 
 <script src='~/Scripts/angular.js'></script>
 <script src="~/Scripts/angular-animate.js"></script>
+<script src="~/Scripts/angular-cookies.js"></script>
 <div ng-app="schedule" ng-controller="controller" class="ng-cloak">
     <h2>Book A Class</h2>
 
@@ -122,8 +123,8 @@
                 sameElse: 'L'
             }
         });
-        var app = angular.module('schedule', ['ngAnimate']);
-        app.controller('controller', function ($scope, $http) {
+        var app = angular.module('schedule', ['ngAnimate', 'ngCookies']);
+        app.controller('controller', function ($scope, $http, $cookies) {
             $scope.userId = "@User.Identity.GetUserId()";
             //hold week days in advance
             $scope.week = [];
@@ -193,6 +194,12 @@
                 //set current day to day selected
                 day.selected = true;
                 $scope.selectedDay = day;
+                //set cookie
+                console.log(day);
+                var expireDate = new Date();
+                expireDate.setDate(expireDate.getDate() + 1);
+                $cookies.put('day', day.date.format("YYYY-MM-DD"), { expires: expireDate });
+
                 //Load day selected data
                 $scope.getData(day.date);
             }
@@ -248,26 +255,36 @@
 
             //on load populate week
             var init = function () {
+
+                var cookieDay = $cookies.get("day");
+                console.log(cookieDay);
+                if (cookieDay != null) {
+                    $scope.selectedDay = moment(cookieDay, "YYYY-MM-DD");
+                }
+                else {
+                    $scope.selectedDay = moment();
+                }
                 for (var x = 0; x < 7; x++) {
 
                     var item = { date: moment().add(x, 'days'), selected: false }
-                    if (x == 0) {
+                    if ($scope.selectedDay.format("YYYY-MM-DD") == item.date.format("YYYY-MM-DD")) {
                         item.selected = true;
-                        $scope.selectedDay = item;
+                        //$scope.selectedDay = item;
                     }
                     $scope.week.push(item);
 
                 }
 
-                //load first days data
-                $scope.getData(moment());
+
+                //load today
+                $scope.getData($scope.selectedDay );
 
             }();
 
             //signalr functions
             chat.client.updateDataClient = function () {
                 $scope.getData($scope.selectedDay.date);
-                
+                console.log("here");
             }
 
 

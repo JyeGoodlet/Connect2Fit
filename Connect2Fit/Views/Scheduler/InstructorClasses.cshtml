@@ -55,7 +55,7 @@
                     
                 </td>
                 <td>
-                <button  tooltip-placement="right" uib-tooltip="Delete" tooltip-trigger="mouseenter" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+                <button ng-click="deleteClass(class)" tooltip-placement="right" uib-tooltip="Double Click To Delete" tooltip-trigger="mouseenter" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
                     </td>
             </tr>
         </tbody>
@@ -172,6 +172,26 @@
 
             }
 
+            $scope.deleteClass = function (instructorsClass) {
+                
+                $http({
+                    method: "post",
+                    url: "/Scheduler/DeleteClass",
+                   
+                    data: {
+                        id: instructorsClass.id
+                    }
+                })
+                .success(
+                    function (deleteStatus) {
+                        delete $scope.classes[instructorsClass.id];
+                        chat.server.updateDataServer();
+                            
+                        
+                    })
+
+            }
+
 
 
 
@@ -186,6 +206,7 @@
             //signalr functions
             chat.client.updateDataClient = function () {
                 $scope.getData(moment());
+                console.log("here");
 
             }
 
