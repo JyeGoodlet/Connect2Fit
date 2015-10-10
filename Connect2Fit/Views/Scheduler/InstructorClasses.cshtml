@@ -36,8 +36,8 @@
                 <td> {{class.duration}}</td>
                 <td>{{class.title}}</td>
                 <td>{{class.instructor}}</td>
-                <td>
-                    <div uib-popover-template="dynamicPopover.templateUrl"  popover-title="{{dynamicPopover.title}}" popover-placement="right" popover-trigger="mouseenter"  >
+                <td width="200">
+                    <div  uib-popover-template="dynamicPopover.templateUrl"  popover-title="{{dynamicPopover.title}}" popover-placement="right" popover-trigger="mouseenter"  >
        
                         <div style="width: 80%; margin-right:3px" class="progress pull-left">
                             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" ng-class="progressbarColor(class)" ng-style="{ 'width': ( class.attendiesCount / class.maxAttendies * 100) + '%' }">
