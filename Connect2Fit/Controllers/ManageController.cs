@@ -62,10 +62,14 @@ namespace Connect2Fit.Controllers
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
+           
 
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
+                Name = GetName(),
+                Email = GetEmail(),
+                AccountType = GetAccountType(),
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -369,6 +373,53 @@ namespace Connect2Fit.Controllers
                 return user.PhoneNumber != null;
             }
             return false;
+        }
+
+        // Returns the users Name. Returns empty string if the user or Name is null
+        private string GetName()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                if (user.Name != null)
+                {
+                    return user.Name;
+                }
+            }
+            return "";
+        }
+
+        // Returns the users Email Address. Returns empty string if the user or Email is null
+        private string GetEmail()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                if (user.Name != null)
+                {
+                    return user.Email;
+                }
+            }
+            return "";
+        }
+
+        // Returns the account type of the user. Will be either "Instructor" or "Client"
+        // or an empty string if it is neither.
+        private string GetAccountType()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                if (UserManager.IsInRole(user.Id, "Instructor"))
+                {
+                    return "Instructor";
+                }
+                else if (UserManager.IsInRole(user.Id, "Client"))
+                {
+                    return "Client";
+                }
+            }
+            return "";
         }
 
         public enum ManageMessageId
