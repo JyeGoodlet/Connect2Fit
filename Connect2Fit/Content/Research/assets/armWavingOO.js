@@ -67,8 +67,9 @@ function armWaving (canvasSelectorLoc) {
    var init =  function() {
        // Grab HTML Canvas
        console.log(canvasSelector)
-       canvas = document.getElementById(canvasSelector);
        
+      canvas = document.getElementById(canvasSelector);
+      console.log(canvas);
         context = canvas.getContext("2d");
 
         start();

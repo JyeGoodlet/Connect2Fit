@@ -53,8 +53,12 @@ namespace Connect2Fit.Controllers
         {
             ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);
 
-            var attendies = from item in scheduleItem.ApplicationUsers
-                            select new { name = item.Email };
+            var attendies = (from item in scheduleItem.ApplicationUsers
+                            select new { id = item.Id, name = item.Email }).ToDictionary
+                            ( g => g.id, g => g);
+
+            
+
             return Json(attendies, JsonRequestBehavior.AllowGet);
            
         }
