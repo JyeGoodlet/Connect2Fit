@@ -56,11 +56,14 @@
 </div>
 </div>
 
+<canvas id="myCanvas" width="500" height="500"></canvas>
+<canvas id="myCanvas2" width="500" height="500"></canvas>
 
 @section scripts {
 <script src='~/Scripts/angular.js'></script>
 <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
 <script src="~/signalr/hubs"></script>
+<script src="~/Content/Research/assets/armWavingOO.js"></script>
 
 <link rel="stylesheet" type="text/css" href="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.css" />
 
@@ -109,14 +112,14 @@
         //signalr functions
         chat.client.message = function (message) {
 
-            console.log(message);
+            //console.log(message);
             $scope.messages.push(message);
             $scope.$apply();
 
         }
 
         chat.client.recievePoint = function(point) {
-            console.log(point);
+            //console.log(point);
 
         }
 
@@ -234,9 +237,9 @@
 
     angular.module('Room').filter('userOnline', function() {
         return function(user, onlineUsers) {
-            console.log(user);
+            //console.log(user);
             //console.log("here");
-            console.log(onlineUsers);
+            //console.log(onlineUsers);
            
 
             for (var i in onlineUsers) {

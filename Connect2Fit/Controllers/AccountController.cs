@@ -213,6 +213,7 @@ namespace Connect2Fit.Controllers
 
         public ActionResult Invite()
         {
+
             return View();
         }
 
