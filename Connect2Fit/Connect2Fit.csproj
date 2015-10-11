@@ -288,6 +288,7 @@
     <Content Include="Content\img\3.jpg" />
     <Content Include="Content\img\4.jpg" />
     <Content Include="Content\img\logo.png" />
+    <Content Include="Content\Research\assets\armWavingOO.js" />
     <Content Include="Content\Research\assets\armWaving.js" />
     <Content Include="Content\Research\assets\dat.gui.min.js" />
     <Content Include="Content\Research\assets\demo.css" />

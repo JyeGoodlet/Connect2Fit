@@ -29,6 +29,13 @@
                     
                     <li>@Html.ActionLink("Book A  Class", "Schedule", "Scheduler")</li>
                     <li>@Html.ActionLink("My Classes", "MyClasses", "Scheduler")</li>
+                        @if (Request.IsAuthenticated && User.IsInRole("Instructor"))
+                        {
+                            <li>@Html.ActionLink("Invite User", "Invite", "Account")</li>
+                        }
+
+
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
