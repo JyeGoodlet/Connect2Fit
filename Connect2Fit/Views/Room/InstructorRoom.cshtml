@@ -7,14 +7,23 @@
 
 <h2>Instructor Room</h2>
 <div ng-app="Room" class="ng-cloak"  >
+<div ng-controller="WebRTC"  class="row" id="ClientAvatars">
+    <div class="col-md-4" ng-repeat="client in clients">
+        <div>Avatar Here</div>
+        <span>{{client.name}}</span>
+        <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
+        <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
+    </div>
+
+</div>
 <div id="status">Connecting</div>
 <div class="row">
     
-    <div class="col-md-4" id="videos">
+    <div class="col-md-3" id="videos">
         <video autoplay="autoplay" id="selfVideo" muted="muted" volume="0"></video>
 
     </div>
-
+    <!--
     <div ng-controller="WebRTC"  class="col-md-7 .col-md-offset-1">
         <h4>Clients</h4>
         <table class="table table-striped">
@@ -27,6 +36,7 @@
             </tr>
         </table>
     </div>
+        -->
 </div>
 <div ng-controller="Chat" >
     <h2>Client Classes</h2>
@@ -56,8 +66,7 @@
 </div>
 </div>
 
-<canvas id="myCanvas" width="500" height="500"></canvas>
-<canvas id="myCanvas2" width="500" height="500"></canvas>
+
 
 @section scripts {
 <script src='~/Scripts/angular.js'></script>
