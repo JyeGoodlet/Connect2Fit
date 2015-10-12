@@ -23,9 +23,15 @@ namespace Connect2Fit
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/theme").Include(
+                      "~/Content/css/bootstrap-theme.min.css",
+                      "~/Content/css/bootstrap.min.css",
+                      "~/Content/css/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/icons").Include(
+                      "~/Content/css/ionicons.min.css",
+                      "~/Content/css/font-awesome.min.css"          
+                ));
         }
     }
 }

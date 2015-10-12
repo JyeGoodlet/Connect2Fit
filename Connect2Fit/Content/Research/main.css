@@ -16,16 +16,16 @@ video, #info, #description {
 
 #canvas-source {
 	display: none;
-	position: absolute;
+	position: relative;
 	top: 40px;
 	left: 10px;
 }
 
 #canvas-blended {
 	display: none;
-	position: absolute;
-	top: 407px;
-	left: 500px;
+	position: relative;
+	top: 40px;
+	left: 10px;
 	width: 150px;
 	height: 113px;
 }

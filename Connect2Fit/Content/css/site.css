@@ -1,0 +1,153 @@
+/*@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);*/
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
+
+body {
+    background-color: #2f4050;
+    color: #676a6c;
+    /*font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    font-family: "Lato", sans-serif;
+    font-size: 13px;
+    overflow-x: hidden;
+}
+
+#wrapper {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.navbar-static-side {
+    position: absolute;
+    width: 220px;
+}
+
+.navbar-default {
+    background: transparent;
+    border-color: #2f4050;
+    border-radius: 0;
+}
+
+#side-menu .navbar-header {
+    padding: 33px 25px;
+    width: 100%;
+    float: none;
+}
+
+.nav > li > a {
+    font-weight: 600;
+    color: #fff;
+    padding: 15px 15px;
+    font-size: 1.1em;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    background: inherit;
+}
+
+.nav > li > a:focus {
+    outline: none;
+}
+
+.side-menu-item:hover {
+    background: #122b40;
+}
+
+#side-menu li[class="side-menu-item"]:hover:nth-child(3n - 1) > a {
+    color: greenyellow;
+}
+
+#side-menu li[class="side-menu-item"]:hover:nth-child(3n + 0) > a {
+    color: orangered;
+}
+
+#side-menu li[class="side-menu-item"]:hover:nth-child(3n + 1) > a {
+    color: red;
+}
+
+.side-menu-item > a > i:first-of-type {
+    padding: 0 10px;
+}
+
+.side-menu-item > a > i:nth-of-type(2) {
+    float: right;
+    position: relative;
+    top: 2px;
+}
+
+.side-menu-item > a:hover > div.colour-block {
+    color: red;
+}
+
+.colour-block {
+    height: 100%;
+    position: absolute;
+    width: 5px;
+    top: 0;
+    left: 0;
+}
+
+.avatar {
+    height: 70px;
+    width: 70px;
+    margin-left: 50px;
+}
+
+.user-name {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #f4f4f4;
+}
+
+.navbar {
+    border: 0 none;
+}
+
+.navbar-static-top {
+    background: #fff;
+    margin-bottom: 0;
+}
+
+.navbar-static-top a {
+    margin: 15px 5px 5px 20px;
+    padding: 4px 12px;
+    font-size: 14px;
+}
+
+#page-wrapper {
+    margin: 0 0 0 220px;
+    padding: 0 15px;
+    background-color: #f3f3f4;
+    min-height: 1220px;
+    position: inherit;
+}
+
+.wrapper {
+    padding: 0 20px;
+}
+
+.wrapper-content {
+    padding: 20px 10px 40px;
+}
+
+.top-nav-links > li {
+    display: inline-block;
+}
+
+.top-nav-links > li:last-child {
+    margin-right: 40px;
+}
+
+.top-nav-links > li > a {
+    margin: 0;
+    padding: 20px 10px;
+    color: #1b6d85;
+}
+
+.icon-button-sm {
+    margin: 0 4px 2px;
+    padding: 2px 5px;
+}
