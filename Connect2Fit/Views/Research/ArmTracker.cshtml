@@ -51,30 +51,18 @@
         
         var vm = {
             character: ko.observableArray(),
-            updatePoints: function (newPoint) {
-                var points = this.character();
-                for (x in points)
-                {
-                    var point = points[x];
-                    diffX = Math.abs(point.x - newPoint.x);
-                    diffY = Math.abs(point.y - newPoint.y);
-                    // 20 is the tracking number, increase it if you want to track faster moving targets
-                    if (diffX < 15 && diffY < 15)
-                    {
-                        newPoint.name = point.name;
-                        vm.character.remove(point);
-                        vm.character.push(newPoint);
-                    }
-                };
+            updatePoint: function (oldPoint, newPoint) {
+                vm.character.remove(oldPoint);
+                vm.character.push(newPoint);
                 return false;
             },
             paintPoints: function (context) {
-                context.font = '25px Helvetica';
+                context.font = '24px Helvetica';
                 context.fillStyle = "#fff";
                 var points = this.character();
                 for (x in points) {
                     var point = points[x];
-                    context.fillText('+', point.x, point.y);
+                    context.fillText('+', point.x - 6, point.y + 6);
                 };
                 return false;
             }
@@ -95,7 +83,7 @@
             // tracker setup
             var trackYellow = new tracking.ColorTracker(['yellow']);
             // config tracker
-            trackYellow.setMinDimension(1);
+            trackYellow.setMinDimension(2);
             trackYellow.setMinGroupSize(1);
             trackYellow.on('track', function (event) {
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -103,10 +91,22 @@
                     // No colors were detected in this frame.
                 } else {
                     event.data.forEach(function (rect) {
+                        // only for testing purposes
                         context.strokeStyle = rect.color;
                         context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                        vm.updatePoints(new trackingPoint('new', rect.x + (rect.width / 2), rect.y + rect.height));
-                        //vm.updatePoints(new trackingPoint('new', rect.x, rect.y));
+                        // different colours for each joint will be added to remove crossover
+                        var newX, newY;
+                        var trackingRange = 15;
+                        vm.character().forEach(function (trackedPoint) {
+                            if ((trackedPoint.x > (rect.x - trackingRange) &&
+                                trackedPoint.x < (rect.x + rect.width + trackingRange)) &&
+                                (trackedPoint.y > (rect.y - trackingRange) &&
+                                trackedPoint.y < (rect.y + rect.height + trackingRange))) {
+                                newX = rect.x + (rect.width / 2);
+                                newY = rect.y + (rect.height / 2);
+                                vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
+                            }      
+                        });
                     });
                 }
                 vm.paintPoints(context);
