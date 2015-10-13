@@ -236,6 +236,18 @@ namespace Connect2Fit.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult DeleteClass(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Json(new { message = "Error: User Not Logged In" });
+            }
+            var classX = db.scheduleItems.Where(x => x.id == id).FirstOrDefault();
+            db.Entry(classX).State = System.Data.Entity.EntityState.Deleted;
+            db.SaveChanges();
+            return Json(new { message = "Error: Deleted" });
+        }
        
         [HttpPost]
         public JsonResult classEventLeave(CalendarEvent classEvent)

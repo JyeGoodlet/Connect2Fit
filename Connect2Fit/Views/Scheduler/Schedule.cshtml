@@ -156,6 +156,7 @@
             $scope.classesDataLink = "/Scheduler/scheduledClasses";
 
             $scope.getData = function (date) {
+                console.log(date);
                 $http({
                     url: $scope.classesDataLink,
                     method: "GET",
@@ -283,6 +284,7 @@
 
             //signalr functions
             chat.client.updateDataClient = function () {
+                
                 $scope.getData($scope.selectedDay.date);
                 console.log("here");
             }
