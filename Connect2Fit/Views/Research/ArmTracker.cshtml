@@ -47,7 +47,7 @@
             this.x = startX;
             this.y = startY;
         };
-        
+
         var vm = {
             character: ko.observableArray(),
             updatePoint: function (oldPoint, newPoint) {
@@ -67,18 +67,18 @@
             }
         };
         ko.applyBindings(vm);
-        
+
         // after page loads
         $(function () {
-            // load dummy data into data bind       
-            vm.character.push(new trackingPoint('L Hand', 180, 240));         
-            vm.character.push(new trackingPoint('L Elbow', 220, 180));          
+            // load dummy data into data bind
+            vm.character.push(new trackingPoint('L Hand', 180, 240));
+            vm.character.push(new trackingPoint('L Elbow', 220, 180));
             vm.character.push(new trackingPoint('L Shoulder', 265, 115));
             vm.character.push(new trackingPoint('R Shoulder', 380, 115));
             vm.character.push(new trackingPoint('R Elbow', 420, 180));
             vm.character.push(new trackingPoint('R Hand', 440, 240));
-            
-            
+
+
             // tracker setup
             var trackYellow = new tracking.ColorTracker(['yellow']);
             // config tracker
@@ -104,7 +104,7 @@
                                 newX = rect.x + (rect.width / 2);
                                 newY = rect.y + (rect.height / 2);
                                 vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
-                            }      
+                            }
                         });
                     });
                 }
@@ -118,11 +118,11 @@
             function windowError(message) {
                 alert(message + " using fallback video");
                 var source = document.createElement('source');
-                source.src = "/Content/img/Fallback.mp4";
+                source.src = "@Url.Content("~/Content/img/Fallback.m4v")";
                 source.type = "video/mp4";
                 $('#sourceVideo').append(source);
                 source = document.createElement('source');
-                source.src = "/Content/img/Fallback.ogv";
+                source.src = "@Url.Content("~/Content/img/Fallback.ogv")";
                 source.type = "video/ogg";
                 $('#sourceVideo').append(source);
             }
