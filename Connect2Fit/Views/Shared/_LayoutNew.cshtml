@@ -1,10 +1,10 @@
 ﻿@{
     ViewData["avatar_path"] = null;
-    ViewData["full_name"] = "Joe Bloggs";
+    ViewData["full_name"] = "Connect2Fit";
 
     if (ViewData["avatar_path"] == null)
     {
-        ViewData["avatar_path"] = "/Content/img/avatar_default.jpg";
+        ViewData["avatar_path"] = "/Content/img/logo.png";
     }
 }
 <!DOCTYPE html>
@@ -77,8 +77,10 @@
 						</a>
 					</div>
 					<ul class="nav navbar-right top-nav-links">
+@if (Request.IsAuthenticated)
+{
 						<li>
-							<span>Welcome back, @ViewData["full_name"]</span>
+							<span>Welcome back, &nbsp; @User.Identity.Name</span>
 						</li>
                         <li>
                             <a href="@Url.Action("Index", "Manage")">
@@ -87,11 +89,23 @@
                             </a>
                         </li>
 						<li>
-							<a href="#">
-								<i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
-								<span>Log Out</span>
+							<a href="/Account/LogOff">
+                                <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
+                                <span>Log Out</span>
 							</a>
 						</li>
+
+}
+else
+{
+    <li>
+        <a href="/Account/Login">
+            <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
+            <span>Log In</span>
+        </a>
+    </li>
+
+}
 					</ul>
 				</nav>
 			</div>
