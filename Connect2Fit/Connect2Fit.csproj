@@ -290,6 +290,7 @@
     <Content Include="Content\img\2.jpg" />
     <Content Include="Content\img\3.jpg" />
     <Content Include="Content\img\4.jpg" />
+    <Content Include="Content\img\Fallback.m4v" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\css\ionicons.min.css" />
     <Content Include="Content\img\avatar_default.jpg" />
@@ -304,7 +305,6 @@
     <Content Include="Content\Research\assets\stats.min.js" />
     <Content Include="Content\Research\assets\tracking.js" />
     <Content Include="Content\Research\images\Animate.jpg" />
-    <Content Include="Content\Research\images\Fallback.mp4" />
     <Content Include="Content\Research\images\moveOnce.jpg" />
     <Content Include="Content\Research\images\Reset.jpg" />
     <Content Include="Content\Research\images\Start.jpg" />
@@ -444,6 +444,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\img\Fallback.ogv" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />

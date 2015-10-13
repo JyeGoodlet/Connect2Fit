@@ -11,8 +11,7 @@
 <div class="row">
     <div class="col-sm-8">
         <h3>Image frame</h3>
-        <video id="sourceVideo" width="640" height="480" preload  loop muted controls>
-            <source src="~/Content/Research/images/Fallback.mp4" type="video/mp4" />
+        <video id="sourceVideo" width="640" height="480" preload autoplay loop muted controls>
         </video>
         <canvas id="canvas" width="640" height="480"></canvas>
     </div>
@@ -115,7 +114,20 @@
             var canvas = $("#canvas")[0];
             var context = canvas.getContext('2d');
             vm.paintPoints(context);
-            tracking.track('#sourceVideo', trackYellow, { camera: true });
+            // error handler
+            function windowError(message) {
+                alert(message + " using fallback video");
+                var source = document.createElement('source');
+                source.src = "/Content/img/Fallback.mp4";
+                source.type = "video/mp4";
+                $('#sourceVideo').append(source);
+                source = document.createElement('source');
+                source.src = "/Content/img/Fallback.ogv";
+                source.type = "video/ogg";
+                $('#sourceVideo').append(source);
+            }
+            window.onerror = windowError;
+            var trackingTask = tracking.track('#sourceVideo', trackYellow, { camera: true });
         });
     </script>
 }
