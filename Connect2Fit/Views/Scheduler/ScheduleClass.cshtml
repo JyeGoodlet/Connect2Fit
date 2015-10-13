@@ -80,8 +80,9 @@
     }
 
     $(document).ready(function() {
-       
-
+        //disabling client side date check as it fails in chrome.
+        //TODO: Fix later
+        jQuery.validator.methods["date"] = function (value, element) { return true; }
 
         $('.datepicker').datetimepicker(
             {
