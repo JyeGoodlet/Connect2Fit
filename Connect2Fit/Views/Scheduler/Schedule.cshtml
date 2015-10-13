@@ -160,7 +160,7 @@
                 $http({
                     url: $scope.classesDataLink,
                     method: "GET",
-                    params: { day: date.format("YYYY-MM-DD") }
+                    params: { day: date.date.format("YYYY-MM-DD") }
                 }).success(function (response) { $scope.classes = response });
             }
 
@@ -202,7 +202,7 @@
                 $cookies.put('day', day.date.format("YYYY-MM-DD"), { expires: expireDate });
 
                 //Load day selected data
-                $scope.getData(day.date);
+                $scope.getData(day);
             }
 
             //book a class
@@ -256,21 +256,22 @@
 
             //on load populate week
             var init = function () {
-
+                var day;
                 var cookieDay = $cookies.get("day");
                 console.log(cookieDay);
                 if (cookieDay != null) {
-                    $scope.selectedDay = moment(cookieDay, "YYYY-MM-DD");
+                    day = moment(cookieDay, "YYYY-MM-DD");
                 }
                 else {
-                    $scope.selectedDay = moment();
+                    day = moment();
                 }
                 for (var x = 0; x < 7; x++) {
 
                     var item = { date: moment().add(x, 'days'), selected: false }
-                    if ($scope.selectedDay.format("YYYY-MM-DD") == item.date.format("YYYY-MM-DD")) {
+                    if (day.format("YYYY-MM-DD") == item.date.format("YYYY-MM-DD")) {
+                        console.log(item);
                         item.selected = true;
-                        //$scope.selectedDay = item;
+                        $scope.selectedDay = item;
                     }
                     $scope.week.push(item);
 
@@ -284,8 +285,10 @@
 
             //signalr functions
             chat.client.updateDataClient = function () {
-                
-                $scope.getData($scope.selectedDay.date);
+                //added a timer so the data is on the server when a called is made
+                setTimeout(function () {
+                    $scope.getData($scope.selectedDay);
+                }, 1000);
                 console.log("here");
             }
 
