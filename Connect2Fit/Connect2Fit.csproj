@@ -305,7 +305,6 @@
     <Content Include="Content\Research\assets\stats.min.js" />
     <Content Include="Content\Research\assets\tracking.js" />
     <Content Include="Content\Research\images\Animate.jpg" />
-    <Content Include="Content\Research\images\Fallback.mp4" />
     <Content Include="Content\Research\images\moveOnce.jpg" />
     <Content Include="Content\Research\images\Reset.jpg" />
     <Content Include="Content\Research\images\Start.jpg" />
