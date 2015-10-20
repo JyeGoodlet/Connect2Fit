@@ -45,16 +45,16 @@
         var app = angular.module('Tracking', []);
 
 
-        // prep work before page loads
-        // setting up the data binding
-        var trackingPoint = function (name, startX, startY) {
-            this.name = name;
-            this.x = startX;
-            this.y = startY;
-        };
 
         app.controller('TrackingPoints', function ($scope, $http) {
-            
+           
+            var trackingPoint = function (name, startX, startY) {
+                this.name = name;
+                this.x = startX;
+                this.y = startY;
+            };
+
+
             $scope.character = {};
             $scope.updatePoint = function (oldPoint, newPoint) {
                 $scope.character[newPoint.name] = newPoint;
@@ -82,71 +82,71 @@
                 $scope.character['R Elbow'] = new trackingPoint('R Elbow', 420, 180);
                 $scope.character['R Hand'] = new trackingPoint('R Hand', 440, 240);
 
+
+
+                
+                vm = $scope;
+
+
+
+                // tracker setup
+                var trackYellow = new tracking.ColorTracker(['yellow']);
+                // config tracker
+                trackYellow.setMinDimension(2);
+                trackYellow.setMinGroupSize(1);
+                trackYellow.on('track', function (event) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    if (event.data.length === 0) {
+                        // No colors were detected in this frame.
+                    } else {
+                        event.data.forEach(function (rect) {
+                            // only for testing purposes
+                            context.strokeStyle = rect.color;
+                            context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                            // different colours for each joint will be added to remove crossover
+                            var newX, newY;
+                            var trackingRange = 15;
+                            for (trackedPoint in vm.character) {
+                                //console.log(vm.character[trackedPoint]);
+                                trackedPoint = vm.character[trackedPoint];
+                                if ((trackedPoint.x > (rect.x - trackingRange) &&
+                                    trackedPoint.x < (rect.x + rect.width + trackingRange)) &&
+                                    (trackedPoint.y > (rect.y - trackingRange) &&
+                                    trackedPoint.y < (rect.y + rect.height + trackingRange))) {
+                                    newX = rect.x + (rect.width / 2);
+                                    newY = rect.y + (rect.height / 2);
+                                    vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
+            
+                                }
+                            };
+                        });
+                    }
+                    vm.paintPoints(context);
+                });
+                // start the colour tracker
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                vm.paintPoints(context);
+                // error handler
+                function windowError(message) {
+                    alert(message + " using fallback video");
+                    var source = document.createElement('source');
+                    source.src = "@Url.Content("~/Content/img/Fallback.m4v")";
+                    source.type = "video/mp4";
+                    $('#sourceVideo').append(source);
+                    source = document.createElement('source');
+                    source.src = "@Url.Content("~/Content/img/Fallback.ogv")";
+                    source.type = "video/ogg";
+                    $('#sourceVideo').append(source);
+                }
+                window.onerror = windowError;
+                var trackingTask = tracking.track('#sourceVideo', trackYellow, { camera: true });
+
+
             }()
 
 
          });
 
-        // after page loads
-        $(function () {
-
-            vm = angular.element(document.getElementById("TrackingPoints")).scope();
-            // load dummy data into data bind
-
-
-
-            // tracker setup
-            var trackYellow = new tracking.ColorTracker(['yellow']);
-            // config tracker
-            trackYellow.setMinDimension(2);
-            trackYellow.setMinGroupSize(1);
-            trackYellow.on('track', function (event) {
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                if (event.data.length === 0) {
-                    // No colors were detected in this frame.
-                } else {
-                    event.data.forEach(function (rect) {
-                        // only for testing purposes
-                        context.strokeStyle = rect.color;
-                        context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                        // different colours for each joint will be added to remove crossover
-                        var newX, newY;
-                        var trackingRange = 15;
-                        for (trackedPoint in vm.character) {
-                            //console.log(vm.character[trackedPoint]);
-                            trackedPoint = vm.character[trackedPoint];
-                            if ((trackedPoint.x > (rect.x - trackingRange) &&
-                                trackedPoint.x < (rect.x + rect.width + trackingRange)) &&
-                                (trackedPoint.y > (rect.y - trackingRange) &&
-                                trackedPoint.y < (rect.y + rect.height + trackingRange))) {
-                                newX = rect.x + (rect.width / 2);
-                                newY = rect.y + (rect.height / 2);
-                                vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
-            
-                            }
-                        };
-                    });
-                }
-                vm.paintPoints(context);
-            });
-            // start the colour tracker
-            var canvas = $("#canvas")[0];
-            var context = canvas.getContext('2d');
-            vm.paintPoints(context);
-            // error handler
-            function windowError(message) {
-                alert(message + " using fallback video");
-                var source = document.createElement('source');
-                source.src = "@Url.Content("~/Content/img/Fallback.m4v")";
-                source.type = "video/mp4";
-                $('#sourceVideo').append(source);
-                source = document.createElement('source');
-                source.src = "@Url.Content("~/Content/img/Fallback.ogv")";
-                source.type = "video/ogg";
-                $('#sourceVideo').append(source);
-            }
-            window.onerror = windowError;
-            var trackingTask = tracking.track('#sourceVideo', trackYellow, { camera: true });
-        });
     </script>
 }
