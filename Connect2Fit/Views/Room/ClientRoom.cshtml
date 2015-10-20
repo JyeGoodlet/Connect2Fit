@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Client Room";
 }
-
+<link rel="stylesheet" href="~/Content/Research/assets/demo.css">
 <h2>Client Room</h2>
 <div ng-app="Room" class="ng-cloak" ng-controller="webRTC">
     <div id="status">Connecting.</div>
@@ -12,12 +12,31 @@
         <div class="col-md-4" id="intructorVideos">
 
             <video autoplay="autoplay" id="callerVideo"></video>
-            <span> Instructor 
+            <span> Instructor </span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span> 
         </div>
         <div id="" class="col-md-7 .col-md-offset-1">
             <span>Clients avatar to go here</span>
+            <div  ng-controller="TrackingPoints" id="TrackingPoints" class="row">
+                <div class="col-sm-8">
+                    <h3>Image frame</h3>
+                    <video id="sourceVideo" width="640" height="480" preload autoplay loop muted controls></video>
+                    <canvas style="background-color:blue;" id="canvas" width="640" height="480"></canvas>
+                </div>
+                <div class="col-sm-4">
+                    <h3>Points detecting</h3>
+                    <p>This tracker will lock on to the tracked colour target which in this case is yellow and update the cross and the data below.</p>
+                    <ul class="list-unstyled list-group">
+                        <li class="list-group-item" ng-repeat="(key, value) in character">
+                            Name: <span class="text-info"> {{value.name}}</span>
+                            x: <span class="text-info">{{value.x}}</span>
+                            y: <span class="text-info">{{value.y}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </div>
     <div id="connectedUsers">
@@ -55,6 +74,7 @@
 
 @section scripts {
 <script src='~/Scripts/angular.js'></script>
+<script src="~/Content/Research/assets/tracking.js"></script>
 <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
 <script src="~/signalr/hubs"></script>
     <link rel="stylesheet" type="text/css" href="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.css" />
@@ -105,14 +125,14 @@
             //signalr functions
             chat.client.message = function (message) {
 
-                console.log(message);
+                //console.log(message);
                 $scope.messages.push(message);
                 $scope.$apply();
 
             }
 
             chat.client.recievePoint = function(point) {
-                console.log(point);
+                //console.log(point);
 
             }
 
@@ -167,14 +187,14 @@
 
 
             function convertListToButtons(roomName, data, isPrimary) {
-                console.log(roomName);
-                console.log(data);
-                console.log(isPrimary);
+                //console.log(roomName);
+                //console.log(data);
+                //console.log(isPrimary);
                 clearConnectList();
                 for (var easyrtcid in data) {
 
                     $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
-                    
+
                 }
                 $scope.$apply();
 
@@ -201,23 +221,133 @@
             }
         })
 
+        app.controller('TrackingPoints', function ($scope, $http) {
+
+            var trackingPoint = function (name, startX, startY) {
+                this.name = name;
+                this.x = startX;
+                this.y = startY;
+            };
+
+
+            $scope.character = {};
+            $scope.updatePoint = function (oldPoint, newPoint) {
+                $scope.character[newPoint.name] = newPoint;
+                //console.log($scope.character['R Shoulder']);
+                $scope.$apply();
+                return false;
+            };
+            $scope.paintPoints = function (context) {
+                context.font = '24px Helvetica';
+                context.fillStyle = "#fff";
+                var points = $scope.character;
+                for (x in points) {
+                    var point = points[x];
+                    context.fillText('+', point.x - 6, point.y + 6);
+                };
+                $.connection.hub.start().done(function () {
+                    chat.server.sendpoint(@Model.id, vm.character);
+                    console.log("hub");
+                });
+
+                return false;
+            };
+
+            //on start
+            var init = function () {
+                $scope.character['L Hand'] = new trackingPoint('L Hand', 180, 240);
+                $scope.character['L Elbow'] = new trackingPoint('L Elbow', 220, 180);
+                $scope.character['L Shoulder'] = new trackingPoint('L Shoulder', 265, 115);
+                $scope.character['R Shoulder'] = new trackingPoint('R Shoulder', 380, 115);
+                $scope.character['R Elbow'] = new trackingPoint('R Elbow', 420, 180);
+                $scope.character['R Hand'] = new trackingPoint('R Hand', 440, 240);
+
+
+
+
+                vm = $scope;
+
+
+
+                // tracker setup
+                var trackYellow = new tracking.ColorTracker(['yellow']);
+                // config tracker
+                trackYellow.setMinDimension(2);
+                trackYellow.setMinGroupSize(1);
+                trackYellow.on('track', function (event) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    if (event.data.length === 0) {
+                        // No colors were detected in this frame.
+                    } else {
+                        event.data.forEach(function (rect) {
+                            // only for testing purposes
+                            context.strokeStyle = rect.color;
+                            context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                            // different colours for each joint will be added to remove crossover
+                            var newX, newY;
+                            var trackingRange = 15;
+                            for (trackedPoint in vm.character) {
+                                //console.log(vm.character[trackedPoint]);
+                                trackedPoint = vm.character[trackedPoint];
+                                if ((trackedPoint.x > (rect.x - trackingRange) &&
+                                    trackedPoint.x < (rect.x + rect.width + trackingRange)) &&
+                                    (trackedPoint.y > (rect.y - trackingRange) &&
+                                    trackedPoint.y < (rect.y + rect.height + trackingRange))) {
+                                    newX = rect.x + (rect.width / 2);
+                                    newY = rect.y + (rect.height / 2);
+                                    vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
+
+                                }
+                            };
+                        });
+                    }
+                    vm.paintPoints(context);
+                });
+                // start the colour tracker
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                vm.paintPoints(context);
+                //send points to server
+
+                
+                // error handler
+                function windowError(message) {
+                    alert(message + " using fallback video");
+                    var source = document.createElement('source');
+                    source.src = "@Url.Content("~/Content/img/Fallback.m4v")";
+                    source.type = "video/mp4";
+                    $('#sourceVideo').append(source);
+                    source = document.createElement('source');
+                    source.src = "@Url.Content("~/Content/img/Fallback.ogv")";
+                    source.type = "video/ogg";
+                    $('#sourceVideo').append(source);
+                }
+                window.onerror = windowError;
+                var trackingTask = tracking.track('#sourceVideo', trackYellow, { camera: true });
+
+
+            }()
+
+
+        });
+
         angular.module('Room').filter('InstructorConnected', function() {
             return function(user, onlineUsers) {
-                console.log(user);
+                //console.log(user);
                 //console.log("here");
-                console.log(onlineUsers);
-           
+                //console.log(onlineUsers);
+
 
                 for (var i in onlineUsers) {
 
                     if (onlineUsers[i] == user) {
-                        
+
                         return true;
                     }
                 }
                 return false;
 
-           
+
             };
         });
 

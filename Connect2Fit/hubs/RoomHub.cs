@@ -27,7 +27,7 @@ namespace Connect2Fit.hubs
 
         }
 
-        public void Sendpoint(string roomId, ClientPoint3D point)
+        public void Sendpoint(string roomId, Dictionary<String, ClientPoint3D> point)
         {
             Clients.OthersInGroup(roomId).recievePoint(point);
         }

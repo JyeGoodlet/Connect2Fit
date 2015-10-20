@@ -9,6 +9,8 @@ namespace Connect2Fit.Models
     {
         public int pointId { get; set; }
 
+        public string name { get; set; }
+
         public int clientId { get; set; }
 
         public double x { get; set; }

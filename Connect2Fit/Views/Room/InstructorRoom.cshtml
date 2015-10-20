@@ -9,8 +9,9 @@
 <div ng-app="Room" ng-cloak   >
 <div ng-controller="WebRTC"  class="row" id="ClientAvatars">
     <div class="col-md-4" ng-repeat="client in clients">
-        <canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
-        <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div
+        <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
+        <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
+        <canvas style="background-color:blue;height:250px;" id="canvas" width="640" height="480"></canvas>
         <span>{{client.name}}</span>
         <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
         <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
@@ -128,20 +129,34 @@
 
         }
 
+        //paint points on to canvas
+        var paintPoints = function (context, points) {
+      
+            context.font = '24px Helvetica';
+            context.fillStyle = "#fff";
+            for (x in points) {
+                var point = points[x];
+                context.fillText('+', point.x - 6, point.y + 6);
+            };
+
+
+            return false;
+        };
+
         chat.client.recievePoint = function(point) {
             //console.log(point);
+            var canvas = $("#canvas")[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            paintPoints(context, point);
+
 
         }
 
 
     });
 
-    function testSendingPoint() {
-        point = {clientId: 1, pointId: 2, x: 3, y: 4, z: 5 }
-        chat.server.sendpoint(@Model.id, point);
-        return "sent";
 
-    }
 
 
 
