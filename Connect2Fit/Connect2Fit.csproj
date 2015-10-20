@@ -1277,6 +1277,7 @@
     <Content Include="Views\Room\WebRtcTest.cshtml" />
     <Content Include="Views\Research\ArmWaving.cshtml" />
     <Content Include="Views\Shared\_LayoutNew.cshtml" />
+    <Content Include="Views\Research\ArmTrackerAngular.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
