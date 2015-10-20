@@ -5,6 +5,7 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
 using Connect2Fit.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Connect2Fit.hubs
 {
@@ -29,7 +30,8 @@ namespace Connect2Fit.hubs
 
         public void Sendpoint(string roomId, Dictionary<String, ClientPoint3D> point)
         {
-            Clients.OthersInGroup(roomId).recievePoint(point);
+            var clientId = Context.User.Identity.GetUserId();
+            Clients.OthersInGroup(roomId).recievePoint(point, clientId);
         }
     }
 }
