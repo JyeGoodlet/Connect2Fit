@@ -223,13 +223,15 @@
 
         app.controller('TrackingPoints', function ($scope, $http) {
 
+
+
             var trackingPoint = function (name, startX, startY) {
                 this.name = name;
                 this.x = startX;
                 this.y = startY;
             };
 
-
+            $scope.time = null;
             $scope.character = {};
             $scope.updatePoint = function (oldPoint, newPoint) {
                 $scope.character[newPoint.name] = newPoint;
@@ -245,13 +247,36 @@
                     var point = points[x];
                     context.fillText('+', point.x - 6, point.y + 6);
                 };
-                $.connection.hub.start().done(function () {
-                    chat.server.sendpoint(@Model.id, vm.character);
-                    console.log("hub");
-                });
+
+                sendPointsServer();
 
                 return false;
             };
+
+            //send points to server/instructor. With ms throttle
+            var sendPointsServer = function() {
+                var throttle = 35;
+                $.connection.hub.start().done(function () {
+                    var diffTime = null;
+                    if ($scope.time == null) {
+
+                        $scope.time = new Date();
+                    }
+                    else {
+                        diffTime = new Date() - $scope.time;
+                        if (diffTime > throttle) {
+                            chat.server.sendpoint(@Model.id, vm.character);
+                            console.log(diffTime);
+                            $scope.time = new Date();
+                        }
+                    }
+
+
+
+
+                });
+
+            }
 
             //on start
             var init = function () {
@@ -309,7 +334,7 @@
                 vm.paintPoints(context);
                 //send points to server
 
-                
+
                 // error handler
                 function windowError(message) {
                     alert(message + " using fallback video");
