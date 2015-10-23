@@ -14,11 +14,11 @@
             <video autoplay="autoplay" id="callerVideo"></video>
             <span> Instructor </span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
-            <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span> 
+            <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
         </div>
         <div id="" class="col-md-7 .col-md-offset-1">
             <span>Clients avatar to go here</span>
-            <div  ng-controller="TrackingPoints" id="TrackingPoints" class="row">
+            <div ng-controller="TrackingPoints" id="TrackingPoints" class="row">
                 <div class="col-sm-8">
                     <h3>Image frame</h3>
                     <video id="sourceVideo" width="640" height="480" preload autoplay loop muted controls></video>
@@ -43,7 +43,7 @@
         <h4>Connected Users</h4>
         <span ng-repeat="client in connectedClients">{{client}}</span>
     </div>
-    <div  ng-controller="Chat" >
+    <div ng-controller="Chat">
         <h2>Client Classes</h2>
         <table class="table table-striped">
             <thead>
@@ -73,10 +73,10 @@
 
 
 @section scripts {
-<script src='~/Scripts/angular.js'></script>
-<script src="~/Content/Research/assets/tracking.js"></script>
-<script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
-<script src="~/signalr/hubs"></script>
+    <script src='~/Scripts/angular.js'></script>
+    <script src="~/Content/Research/assets/tracking.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/hubs"></script>
     <link rel="stylesheet" type="text/css" href="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.css" />
 
     <!-- Assumes global locations for socket.io.js and easyrtc.js -->
@@ -231,7 +231,7 @@
                 this.y = startY;
             };
 
-            $scope.time = null;
+            $scope.time = new Date();
             $scope.character = {};
             $scope.updatePoint = function (oldPoint, newPoint) {
                 $scope.character[newPoint.name] = newPoint;
@@ -257,21 +257,14 @@
             var sendPointsServer = function() {
                 var throttle = 35;
                 $.connection.hub.start().done(function () {
-                    var diffTime = null;
-                    if ($scope.time == null) {
 
+                    diffTime = new Date() - $scope.time;
+                    
+                    if (diffTime > throttle) {
+                        chat.server.sendpoint(@Model.id, vm.character);
+                        console.log(diffTime);
                         $scope.time = new Date();
                     }
-                    else {
-                        diffTime = new Date() - $scope.time;
-                        if (diffTime > throttle) {
-                            chat.server.sendpoint(@Model.id, vm.character);
-                            console.log(diffTime);
-                            $scope.time = new Date();
-                        }
-                    }
-
-
 
 
                 });
