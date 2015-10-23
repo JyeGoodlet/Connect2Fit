@@ -139,12 +139,6 @@
 
         });
 
-        function testSendingPoint() {
-            point = {clientId: 1, pointId: 2, x: 3, y: 4, z: 5 }
-            chat.server.sendpoint(@Model.id, point);
-            return "sent";
-
-        }
 
 
         app.controller('webRTC', function ($scope, $http) {
@@ -162,7 +156,7 @@
             function connect() {
                 easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
                 //easyrtc.setVideoDims(640, 480);
-                easyrtc.enableAudio(false);
+                easyrtc.enableAudio(true);
                 easyrtc.enableVideo(false);
                 easyrtc.enableDataChannels(false);
                 easyrtc.setUsername("@User.Identity.Name");
