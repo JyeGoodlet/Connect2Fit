@@ -12,6 +12,8 @@
         <div class="col-md-4" id="intructorVideos">
 
             <video autoplay="autoplay" id="callerVideo"></video>
+            <video  id="selfAudio"></video>
+            <video id="callerAudio"></video>
             <span> Instructor </span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
@@ -149,7 +151,7 @@
                 connect();
 
             })
-
+            convertListToButtons
             var selfEasyrtcid = "";
 
 
@@ -158,13 +160,16 @@
                 //easyrtc.setVideoDims(640, 480);
                 easyrtc.enableAudio(true);
                 easyrtc.enableVideo(false);
-                easyrtc.enableDataChannels(false);
+                easyrtc.enableDataChannels(true);
                 easyrtc.setUsername("@User.Identity.Name");
                 easyrtc.joinRoom("@Model.id", null, null, null)
                 easyrtc.setRoomOccupantListener(convertListToButtons);
 
-                //easyrtc.easyApp("easyrtc.audioVideoSimple", null, ["callerVideo"], loginSuccess, loginFailure);
-                easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
+                
+                //easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
+
+                easyrtc.easyApp("easyrtc.audioVideoSimple", "callerAudio", ["callerVideo"], loginSuccess, loginFailure);
+                //easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
             }
 
             easyrtc.setStreamAcceptor(function (easyrtcid, stream) {
@@ -256,7 +261,7 @@
                     
                     if (diffTime > throttle) {
                         chat.server.sendpoint(@Model.id, vm.character);
-                        console.log(diffTime);
+                        //console.log(diffTime);
                         $scope.time = new Date();
                     }
 

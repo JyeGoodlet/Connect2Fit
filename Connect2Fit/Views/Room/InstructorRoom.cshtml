@@ -23,7 +23,8 @@
     
     <div class="col-md-3" id="videos">
         <video autoplay="autoplay" id="selfVideo" muted="muted" volume="0"></video>
-
+        <video autoplay="autoplay" id="selfAudio" muted="muted" volume="0"></video>
+        <video id="callerAudio"></video>
     </div>
     <!--
     <div ng-controller="WebRTC"  class="col-md-7 .col-md-offset-1">
@@ -223,11 +224,17 @@
             easyrtc.setVideoDims(320, 240);
             easyrtc.setUsername("@User.Identity.Name");
             easyrtc.joinRoom("@Model.id", null, null, null)
+            easyrtc.enableAudio(true);
             easyrtc.setRoomOccupantListener(convertListToButtons);
 
-            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
+            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfAudio", ["callerAudio"], loginSuccess, loginFailure);
         }
 
+        easyrtc.setStreamAcceptor( function(easyrtcid, stream) {
+            var audio = document.getElementById("callerAudio");
+            easyrtc.setVideoObjectSrc(audio,stream);
+            //enable("hangupButton");
+        });
 
         function clearConnectList() {
             $scope.connectedClients = [];
@@ -240,7 +247,6 @@
             //console.log(data);
             for (var easyrtcid in data) {
 
-                //add each id to angularjs array
                 $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
                 //console.log($scope.connectedClients);
                 //console.log(easyrtc.idToName(easyrtcid) + " connected")
