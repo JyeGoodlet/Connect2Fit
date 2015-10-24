@@ -26,20 +26,7 @@
         <video autoplay="autoplay" id="selfAudio" muted="muted" volume="0"></video>
         <video id="callerAudio"></video>
     </div>
-    <!--
-    <div ng-controller="WebRTC"  class="col-md-7 .col-md-offset-1">
-        <h4>Clients</h4>
-        <table class="table table-striped">
-            <tr ng-repeat="client in clients">
-                <td>{{client.name}}</td>
-                <td>
-                    <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
-                    <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
-                </td>
-            </tr>
-        </table>
-    </div>
-        -->
+
 </div>
 <div ng-controller="Chat" >
     <h2>Client Classes</h2>
@@ -82,10 +69,9 @@
 <!-- Assumes global locations for socket.io.js and easyrtc.js -->
 <script src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.js"></script>
-<!-- <script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/demos/js/demo_audio_video_simple.js"></script> -->
 <script type="text/javascript">
 
-    //signalr connection
+    //signalr connection - used to send messages between clients via server
     chat = $.connection.roomHub;
     $.connection.hub.start(
         function () {
@@ -96,8 +82,11 @@
         });
 
 
-
+    //this is the module that all the angular controllers on this page use
     var app = angular.module('Room', []);
+    
+    
+    //The Chat Controller allows the client to send and recieve text messages. Uses signalr
     app.controller('Chat', function ($scope, $http) {
         var groupId = @Model.id;
         $scope.userId = "@User.Identity.Name";
@@ -161,7 +150,8 @@
 
 
 
-
+    //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
+    //webrtc is peer to peer so video does not pass through server.
     app.controller('WebRTC', function ($scope, $http, $timeout) {
         $scope.clients;
         $scope.connectedClients = [];
@@ -210,8 +200,6 @@
         }();
 
 
-
-        
         $(document).ready(function() {
             connect();
 
@@ -279,12 +267,10 @@
 
     });
 
+
+    //this filter is used to show which clients are offline or online
     angular.module('Room').filter('userOnline', function() {
         return function(user, onlineUsers) {
-            //console.log(user);
-            //console.log("here");
-            //console.log(onlineUsers);
-           
 
             for (var i in onlineUsers) {
 
