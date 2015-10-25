@@ -7,7 +7,7 @@
 
 <h2>Instructor Room</h2>
 <div ng-app="Room" ng-cloak   >
-<div ng-controller="WebRTC"  class="row" id="ClientAvatars">
+<div ng-controller="WebRTCVideo"  class="row" id="ClientAvatars">
     <div class="col-md-4" ng-repeat="client in clients">
         <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
         <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
@@ -23,8 +23,6 @@
     
     <div class="col-md-3" id="videos">
         <video autoplay="autoplay" id="selfVideo" muted="muted" volume="0"></video>
-        <video autoplay="autoplay" id="selfAudio" muted="muted" volume="0"></video>
-        <video id="callerAudio"></video>
     </div>
 
 </div>
@@ -152,7 +150,7 @@
 
     //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
     //webrtc is peer to peer so video does not pass through server.
-    app.controller('WebRTC', function ($scope, $http, $timeout) {
+    app.controller('WebRTCVideo', function ($scope, $http, $timeout) {
         $scope.clients;
         $scope.connectedClients = [];
         
@@ -211,18 +209,15 @@
             easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
             easyrtc.setVideoDims(320, 240);
             easyrtc.setUsername("@User.Identity.Name");
+            easyrtc.enableAudio(false);
             easyrtc.joinRoom("@Model.id", null, null, null)
             easyrtc.enableAudio(true);
             easyrtc.setRoomOccupantListener(convertListToButtons);
 
-            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfAudio", ["callerAudio"], loginSuccess, loginFailure);
+            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
         }
 
-        easyrtc.setStreamAcceptor( function(easyrtcid, stream) {
-            var audio = document.getElementById("callerAudio");
-            easyrtc.setVideoObjectSrc(audio,stream);
-            //enable("hangupButton");
-        });
+
 
         function clearConnectList() {
             $scope.connectedClients = [];
