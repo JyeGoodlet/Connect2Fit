@@ -91,41 +91,47 @@
 						</a>
 					</div>
 					<ul class="nav navbar-right top-nav-links">
-@if (Request.IsAuthenticated)
-{
-						<li>
-							<span>Welcome back, &nbsp; @User.Identity.Name</span>
-						</li>
-                        <li>
-                            <a href="@Url.Action("Index", "Manage")">
-                                <i class="fa fa-cog btn btn-default icon-button-sm"></i>
-                                <span>My Account</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Contact", "Home")">
-                                <i class="fa fa-envelope btn btn-default icon-button-sm"></i>
-                                <span>Contact Us</span>
-                            </a>
-                        </li>
-						<li>
-							<a href="/Account/LogOff">
-                                <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
-                                <span>Log Out</span>
-							</a>
-						</li>
+                        @if (Request.IsAuthenticated)
+                        {
+						    <li>
+							    <span>Welcome back, &nbsp; @User.Identity.Name</span>
+						    </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Manage")">
+                                    <i class="fa fa-cog btn btn-default icon-button-sm"></i>
+                                    <span>My Account</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Contact", "Home")">
+                                    <i class="fa fa-envelope btn btn-default icon-button-sm"></i>
+                                    <span>Contact Us</span>
+                                </a>
+                            </li>
+						    <li>
+							    <a href="/Account/LogOff">
+                                    <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
+                                    <span>Log Out</span>
+							    </a>
+						    </li>
 
-}
-else
-{
-    <li>
-        <a href="/Account/Login">
-            <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
-            <span>Log In</span>
-        </a>
-    </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Url.Action("Contact", "Home")">
+                                    <i class="fa fa-envelope btn btn-default icon-button-sm"></i>
+                                    <span>Contact Us</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Account/Login">
+                                    <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
+                                    <span>Log In</span>
+                                </a>
+                            </li>
 
-}
+                        }
 					</ul>
 				</nav>
 			</div>
