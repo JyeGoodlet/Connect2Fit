@@ -47,6 +47,8 @@
 							<i class="fa fa-angle-right"></i>
 						</a>
 					</li>
+                    @if (User.IsInRole("Client"))
+                    {
 					<li class="side-menu-item">
 
 						<a href="@Url.Action("Schedule", "Scheduler")">
@@ -56,15 +58,27 @@
 							<i class="fa fa-angle-right"></i>
 						</a>
 					</li>
-                    <li class="side-menu-item">
+                    }
+                    @if (User.IsInRole("Instructor"))
+                    {
+                        <li class="side-menu-item">
+                            <a href="@Url.Action("MyClasses", "Scheduler")">
+                                <div class="colour-block"></div>
+                                <i class="fa fa-clock-o"></i>
+                                <span class="nav-label">My Classes</span>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
 
-                        <a href="@Url.Action("MyClasses", "Scheduler")">
-                            <div class="colour-block"></div>
-                            <i class="fa fa-clock-o"></i>
-                            <span class="nav-label">My Classes</span>
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </li>
+                            <a href="@Url.Action("Invite", "Account")">
+                                <div class="colour-block"></div>
+                                <i class="fa fa-user-plus"></i>
+                                <span class="nav-label">Invite User</span>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    }
 				</ul>
 			</div>
 		</nav>
@@ -86,6 +100,12 @@
                             <a href="@Url.Action("Index", "Manage")">
                                 <i class="fa fa-cog btn btn-default icon-button-sm"></i>
                                 <span>My Account</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Contact", "Home")">
+                                <i class="fa fa-envelope btn btn-default icon-button-sm"></i>
+                                <span>Contact Us</span>
                             </a>
                         </li>
 						<li>

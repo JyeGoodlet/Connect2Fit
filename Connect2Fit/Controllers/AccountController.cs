@@ -210,13 +210,58 @@ namespace Connect2Fit.Controllers
             return View( model);
         }
 
-
+        //
+        // GET: /Account/Invite
+        [AllowAnonymous]
         public ActionResult Invite()
         {
-
             return View();
         }
 
+        //
+        // POST: /Account/Invite
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Invite(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    //check if client role exists, if not create client role
+                    var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    if (!roleManager.RoleExists("Client"))
+                    {
+                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                        role.Name = "Client";
+                        roleManager.Create(role);
+
+                    }
+
+                    //when user signs up they have a default role as client.
+                    UserManager.AddToRole(user.Id, "Client");
+
+
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
 
 
         //
