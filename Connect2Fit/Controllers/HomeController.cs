@@ -56,7 +56,7 @@ namespace Connect2Fit.Controllers
                 {
                     var credential = new NetworkCredential
                     {
-                        UserName = "webmaster@connect2fit.com",  // replace with valid value
+                        UserName = "webmaster@connect2fit.com.au",  // replace with valid value
                         Password = "Connect2015"  // replace with valid value
                     };
                     smtp.Credentials = credential;
