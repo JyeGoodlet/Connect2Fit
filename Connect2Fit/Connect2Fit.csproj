@@ -237,6 +237,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CalendarEvent.cs" />
+    <Compile Include="Models\EmailModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
@@ -1281,6 +1282,8 @@
     <Content Include="Views\Research\ArmWaving.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Research\ArmTrackerAngular.cshtml" />
+    <Content Include="Views\Account\Invite.cshtml" />
+    <Content Include="Views\Home\Sent.cshtml" />
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\_LoginNavLinks.cshtml" />
     <Content Include="Views\Account\_RegisterNavLinks.cshtml" />

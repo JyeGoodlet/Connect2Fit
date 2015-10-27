@@ -82,6 +82,7 @@ body > .container-fluid > .navbar.navbar-default {
 .navbar-default .navbar-brand:hover 
 {
     color: #fff;
+    outline: none;
 }
 
 #navlinks > ul > li {

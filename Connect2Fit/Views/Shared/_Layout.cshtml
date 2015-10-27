@@ -14,64 +14,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Connect2Fit</title>
     @Styles.Render("~/Content/bootstrap")
-    @Styles.Render("~/Content/icons")
     @Styles.Render("~/Content/theme")
+    @Styles.Render("~/Content/icons")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
 <body>
-	<div id="wrapper">
-		<nav id="side-menu" class="navbar-default navbar-static-side" role="navigation">
-			<div class="sidebar-collapse">
-				<ul class="nav">
-					<li class="navbar-header">
-						<div class="profile-element">
-							<span>
-								<img class="img-circle avatar" src=@ViewData["avatar_path"] alt="Profile Picture"/>
-							</span>
-							<span class="user-name">@ViewData["full_name"]</span>
-						</div>
-					</li>
-					<li class="side-menu-item"> 
-						<a href="@Url.Action("Index", "Home")">
-							<div class="colour-block"></div>
-							<i class="fa fa-th-large"></i>
-							<span class="nav-label">Dashboard</span>
-							<i class="fa fa-angle-right"></i>
-						</a>
-					</li>
-					<li class="side-menu-item">
-						<a href="@Url.Action("Index", "Research")">
-							<div class="colour-block"></div>
-							<i class="fa fa-calendar"></i>
-							<span class="nav-label">Research</span>
-							<i class="fa fa-angle-right"></i>
-						</a>
-					</li>
-					<li class="side-menu-item">
-
-						<a href="@Url.Action("Schedule", "Scheduler")">
-							<div class="colour-block"></div>
-							<i class="fa fa-clock-o"></i>
-							<span class="nav-label">Book A Class</span>
-							<i class="fa fa-angle-right"></i>
-						</a>
-					</li>
+    <div id="wrapper">
+        <nav id="side-menu" class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav">
+                    <li class="navbar-header">
+                        <div class="profile-element">
+                            <span>
+                                <img class="img-circle avatar" src=@ViewData["avatar_path"] alt="Profile Picture" />
+                            </span>
+                            <span class="user-name">@ViewData["full_name"]</span>
+                        </div>
+                    </li>
                     <li class="side-menu-item">
-
-                        <a href="@Url.Action("MyClasses", "Scheduler")">
+                        <a href="@Url.Action("Index", "Home")">
                             <div class="colour-block"></div>
-                            <i class="fa fa-clock-o"></i>
-                            <span class="nav-label">My Classes</span>
+                            <i class="fa fa-th-large"></i>
+                            <span class="nav-label">Dashboard</span>
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </li>
-				</ul>
-			</div>
-		</nav>
-		<div id="page-wrapper">
-			<div class="row">
-				<nav class="navbar navbar-static-top" role="navigation">
+                    <li class="side-menu-item">
+                        <a href="@Url.Action("Index", "Research")">
+                            <div class="colour-block"></div>
+                            <i class="fa fa-calendar"></i>
+                            <span class="nav-label">Research</span>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                    @if (User.IsInRole("Client"))
+                    {
+                        <li class="side-menu-item">
+
+                            <a href="@Url.Action("Schedule", "Scheduler")">
+                                <div class="colour-block"></div>
+                                <i class="fa fa-clock-o"></i>
+                                <span class="nav-label">Book A Class</span>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+                            <a href="@Url.Action("MyClasses", "Scheduler")">
+                                <div class="colour-block"></div>
+                                <i class="fa fa-clock-o"></i>
+                                <span class="nav-label">My Booked Classes</span>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+
+                    }
+                    @if (User.IsInRole("Instructor"))
+                    {
+                        <li class="side-menu-item">
+                            <a href="@Url.Action("MyClasses", "Scheduler")">
+                                <div class="colour-block"></div>
+                                <i class="fa fa-clock-o"></i>
+                                <span class="nav-label">My Classes</span>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="side-menu-item">
+
+                            <a href="@Url.Action("Invite", "Account")">
+                                <div class="colour-block"></div>
+                                <i class="fa fa-user-plus"></i>
+                                <span class="nav-label">Invite User</span>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+        <div id="page-wrapper">
+            <div class="row">
+                <nav class="navbar navbar-static-top" role="navigation">
                     <ul class="nav navbar-left top-nav-links">
                         <li>
                             <a onclick="toggleSideMenu(); return false;" href="#">
@@ -80,76 +103,88 @@
                             </a>
                         </li>
                     </ul>
-					<ul class="nav navbar-right top-nav-links">
-                    @if (Request.IsAuthenticated)
-                    {
-						<li>
-							<span>Welcome back, &nbsp; @User.Identity.Name</span>
-						</li>
-                        <li>
-                            <a href="@Url.Action("Index", "Manage")">
-                                <i class="fa fa-cog btn btn-default icon-button-sm"></i>
-                                <span>My Account</span>
-                            </a>
-                        </li>
-						<li>
-							<a href="/Account/LogOff">
-                                <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
-                                <span>Log Out</span>
-							</a>
-						</li>
+                    <ul class="nav navbar-right top-nav-links">
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li>
+                                <span>Welcome back, &nbsp; @User.Identity.Name</span>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Manage")">
+                                    <i class="fa fa-cog btn btn-default icon-button-sm"></i>
+                                    <span>My Account</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Contact", "Home")">
+                                    <i class="fa fa-envelope btn btn-default icon-button-sm"></i>
+                                    <span>Contact Us</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Account/LogOff">
+                                    <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
+                                    <span>Log Out</span>
+                                </a>
+                            </li>
 
-}
-else
-{
-    <li>
-        <a href="/Account/Login">
-            <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
-            <span>Log In</span>
-        </a>
-    </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Url.Action("Contact", "Home")">
+                                    <i class="fa fa-envelope btn btn-default icon-button-sm"></i>
+                                    <span>Contact Us</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Account/Login">
+                                    <i class="fa fa-power-off btn btn-danger icon-button-sm"></i>
+                                    <span>Log In</span>
+                                </a>
+                            </li>
 
-}
-					</ul>
-				</nav>
-			</div>
-			<div class="wrapper wrapper-content">
-				@RenderBody()
-			</div>
-		</div>
+                        }
+                    </ul>
+                </nav>
+            </div>
+            <div class="wrapper wrapper-content">
+                @RenderBody()
+            </div>
+        </div>
 
-	</div>
-	<script>
-		function toggleSideMenu() {
-			var pageWrapper = $('#page-wrapper');
-			var sideMenu = $('#side-menu');
+    </div>
+    <script>
+        function toggleSideMenu() {
+            var pageWrapper = $('#page-wrapper');
+            var sideMenu = $('#side-menu');
 
-			var height = $(pageWrapper).css('margin-left').replace('px', '');
+            var height = $(pageWrapper).css('margin-left').replace('px', '');
 
-			if (height > 0) {
-				$(pageWrapper).animate({
-					'margin-left': '0'
-				}, {duration: 400, queue: false});
+            if (height > 0) {
+                $(pageWrapper).animate({
+                    'margin-left': '0'
+                }, { duration: 400, queue: false });
 
-				$(sideMenu).animate({
-					'left': '-220px'
-				}, {duration: 400, queue: false});
-			} else if (height == 0) {
-				$(pageWrapper).animate({
-					'margin-left': '220px'
-				}, {duration: 400, queue: false});
+                $(sideMenu).animate({
+                    'left': '-220px'
+                }, { duration: 400, queue: false });
+            } else if (height == 0) {
+                $(pageWrapper).animate({
+                    'margin-left': '220px'
+                }, { duration: 400, queue: false });
 
-				$(sideMenu).animate({
-					'left': '0'
-				}, {duration: 400, queue: false});
-			}
-		}
-	</script>
-	@Scripts.Render("~/bundles/jquery")
+                $(sideMenu).animate({
+                    'left': '0'
+                }, { duration: 400, queue: false });
+            }
+        }
+    </script>
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script type="text/javascript" src="~/Scripts/moment.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript"  src="~/Scripts/lodash.js"></script>
+    <script type="text/javascript" src="~/Scripts/lodash.js"></script>
     <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css" />
     @RenderSection("scripts", required: false)
 </body>

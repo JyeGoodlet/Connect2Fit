@@ -6,14 +6,12 @@
 }
 <link rel="stylesheet" href="~/Content/Research/assets/demo.css">
 <h2>Client Room</h2>
-<div ng-app="Room" class="ng-cloak" ng-controller="webRTC">
+<div ng-app="Room" class="ng-cloak" ng-controller="webRTCVideo">
     <div id="status">Connecting.</div>
     <div class="row">
         <div class="col-md-4" id="intructorVideos">
 
             <video autoplay="autoplay" id="callerVideo"></video>
-            <video id="selfAudio"></video>
-            <video id="callerAudio"></video>
             <span> Instructor </span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
@@ -150,7 +148,7 @@
 
         //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
         //webrtc is peer to peer so video does not pass through server.
-        app.controller('webRTC', function ($scope, $http) {
+        app.controller('webRTCVideo', function ($scope, $http) {
             $scope.instructor = "@Model.instructor.Email";
             $scope.connectedClients = []
 
@@ -165,19 +163,23 @@
             function connect() {
                 easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
                 //easyrtc.setVideoDims(640, 480);
-                easyrtc.enableAudio(true);
+                easyrtc.enableAudio(false);
                 easyrtc.enableVideo(false);
-                easyrtc.enableDataChannels(true);
+                easyrtc.enableDataChannels(false);
                 easyrtc.setUsername("@User.Identity.Name");
-                easyrtc.joinRoom("@Model.id", null, null, null)
+                easyrtc.joinRoom("@Model.id", null, loginSuccess, loginFailure)
                 easyrtc.setRoomOccupantListener(convertListToButtons);
-
+                //easyrtc.setRoomOccupantListener(null);
 
                 //easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
 
-                easyrtc.easyApp("easyrtc.audioVideoSimple", "callerAudio", ["callerVideo"], loginSuccess, loginFailure);
-                //easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
+                //easyrtc.easyApp("easyrtc.audioVideoSimple", "callerAudio", ["callerVideo"], loginSuccess, loginFailure);
+                easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
             }
+
+
+
+
 
             easyrtc.setStreamAcceptor(function (easyrtcid, stream) {
                 //setUpMirror();
@@ -200,8 +202,9 @@
                 for (var easyrtcid in data) {
 
                     $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
-
+                    //performCall(easyrtcid);
                 }
+
                 $scope.$apply();
 
             }
