@@ -1,10 +1,8 @@
-/*@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);*/
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
 
 body {
     background-color: #2f4050;
     color: #676a6c;
-    /*font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;*/
     font-family: "Lato", sans-serif;
     font-size: 13px;
     overflow-x: hidden;
@@ -13,6 +11,7 @@ body {
 #wrapper {
     width: 100%;
     overflow-x: hidden;
+    min-height: 768px;
 }
 
 .navbar-static-side {
@@ -24,6 +23,10 @@ body {
     background: transparent;
     border-color: #2f4050;
     border-radius: 0;
+}
+
+#side-menu {
+    left: -220px;
 }
 
 #side-menu .navbar-header {
@@ -74,10 +77,6 @@ body {
     top: 2px;
 }
 
-.side-menu-item > a:hover > div.colour-block {
-    color: red;
-}
-
 .colour-block {
     height: 100%;
     position: absolute;
@@ -118,11 +117,10 @@ body {
 }
 
 #page-wrapper {
-    margin: 0 0 0 220px;
+    margin: 0 0 0 0;
     padding: 0 15px;
     background-color: #f3f3f4;
-    min-height: 1220px;
-    position: inherit;
+    min-height: inherit;
 }
 
 .wrapper {
@@ -131,6 +129,10 @@ body {
 
 .wrapper-content {
     padding: 20px 10px 40px;
+}
+
+.wrapper.wrapper-content {
+	padding-top: 60px;
 }
 
 .top-nav-links > li {
@@ -150,4 +152,89 @@ body {
 .icon-button-sm {
     margin: 0 4px 2px;
     padding: 2px 5px;
+}
+
+.row > div[class~="big-button"]:first-of-type {
+    margin-left: 20%;
+    float: left
+}
+
+.row > div[class~="big-button"]:nth-of-type(2) {
+    margin-right: 20%;
+    margin-left: 0;
+    float: right
+}
+
+.big-button {
+    margin-top: 35px;
+    margin-bottom: 35px;
+    padding: 0;
+    white-space: normal;
+    width: 250px;
+    height: 200px;
+    background: #2f4050;
+    color: #EEE;
+    border-radius: 8px;
+}
+
+.big-button > a {
+    height: 100%;
+    display: block;
+    color: inherit;
+    border-radius: inherit;
+}
+
+.big-button > a:hover {
+    text-decoration: none;
+    background: #122b40;
+}
+
+.big-button > a:focus {
+	text-decoration: none;
+	outline: none;
+	color: inherit;
+}
+
+.wrapper-content > div[class~="row"]:nth-child(2n + 1) > div[class~="big-button"]:hover:nth-child(2n + 1) > a {
+    color: yellowgreen;
+}
+
+.wrapper-content > div[class~="row"]:nth-child(2n + 1) > div[class~="big-button"]:hover:nth-child(2n + 2) > a {
+    color: orangered;
+}
+
+.wrapper-content > div[class~="row"]:nth-child(2n + 2) > div[class~="big-button"]:hover:nth-child(2n + 1) > a {
+    color: red;
+}
+
+.wrapper-content > div[class~="row"]:nth-child(2n + 2) > div[class~="big-button"]:hover:nth-child(2n + 2) > a {
+    color: #5bc0de;
+}
+
+.big-button > a > div.panel-body {
+	padding: 0;
+    height: 100%;
+}
+
+.big-button-wrapper {
+	padding: 6px 12px;
+    position: relative;
+    height: 100%;
+}
+
+.big-button-icon {
+    font-size: 4.5em;
+}
+
+.big-button-heading {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.big-button-description {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    width: 100%;
+    padding: inherit;
 }

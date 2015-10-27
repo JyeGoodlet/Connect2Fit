@@ -1,0 +1,101 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
+
+body {
+    font-family: "Lato", sans-serif;
+}
+
+body[class~="login"] {
+    background: #FFF url('../img/login.jpg') left top / 100% no-repeat;
+}
+
+body[class~="register"] {
+    background: #FFF url('../img/register.jpg') left top / 100% no-repeat;
+}
+
+body > .container-fluid {
+    padding: 0;
+}
+
+body > .container-fluid > .navbar.navbar-default {
+    background: rgba(0, 0, 0, 0.7) none repeat scroll 0 0;
+    border: 0 none;
+    border-radius: 0;
+    width: 100%;
+}
+
+.navbar-default .navbar-brand {
+    color: #fff;
+    font-weight: 600;
+}
+
+.content-panel {
+    background: rgba(0, 0, 0, 0.65) none repeat scroll 0 0;
+    border: 0 none;
+    color: #fff;
+    margin-top: 110px
+}
+
+
+.content-panel > .panel-heading,
+.content-panel > .panel-footer {
+    background: rgba(0, 0, 0, 0.35);
+    border: 0;
+}
+
+.content-panel > .panel-heading {
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.content-panel > .panel-heading > .header {
+    margin-top: 10px;
+}
+
+.content-panel > .panel-body > form {
+    margin-top: 15px;
+}
+
+.form-control { 
+    margin-bottom: 11px;
+}
+
+.validation-summary-errors ul {
+    padding-left: 13px;
+}
+
+#remember-me > input[type=checkbox] {
+    position: relative;
+    top: 1px;
+}
+
+#remember-me > label {
+    margin-left: 4px;
+    font-weight: 400;
+}
+
+#navbar-top .container-fluid {
+    padding: 0 50px;
+}
+
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover 
+{
+    color: #fff;
+}
+
+#navlinks > ul > li {
+  border: 1px solid;
+  border-radius: 4px;
+  color: rgb(255, 255, 255);
+  margin-top: 9px;
+  width: 100px;
+}
+
+#navlinks > ul > li > a {
+  color: inherit;
+  font-size: 1.1em;
+  font-weight: 400;
+  padding: 5px;
+  text-align: center;
+}
