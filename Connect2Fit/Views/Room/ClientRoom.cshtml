@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Client Room";
 }
-<link rel="stylesheet" href="~/Content/Research/assets/demo.css">
+<link href="~/Content/css/tracker.css" rel="stylesheet" />
 <h2>Client Room</h2>
 <div ng-app="Room" class="ng-cloak" ng-controller="webRTCVideo">
     <div id="status">Connecting.</div>
@@ -18,11 +18,18 @@
         </div>
         <div id="" class="col-md-7 .col-md-offset-1">
             <span>Clients avatar to go here</span>
-            <div ng-controller="TrackingPoints" id="TrackingPoints" class="row">
+            <div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints" class="row">
                 <div class="col-sm-8">
+                    <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <strong>Warning</strong> using fallback Video.
+                    </div>
                     <h3>Image frame</h3>
-                    <video id="sourceVideo" width="640" height="480" preload autoplay loop muted controls></video>
-                    <canvas style="background-color:blue;" id="canvas" width="640" height="480"></canvas>
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video class="embed-responsive-item" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls></video>
+                        <!-- canvas will be overlaid onto webcam -->
+                        <canvas class="embed-responsive-item tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
+                    </div>
                 </div>
                 <div class="col-sm-4">
                     <h3>Points detecting</h3>
@@ -36,7 +43,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
     </div>
     <div id="connectedUsers">
@@ -243,11 +249,20 @@
 
             $scope.time = new Date();
             $scope.character = {};
+            // set viewport res
+            $scope.cameraX = 640;
+            $scope.cameraY = 480;
             $scope.updatePoint = function (oldPoint, newPoint) {
                 $scope.character[newPoint.name] = newPoint;
                 //console.log($scope.character['R Shoulder']);
                 $scope.$apply();
                 return false;
+            };
+            $scope.scaleX = function (x) {
+                return Math.round($scope.cameraX * x);
+            };
+            $scope.scaleY = function (y) {
+                return Math.round($scope.cameraY * y);
             };
             $scope.paintPoints = function (context) {
                 context.font = '24px Helvetica';
@@ -257,7 +272,7 @@
                     var point = points[x];
                     context.fillText('+', point.x - 6, point.y + 6);
                 };
-
+                //send points to server
                 sendPointsServer();
 
                 return false;
@@ -283,20 +298,24 @@
 
             //on start
             var init = function () {
-                $scope.character['L Hand'] = new trackingPoint('L Hand', 180, 240);
-                $scope.character['L Elbow'] = new trackingPoint('L Elbow', 220, 180);
-                $scope.character['L Shoulder'] = new trackingPoint('L Shoulder', 265, 115);
-                $scope.character['R Shoulder'] = new trackingPoint('R Shoulder', 380, 115);
-                $scope.character['R Elbow'] = new trackingPoint('R Elbow', 420, 180);
-                $scope.character['R Hand'] = new trackingPoint('R Hand', 440, 240);
-
-
-
-
+                $('#camera-error').hide();
+                var x = $scope.scaleX;
+                var y = $scope.scaleY;
+                $scope.character['L Hand'] = new trackingPoint('L Hand', x(0.28), y(0.5));
+                $scope.character['L Elbow'] = new trackingPoint('L Elbow', x(0.34), y(0.37));
+                $scope.character['L Shoulder'] = new trackingPoint('L Shoulder', x(0.41), y(0.24));
+                $scope.character['R Shoulder'] = new trackingPoint('R Shoulder', x(0.59), y(0.24));
+                $scope.character['R Elbow'] = new trackingPoint('R Elbow', x(0.65), y(0.37));
+                $scope.character['R Hand'] = new trackingPoint('R Hand', x(0.68), y(0.5));
+                $scope.character['Head'] = new trackingPoint('Head', x(0.5), y(0.15));
+                $scope.character['Body'] = new trackingPoint('Body', x(0.5), y(0.37));
+                $scope.character['L Hip'] = new trackingPoint('L Hip', x(0.42), y(0.5));
+                $scope.character['R Hip'] = new trackingPoint('R Hip', x(0.57), y(0.5));
+                $scope.character['L Knee'] = new trackingPoint('L Knee', x(0.39), y(0.70));
+                $scope.character['R Knee'] = new trackingPoint('R Knee', x(0.6), y(0.70));
+                $scope.character['L Foot'] = new trackingPoint('L Foot', x(0.34), y(0.90));
+                $scope.character['R Foot'] = new trackingPoint('R Foot', x(0.65), y(0.90));
                 vm = $scope;
-
-
-
                 // tracker setup
                 var trackYellow = new tracking.ColorTracker(['yellow']);
                 // config tracker
@@ -334,26 +353,24 @@
                 // start the colour tracker
                 var canvas = $("#canvas")[0];
                 var context = canvas.getContext('2d');
+                // reference to view model function
                 vm.paintPoints(context);
-                //send points to server
-
-
                 // error handler
                 function windowError(message) {
-                    alert(message + " using fallback video");
+                    div = $('#camera-error');
+                    div.append(message);
+                    div.show();
                     var source = document.createElement('source');
                     source.src = "@Url.Content("~/Content/img/Fallback.m4v")";
                     source.type = "video/mp4";
-                    $('#sourceVideo').append(source);
+                    $('#source-video').append(source);
                     source = document.createElement('source');
                     source.src = "@Url.Content("~/Content/img/Fallback.ogv")";
                     source.type = "video/ogg";
-                    $('#sourceVideo').append(source);
+                    $('#source-video').append(source);
                 }
                 window.onerror = windowError;
-                var trackingTask = tracking.track('#sourceVideo', trackYellow, { camera: true });
-
-
+                var trackingTask = tracking.track('#source-video', trackYellow, { camera: true });
             }()
 
 
