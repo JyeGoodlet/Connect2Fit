@@ -12,6 +12,7 @@ namespace Connect2Fit.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize(Roles = "Instructor,Client")]
         public ActionResult Index()
         {
             return View();
