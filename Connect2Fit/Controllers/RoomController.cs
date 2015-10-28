@@ -20,12 +20,14 @@ namespace Connect2Fit.Controllers
 
 
         // GET: Room
+        [Authorize(Roles = "Instructor,Client")]
         public ActionResult Index(int id)
         {
             return View(id);
         }
 
         //after the views have been created this can be merged into a single Room action. with different views
+        [Authorize(Roles = "Instructor")]
         public ActionResult InstructorRoom(int id = 1)
         {
             //get schedule details
@@ -34,6 +36,7 @@ namespace Connect2Fit.Controllers
             return View(scheduleItem);
         }
 
+        [Authorize(Roles = "Client")]
         public ActionResult ClientRoom(int id = 1)
         {
 
@@ -48,7 +51,7 @@ namespace Connect2Fit.Controllers
 
         }
 
-
+        [Authorize(Roles = "Instructor,Client")]
         public JsonResult GetAttendies(int id)
         {
             ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);

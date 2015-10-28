@@ -26,18 +26,20 @@ namespace Connect2Fit.Controllers
 
 
         // GET: Scheduler
+        [Authorize(Roles = "Instructor,Client")]
         public ActionResult Index()
         {
             return RedirectToAction("Calendar", "Scheduler");
         }
 
-
+        [Authorize(Roles = "Instructor,Client")]
         public ActionResult Calendar()
         {
             return View();
         }
 
         //changing from calendar based system to a 7 day list system
+        [Authorize(Roles = "Instructor,Client")]
         public ActionResult Schedule()
         {
             return View();
@@ -137,6 +139,7 @@ namespace Connect2Fit.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Instructor,Client")]
         public JsonResult ClientsClasses()
         {
             var clientId = User.Identity.GetUserId();
@@ -169,6 +172,7 @@ namespace Connect2Fit.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Instructor,Client")]
         public JsonResult ScheduledClasses(DateTime day)
         {
 
@@ -196,6 +200,7 @@ namespace Connect2Fit.Controllers
 
         //book a class
         [HttpPost]
+        [Authorize(Roles = "Instructor,Client")]
         public JsonResult classEvent(CalendarEvent classEvent)
         {
             //check if user is logged in
@@ -237,6 +242,7 @@ namespace Connect2Fit.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Instructor")]
         public JsonResult DeleteClass(int id)
         {
             if (!User.Identity.IsAuthenticated)
@@ -250,6 +256,7 @@ namespace Connect2Fit.Controllers
         }
        
         [HttpPost]
+        [Authorize(Roles = "Instructor,Client")]
         public JsonResult classEventLeave(CalendarEvent classEvent)
         {
             //check if user is logged in
