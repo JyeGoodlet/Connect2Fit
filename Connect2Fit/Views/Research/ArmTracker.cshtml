@@ -53,6 +53,9 @@
             updatePoint: function (oldPoint, newPoint) {
                 vm.character.remove(oldPoint);
                 vm.character.push(newPoint);
+                vm.character.sort(function (left, right) {
+                    return left.name == right.name ? 0 : (left.name < right.name ? -1 : 1)
+                });
                 return false;
             },
             paintPoints: function (context) {

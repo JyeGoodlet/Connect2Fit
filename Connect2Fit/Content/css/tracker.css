@@ -1,0 +1,4 @@
+﻿.tracking-overlay, #source-video {
+    position: absolute;
+    float: left;
+}
