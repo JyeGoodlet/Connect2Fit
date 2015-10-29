@@ -35,14 +35,17 @@ namespace Connect2Fit.Models
             {
                 var credential = new NetworkCredential
                 {
-                    UserName = "webmaster@connect2fit.com.au",  // replace with valid value
-                    Password = "Connect2015"  // replace with valid value
+                    UserName = "jye.goodlet@gmail.com",  // replace with valid value
+                    Password = "FHmB3iHzFNQ6S8no4HIT3A"  // replace with valid value
                 };
                 smtp.Credentials = credential;
-                smtp.Host = "mail.rathra.crabdance.com";
-                smtp.Port = 25;
-                smtp.EnableSsl = false;
-                smtp.SendMailAsync(message);
+                smtp.Host = "smtp.mandrillapp.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                //smtp.SendMailAsync(message);
+                smtp.Send(message);
+
+         
              
             }
 
