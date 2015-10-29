@@ -10,6 +10,8 @@ namespace Connect2Fit.Models
 
         public int id { get; set; }
 
+        public long orderDate { get; set; }
+
         public string date { get; set; }
 
         public string time { get; set; }

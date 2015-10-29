@@ -110,8 +110,9 @@ namespace Connect2Fit.Controllers
         public JsonResult InstructorsClasses()
         {
             string instructorId = User.Identity.GetUserId();
+            var yesterday = DateTime.Today.AddDays(-1);
             var items = (from item in db.scheduleItems
-                        where (item.instructor.Id == instructorId)
+                        where (item.instructor.Id == instructorId && item.ClassDateTime > yesterday) 
                         select item).ToList();
 
 
@@ -121,6 +122,7 @@ namespace Connect2Fit.Controllers
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
+                    orderDate = item.ClassDateTime.ToFileTimeUtc(),
                     date = item.ClassDateTime.ToShortDateString(),
                     time = item.ClassDateTime.ToShortTimeString(),
                     duration = item.sessionTime,
@@ -147,7 +149,8 @@ namespace Connect2Fit.Controllers
             /* var items = (from item in db.scheduleItems
                          where item.ApplicationUsers.Contains(ClientId) == true
                          select item).ToList(); */
-            var items = db.scheduleItems.Where(x => x.ApplicationUsers.Select(c => c.Id).Contains(clientId)).ToList();
+            var yesterday = DateTime.Today.AddDays(-1);
+            var items = db.scheduleItems.Where(x => x.ApplicationUsers.Select(c => c.Id).Contains(clientId) && x.ClassDateTime > yesterday ).ToList();
 
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
@@ -155,6 +158,7 @@ namespace Connect2Fit.Controllers
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
+                    orderDate = item.ClassDateTime.ToFileTimeUtc(),
                     date = item.ClassDateTime.ToShortDateString(),
                     time = item.ClassDateTime.ToShortTimeString(),
                     duration = item.sessionTime,

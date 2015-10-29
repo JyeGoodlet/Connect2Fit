@@ -20,7 +20,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="animation" ng-repeat="class in classes">
+            <tr class="animation" ng-repeat="class in classes| object2Array | orderBy:'orderDate'">
                 <td>{{class.date}} {{class.time}}</td>
                 <td> {{class.duration}}</td>
                 <td>{{class.title}}</td>
@@ -79,6 +79,15 @@
             }
         });
         var app = angular.module('schedule', ['ngAnimate']);
+        app.filter('object2Array', function () {
+            return function (input) {
+                var out = [];
+                for (i in input) {
+                    out.push(input[i]);
+                }
+                return out;
+            }
+        })
         app.controller('ClientClasses', function ($scope, $http) {
             $scope.userId = "@User.Identity.GetUserId()";
 
