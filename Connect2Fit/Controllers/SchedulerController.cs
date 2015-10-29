@@ -262,6 +262,19 @@ namespace Connect2Fit.Controllers
             {
 
                 //TODO send notication (email)
+                foreach(var attendie in classX.ApplicationUsers)
+                {
+                    EmailModel email = new EmailModel();
+                    email.FromEmail = attendie.Email;
+                    email.FromName = attendie.Name;
+                    email.Message = string.Format("Sorry {0} Class {1} on {2} {3} Has been Cancelled", attendie.Name, classX.ClassName, classX.ClassDateTime.ToShortDateString(), classX.ClassDateTime.ToShortTimeString() );
+
+                    Notification notification = new EmailNotification(email);
+
+                    notification.send();
+                }
+
+
 
                 db.Entry(classX).State = System.Data.Entity.EntityState.Deleted;
                 db.SaveChanges();
