@@ -121,6 +121,7 @@ namespace Connect2Fit.Controllers
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
+                    date = item.ClassDateTime.ToShortDateString(),
                     time = item.ClassDateTime.ToShortTimeString(),
                     duration = item.sessionTime,
                     maxAttendies = item.maxAttendies,
@@ -154,6 +155,7 @@ namespace Connect2Fit.Controllers
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
+                    date = item.ClassDateTime.ToShortDateString(),
                     time = item.ClassDateTime.ToShortTimeString(),
                     duration = item.sessionTime,
                     maxAttendies = item.maxAttendies,

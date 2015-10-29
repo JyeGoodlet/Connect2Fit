@@ -5,20 +5,20 @@
 }
 
 
-            @using (Ajax.BeginForm("ScheduleClass", "Scheduler",
-            new AjaxOptions
-            {
-                UpdateTargetId = "",
-                HttpMethod = "POST",
-                OnSuccess = "closeModal"
-               
-            }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Schedule A Class</h4>
-                </div>
+@using (Ajax.BeginForm("ScheduleClass", "Scheduler",
+                        new AjaxOptions
+                        {
+                            UpdateTargetId = "",
+                            HttpMethod = "POST",
+                            OnSuccess = "closeModal"
+
+                        }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Schedule A Class</h4>
+    </div>
                 <div class="modal-body">
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -46,29 +46,29 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.sessionTime, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-8">
-                                
+
                                 @Html.DropDownListFor(model => model.sessionTime, new List<SelectListItem>
     {
                         new SelectListItem() {Text = "15 minutes", Value="15 minutes"},
                         new SelectListItem() {Text = "30 minutes", Value="30 minutes"},
     }, new { @class = "form-control" })
-                                
+
                                 @Html.ValidationMessageFor(model => model.sessionTime, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                     </div>
                 </div>
-                    <div class="modal-footer">
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input  type="submit" value="Create" class="btn btn-default" />
-                                
-                            </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-default" />
+
                         </div>
                     </div>
-            }
-  
+                </div>
+}
+
 
 
 @Scripts.Render("~/bundles/jqueryval")
@@ -79,7 +79,7 @@
         $('#myModal').modal('toggle');
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         //disabling client side date check as it fails in chrome.
         //TODO: Fix later
         jQuery.validator.methods["date"] = function (value, element) { return true; }
