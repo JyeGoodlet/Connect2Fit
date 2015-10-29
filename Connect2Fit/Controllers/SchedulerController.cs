@@ -256,9 +256,28 @@ namespace Connect2Fit.Controllers
                 return Json(new { message = "Error: User Not Logged In" });
             }
             var classX = db.scheduleItems.Where(x => x.id == id).FirstOrDefault();
-            db.Entry(classX).State = System.Data.Entity.EntityState.Deleted;
-            db.SaveChanges();
-            return Json(new { message = "Error: Deleted" });
+
+            //check if logged in user is owner of class
+            if (classX.instructor.Email == User.Identity.Name)
+            {
+
+                //TODO send notication (email)
+
+                db.Entry(classX).State = System.Data.Entity.EntityState.Deleted;
+                db.SaveChanges();
+                return Json(new { message = "Error: Deleted" });
+
+            }
+
+            else
+            {
+                return Json(new { message = "Error: User Does not have Right to delete this class" });
+
+
+            }
+
+
+
         }
        
         [HttpPost]
