@@ -49,7 +49,7 @@
         </thead>
         <tbody>
             <tr class="animation" ng-repeat="class in classes">
-                <td>{{class.time}}</td>
+                <td>{{class.date}} {{class.time}}</td>
                 <td> {{class.duration}}</td>
                 <td>{{class.title}}</td>
                 <td>{{class.instructor}}</td>
@@ -65,7 +65,7 @@
 
 
                     <button ng-if="class.LoggedInUserAttending == false" ng-disabled="class.attendiesCount == class.maxAttendies" ng-click="bookClass(class)" type="button" class="btn btn-primary pull-right" style="width: 100px;">Book Class</button>
-                    <button ng-if="class.LoggedInUserAttending == true" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger " style="width: 100px;">Leave Class</button> <a class="btn btn btn-success " ng-if="class.LoggedInUserAttending == true" ng-href="/Room/ClientRoom/{{class.id}}">Join Room</a>
+                    <button ng-if="class.LoggedInUserAttending == true" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger " style="width: 100px;">Leave Class</button> <a class="btn btn btn-success " ng-if="class.LoggedInUserAttending == true && nearTime(class.date, class.time)" ng-href="/Room/ClientRoom/{{class.id}}">Join Room</a>
                 </td>
             </tr>
         </tbody>
@@ -251,6 +251,18 @@
 
             }
 
+            $scope.nearTime = function (date, time) {
+                moment.locale('en-AU');
+                classDateTime = moment(date + " " + time, "DD-MM-YYYY HH:mm A");
+                if (classDateTime.isBetween(moment().subtract(1, 'hours'), moment().add(1, 'hours'))) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            }
+
 
 
 
@@ -276,6 +288,11 @@
                     $scope.week.push(item);
 
                 }
+
+                //update the scope everyone minute, this way we can check if time is near
+                setInterval(function () {
+                    $scope.$apply();
+                }, 60000);
 
 
                 //load today

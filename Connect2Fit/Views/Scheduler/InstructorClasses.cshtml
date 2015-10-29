@@ -49,13 +49,13 @@
 
                 </td>
                 <td>
-                    <a class="btn btn btn-success pull-right" ng-href="/Room/InstructorRoom/{{class.id}}">Join Room</a>
+                    <a ng-if="nearTime(class.date, class.time)" class="btn btn btn-success pull-right" ng-href="/Room/InstructorRoom/{{class.id}}">Join Room</a>
 
 
 
                 </td>
                 <td>
-                    <button ng-click="deleteClass(class)" tooltip-placement="right" uib-tooltip="Double Click To Delete" tooltip-trigger="mouseenter" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button ng-dblclick="deleteClass(class)" tooltip-placement="right" uib-tooltip="Double Click To Delete" tooltip-trigger="mouseenter" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
                 </td>
             </tr>
         </tbody>
@@ -64,7 +64,7 @@
     <div>
         @if (User.IsInRole("Instructor"))
         {
-            <button ng-dblclick="createClass(selectedDay)" type="button" class="btn btn-primary">Create A Class</button>
+            <button ng-click="createClass(selectedDay)" type="button" class="btn btn-primary">Create A Class</button>
         }
     </div>
 
@@ -151,6 +151,19 @@
 
             }
 
+
+            $scope.nearTime = function (date, time) {
+                moment.locale('en-AU');
+                classDateTime = moment(date + " " + time, "DD-MM-YYYY HH:mm A");
+                if (classDateTime.isBetween(moment().subtract(1, 'hours'), moment().add(1, 'hours'))) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            }
+
             //hold a list of all the classes
             $scope.classes = [];
             $scope.classesDataLink = "/Scheduler/InstructorsClasses";
@@ -207,6 +220,12 @@
 
             //on load populate week
             var init = function () {
+
+                //update the scope everyone minute, this way we can check if time is near
+                setInterval(function () {
+                    $scope.$apply();
+                }, 60000);
+
 
                 //load first days data
                 $scope.getData(moment());

@@ -192,7 +192,7 @@ namespace Connect2Fit.Controllers
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
             {
-                calEventItems.Add(item.id.ToString(), new CalendarEvent{ id = item.id, time = item.ClassDateTime.ToShortTimeString(), duration = item.sessionTime, maxAttendies = item.maxAttendies,
+                calEventItems.Add(item.id.ToString(), new CalendarEvent{ id = item.id, date = item.ClassDateTime.ToShortDateString(), time = item.ClassDateTime.ToShortTimeString(), duration = item.sessionTime, maxAttendies = item.maxAttendies,
                     title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count(), LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId())) });
 
             }

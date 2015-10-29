@@ -36,7 +36,7 @@
                 <td>
                     
                     <button ng-if="class.LoggedInUserAttending == true" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger  " style="width: 100px;">Leave Class</button>
-                    <a class="btn btn btn-success pull-right" ng-href="/Room/ClientRoom/{{class.id}}">Join Room</a>
+                    <a ng-if="nearTime(class.date, class.time)" class="btn btn btn-success" ng-href="/Room/ClientRoom/{{class.id}}">Join Room</a>
                 </td>
             </tr>
         </tbody>
@@ -90,6 +90,19 @@
         })
         app.controller('ClientClasses', function ($scope, $http) {
             $scope.userId = "@User.Identity.GetUserId()";
+
+
+            $scope.nearTime = function (date, time) {
+                moment.locale('en-AU');
+                classDateTime = moment(date + " " + time, "DD-MM-YYYY HH:mm A");
+                if (classDateTime.isBetween(moment().subtract(1, 'hours'),moment().add(1, 'hours') )) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            }
 
             $scope.progressbarColor = function (classItem) {
                 if (classItem.attendiesCount / classItem.maxAttendies * 100 <= 50) {
@@ -149,11 +162,17 @@
                 //load first days data
                 $scope.getData(moment());
 
+                //update the scope everyone minute, this way we can check if time is near
+                setInterval(function () {
+                    $scope.$apply();
+                }, 60000);
             }();
 
             //signalr functions
             chat.client.updateDataClient = function () {
                 $scope.getData(moment());
+
+                
 
             }
 
