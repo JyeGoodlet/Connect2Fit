@@ -48,12 +48,12 @@ namespace Connect2Fit.Models
 
     public class LoginViewModel
     {
-        [Required]
+        [Required (ErrorMessage ="Please enter your email address.")]
         [Display(Name = "Email")]
-        [EmailAddress]
+        [EmailAddress (ErrorMessage = "Oops! That doesn't look like a valid email to me.")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter your password.")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

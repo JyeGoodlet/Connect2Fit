@@ -17,7 +17,7 @@ body > .container-fluid {
 }
 
 body > .container-fluid > .navbar.navbar-default {
-    background: rgba(0, 0, 0, 0.7) none repeat scroll 0 0;
+    background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;
     border: 0 none;
     border-radius: 0;
     width: 100%;
@@ -29,7 +29,7 @@ body > .container-fluid > .navbar.navbar-default {
 }
 
 .content-panel {
-    background: rgba(0, 0, 0, 0.65) none repeat scroll 0 0;
+    background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;
     border: 0 none;
     color: #fff;
     margin-top: 110px
@@ -62,6 +62,11 @@ body > .container-fluid > .navbar.navbar-default {
 
 .validation-summary-errors ul {
     padding-left: 13px;
+}
+
+.field-validation-error,
+.validation-summary-errors {
+    color: #ee0c0c;
 }
 
 #remember-me > input[type=checkbox] {
