@@ -26,24 +26,31 @@ namespace Connect2Fit.Controllers
             return View(id);
         }
 
-        //after the views have been created this can be merged into a single Room action. with different views
-        [Authorize(Roles = "Instructor")]
-        public ActionResult InstructorRoom(int id = 1)
-        {
-            //get schedule details
-            ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);
-
-            return View(scheduleItem);
-        }
-
-        [Authorize(Roles = "Client")]
-        public ActionResult ClientRoom(int id = 1)
+        [Authorize(Roles = "Instructor,Client")]
+        public ActionResult Room(int id = 1)
         {
 
             //get schedule details
             ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);
-            return View(scheduleItem);
+
+            if (User.IsInRole("Instructor"))
+            {
+                return View("InstructorRoom", scheduleItem);
+            }
+            else if (User.IsInRole("Client"))
+            {
+                return View("ClientRoom", scheduleItem);
+            }
+            else
+            {
+                throw new HttpException("Role Not Found");
+            }
+
+
+           
+
         }
+
 
         public ActionResult WebRtcTest(int id = 1)
         {

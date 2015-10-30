@@ -36,7 +36,7 @@
                 <td>
                     
                     <button ng-if="class.LoggedInUserAttending == true" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger  " style="width: 100px;">Leave Class</button>
-                    <a ng-if="nearTime(class.date, class.time)" class="btn btn btn-success" ng-href="/Room/ClientRoom/{{class.id}}">Join Room</a>
+                    <a ng-if="nearTime(class.date, class.time)" class="btn btn btn-success" ng-href="/Room/Room/{{class.id}}">Join Room</a>
                 </td>
             </tr>
         </tbody>

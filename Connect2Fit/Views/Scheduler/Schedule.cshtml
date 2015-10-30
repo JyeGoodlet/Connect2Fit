@@ -65,7 +65,7 @@
 
 
                     <button ng-if="class.LoggedInUserAttending == false" ng-disabled="class.attendiesCount == class.maxAttendies" ng-click="bookClass(class)" type="button" class="btn btn-primary pull-right" style="width: 100px;">Book Class</button>
-                    <button ng-if="class.LoggedInUserAttending == true" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger " style="width: 100px;">Leave Class</button> <a class="btn btn btn-success " ng-if="class.LoggedInUserAttending == true && nearTime(class.date, class.time)" ng-href="/Room/ClientRoom/{{class.id}}">Join Room</a>
+                    <button ng-if="class.LoggedInUserAttending == true" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger " style="width: 100px;">Leave Class</button> <a class="btn btn btn-success " ng-if="class.LoggedInUserAttending == true && nearTime(class.date, class.time)" ng-href="/Room/Room/{{class.id}}">Join Room</a>
                 </td>
             </tr>
         </tbody>
