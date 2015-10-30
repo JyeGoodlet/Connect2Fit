@@ -33,12 +33,35 @@ namespace Connect2Fit.Controllers
             //get schedule details
             ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);
 
+            //Check if room can be entered yet. (hour before and hour after block)
+            //also check if room exists
+            if (scheduleItem == null || DateTime.Now > scheduleItem.ClassDateTime.AddHours(1) || DateTime.Now < scheduleItem.ClassDateTime.AddHours(-1) )
+            {
+                //redirect to my classes for now
+                return RedirectToAction("MyClasses", "Scheduler");
+
+            }
+
             if (User.IsInRole("Instructor"))
             {
+                //check if user is instructor for the class
+                if (scheduleItem.instructor.Email != User.Identity.Name)
+                {
+                    return RedirectToAction("MyClasses", "Scheduler");
+
+                }
+                 
+
                 return View("InstructorRoom", scheduleItem);
             }
             else if (User.IsInRole("Client"))
             {
+                //check if user is client of the class
+                if (scheduleItem.ApplicationUsers.Where(x => x.Email == User.Identity.Name).ToList().Count == 0)
+                {
+                    return RedirectToAction("MyClasses", "Scheduler");
+                }
+
                 return View("ClientRoom", scheduleItem);
             }
             else
