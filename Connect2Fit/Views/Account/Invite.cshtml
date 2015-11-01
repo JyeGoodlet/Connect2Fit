@@ -1,4 +1,4 @@
-﻿@model Connect2Fit.Models.RegisterViewModel
+﻿@model Connect2Fit.Models.InviteViewModel
 @{
     ViewBag.Title = "Invite a new User";
 }
@@ -11,34 +11,22 @@
     using (Html.BeginForm("Invite", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <h4>Fill in the details to invite a new user to Connect2Fit. (Same as the register page at the moment, will add emailing and temp password soon)</h4>
+        <h4>Enter a name and email address to invite a new user to Connect2Fit.</h4>
+        <h4>A password will be automatically generated and sent to the user.</h4>
         <hr />
         @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
@@ -50,7 +38,7 @@
 }
 else
 {
-    
+    <h3>You are not authorised to view this page. Please log in. </h3>
 }
 
 

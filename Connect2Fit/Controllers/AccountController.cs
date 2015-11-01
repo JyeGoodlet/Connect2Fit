@@ -5,11 +5,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Connect2Fit.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Text.RegularExpressions;
 
 namespace Connect2Fit.Controllers
 {
@@ -223,13 +225,15 @@ namespace Connect2Fit.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Invite(RegisterViewModel model)
+        public async Task<ActionResult> Invite(InviteViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
-
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var password = Membership.GeneratePassword(8, 0);
+                var rnd = new Random();
+                password = Regex.Replace(password, @"[^a-zA-Z0-9]", m => (rnd.Next(0, 10).ToString()));
+                var result = await UserManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
                     //check if client role exists, if not create client role
@@ -245,8 +249,25 @@ namespace Connect2Fit.Controllers
                     //when user signs up they have a default role as client.
                     UserManager.AddToRole(user.Id, "Client");
 
+                    // Sent Invite email to new user.
+                    var body = "Hi {0}! <br />" + 
+                                "You have been invited to Connect2Fit. Please click this link to sign in: <br />" +
+                                "http://connect2fit.azurewebsites.net/" + 
+                                "<br /><br />You username and password are as follows:<br />" +
+                                "Username: {1}<br />Password: {2}";
+                    EmailModel email = new EmailModel();
+                    email.FromEmail = "webmaster@connect2fit.com.au";
+                    email.FromName = "Invites - Connect2Fit";
+                    email.ToEmail = user.Email;
+                    email.Subject = "Connect2Fit - Invitation";
+                    email.Message = string.Format(body, user.Name, user.Email, password);
+                    Notification notification = new EmailNotification(email);
 
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    notification.send();
+                    // Redirect to "Sent" page to display message to end user that email was sent. 
+                    return RedirectToAction("Sent", "Home");
+
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -254,7 +275,7 @@ namespace Connect2Fit.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
