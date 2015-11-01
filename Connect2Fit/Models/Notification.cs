@@ -9,7 +9,6 @@ namespace Connect2Fit.Models
     public interface Notification
     {
 
-
         void send();
 
     }

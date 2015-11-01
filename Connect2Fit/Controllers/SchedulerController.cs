@@ -262,19 +262,19 @@ namespace Connect2Fit.Controllers
             {
 
                 //TODO send notication (email)
-                foreach(var attendie in classX.ApplicationUsers)
+                foreach(var attendee in classX.ApplicationUsers)
                 {
                     EmailModel email = new EmailModel();
-                    email.FromEmail = attendie.Email;
-                    email.FromName = attendie.Name;
-                    email.Message = string.Format("Sorry {0} Class {1} on {2} {3} Has been Cancelled", attendie.Name, classX.ClassName, classX.ClassDateTime.ToShortDateString(), classX.ClassDateTime.ToShortTimeString() );
+                    email.FromEmail = "classes@connect2fit.com.au";
+                    email.FromName = "Connect2Fit - Classes";
+                    email.ToEmail = "justinhart10+55f691ce64b0e7bdce586394+562c8ee6c93209d935c9f59d+89bf4c924ea07f3af7b7788263aabc14e1f86b19@boards.trello.com";
+                    email.Subject = "Connect2Fit - Class Cancelled";
+                    email.Message = string.Format("Sorry {0}!<br /> Class <b>{1}</b> on {2} {3} has been Cancelled.", attendee.Name, classX.ClassName, classX.ClassDateTime.ToShortDateString(), classX.ClassDateTime.ToShortTimeString() );
 
                     Notification notification = new EmailNotification(email);
 
                     notification.send();
                 }
-
-
 
                 db.Entry(classX).State = System.Data.Entity.EntityState.Deleted;
                 db.SaveChanges();
@@ -285,8 +285,6 @@ namespace Connect2Fit.Controllers
             else
             {
                 return Json(new { message = "Error: User Does not have Right to delete this class" });
-
-
             }
 
 

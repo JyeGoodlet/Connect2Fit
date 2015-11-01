@@ -45,28 +45,21 @@ namespace Connect2Fit.Controllers
         {
             if (ModelState.IsValid)
             {
-                var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
-                var message = new MailMessage();
-                message.To.Add(new MailAddress("justinhart10+55f691ce64b0e7bdce586394+562c8ee6c93209d935c9f59d+89bf4c924ea07f3af7b7788263aabc14e1f86b19@boards.trello.com")); 
-                message.From = new MailAddress("developers@connect2fit.com.au"); 
-                message.Subject = "Test Email";
-                message.Body = string.Format(body, model.FromName, model.FromEmail, model.Message);
-                message.IsBodyHtml = true;
 
-                using (var smtp = new SmtpClient())
-                {
-                    var credential = new NetworkCredential
-                    {
-                        UserName = "webmaster@connect2fit.com.au",  // replace with valid value
-                        Password = "Connect2015"  // replace with valid value
-                    };
-                    smtp.Credentials = credential;
-                    smtp.Host = "mail.rathra.crabdance.com";
-                    smtp.Port = 25;
-                    smtp.EnableSsl = false;
-                    await smtp.SendMailAsync(message);
-                    return RedirectToAction("Sent");
-                }
+                var body = "Email From:<br /> {0} ({1})<br /><br />Message:<br />{2}";
+
+                EmailModel email = new EmailModel();
+                email.FromEmail = "contactus@connect2fit.com.au";
+                email.FromName = "Contact Us - Connect2Fit";
+                email.ToEmail = "justin.k.hart@gmail.com";
+                email.Subject = "Connect2Fit - Contact Us Notification";
+                email.Message = string.Format(body, model.FromName, model.FromEmail, model.Message);
+                Notification notification = new EmailNotification(email);
+
+                notification.send();
+
+                return RedirectToAction("Sent");
+
             }
             return View(model);
         }
