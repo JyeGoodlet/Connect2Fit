@@ -1,0 +1,165 @@
+﻿<!-- move demo.css code into client.css -->
+<link href="~/Content/css/tracker.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Avatar Testing";
+}
+
+<!-- add this section to client page -->
+<div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints"  class="row">
+    <div class="col-sm-4">
+        <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <strong>Warning</strong> using fallback Video. 
+        </div>
+        <h3>Image frame</h3>
+            <video class="" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls>
+                <source type="video/ogg" src="/Content/img/Fallback.ogv">
+                <source type="video/mp4" src="/Content/img/Fallback.m4v">
+            </video>     
+            <!-- canvas will be overlaid onto webcam -->
+            <canvas class="tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
+    </div>
+    <div class="col-sm-4">
+        <h3>Avatar</h3>
+        <p>Draw Avatar here</p>
+        
+    </div>
+    <div class="col-sm-4">
+        <h3>Points detecting</h3>
+        <p>This tracker will lock on to the tracked colour target which in this case is yellow and update the cross and the data below.</p>
+        <ul class="list-unstyled list-group" > 
+            <li class="list-group-item" ng-repeat="(key, value) in character">
+                Name: <span class="text-info"> {{value.name}}</span>
+                x: <span class="text-info">{{value.x}}</span>
+                y: <span class="text-info">{{value.y}}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        // databinding references
+    }
+
+    <script src='~/Scripts/angular.js'></script>
+    @{
+        // colour tracker references
+     }
+    <script src="~/Content/Research/assets/tracking.js"></script>
+    <script>
+
+        var app = angular.module('Tracking', []);
+
+
+
+        app.controller('TrackingPoints', function ($scope, $http) {
+           
+            var trackingPoint = function (name, startX, startY) {
+                this.name = name;
+                this.x = startX;
+                this.y = startY;
+            };
+            $scope.character = {};
+            // set viewport res
+            $scope.cameraX = 640;
+            $scope.cameraY = 480;
+            $scope.updatePoint = function (oldPoint, newPoint) {
+                $scope.character[newPoint.name] = newPoint;
+                $scope.$apply();
+                return false;
+            };
+            $scope.scaleX = function (x) {
+                return Math.round($scope.cameraX * x);
+            };
+            $scope.scaleY = function (y) {
+                return Math.round($scope.cameraY * y);
+            };
+            $scope.paintPoints = function (context) {
+                context.font = '24px Helvetica';
+                context.fillStyle = "#fff";
+                var points = $scope.character;
+                for (x in points) {
+                    var point = points[x];
+                    context.fillText('+', point.x - 6, point.y + 6);
+                };
+                return false;
+            };
+
+            //on start
+            var init = function () {
+                //640, 480
+                $('#camera-error').hide();
+                var x = $scope.scaleX;
+                var y = $scope.scaleY;
+                $scope.character['L Hand'] = new trackingPoint('L Hand', x(0.28), y(0.6));
+                $scope.character['L Elbow'] = new trackingPoint('L Elbow', x(0.34), y(0.37));
+                $scope.character['L Shoulder'] = new trackingPoint('L Shoulder', x(0.41), y(0.24));
+                $scope.character['R Shoulder'] = new trackingPoint('R Shoulder', x(0.59), y(0.24));
+                $scope.character['R Elbow'] = new trackingPoint('R Elbow', x(0.65), y(0.37));
+                $scope.character['R Hand'] = new trackingPoint('R Hand', x(0.68), y(0.6));
+                $scope.character['Head'] = new trackingPoint('Head', x(0.5), y(0.15));
+                $scope.character['Body'] = new trackingPoint('Body', x(0.5), y(0.37));
+                $scope.character['L Hip'] = new trackingPoint('L Hip', x(0.42), y(0.5));
+                $scope.character['R Hip'] = new trackingPoint('R Hip', x(0.57), y(0.5));
+                $scope.character['L Knee'] = new trackingPoint('L Knee', x(0.39), y(0.70));
+                $scope.character['R Knee'] = new trackingPoint('R Knee', x(0.57), y(0.70));
+                $scope.character['L Foot'] = new trackingPoint('L Foot', x(0.38), y(0.90));
+                $scope.character['R Foot'] = new trackingPoint('R Foot', x(0.58), y(0.90));
+                vm = $scope;
+
+
+                // tracker setup
+                var trackYellow = new tracking.ColorTracker(['yellow']);
+                // config tracker
+                trackYellow.setMinDimension(2);
+                trackYellow.setMinGroupSize(1);
+                trackYellow.on('track', function (event) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    if (event.data.length === 0) {
+                        // No colors were detected in this frame.
+                    } else {
+                        event.data.forEach(function (rect) {
+                            // only for testing purposes
+                            context.strokeStyle = rect.color;
+                            context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                            // different colours for each joint will be added to remove crossover
+                            var newX, newY;
+                            var trackingRange = 15;
+                            for (trackedPoint in vm.character) {
+                                //console.log(vm.character[trackedPoint]);
+                                trackedPoint = vm.character[trackedPoint];
+                                if ((trackedPoint.x > (rect.x - trackingRange) &&
+                                    trackedPoint.x < (rect.x + rect.width + trackingRange)) &&
+                                    (trackedPoint.y > (rect.y - trackingRange) &&
+                                    trackedPoint.y < (rect.y + rect.height + trackingRange))) {
+                                    newX = rect.x + (rect.width / 2);
+                                    newY = rect.y + (rect.height / 2);
+                                    // reference to view model function
+                                    vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
+            
+                                }
+                            };
+                        });
+                    }
+                    // reference to view model function
+                    vm.paintPoints(context);
+                });
+                // start the colour tracker
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                // initial painting of the points
+                vm.paintPoints(context);
+                
+                var trackingTask = tracking.track('#source-video', trackYellow);
+
+
+            }()
+
+
+         });
+
+    </script>
+}

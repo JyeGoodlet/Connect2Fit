@@ -48,5 +48,10 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
+        // GET: Avatar Test Script
+        public ActionResult AvatarTesterAngular()
+        {
+            return View();
+        }
     }
 }
