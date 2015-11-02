@@ -245,6 +245,7 @@
     <Compile Include="Models\ClientPoint3d.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\ScheduledItem.cs" />
+    <Compile Include="Models\UIHelperModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1258,7 +1259,7 @@
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\_ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\ManageLogins.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
@@ -1290,6 +1291,10 @@
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\_LoginNavLinks.cshtml" />
     <Content Include="Views\Account\_RegisterNavLinks.cshtml" />
+    <Content Include="Views\Manage\_ChangesButtons.cshtml" />
+    <Content Include="Views\Manage\_EditButton.cshtml" />
+    <Content Include="Views\Manage\_BasicInfo.cshtml" />
+    <Content Include="Views\Shared\_FlashMessage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />

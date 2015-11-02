@@ -238,3 +238,36 @@ body {
     width: 100%;
     padding: inherit;
 }
+
+/* PANELS */
+
+.panel.panel-default {
+    margin: 15px auto;
+    width: 50%;
+}
+
+.panel-body {
+    background: #2f4050;
+    color: #fff;
+}
+
+.edit-button {
+  float: right;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 10px 15px;
+}
+
+.validation-summary-errors,
+.field-validation-error
+{
+    color: #ee0c0c;
+}
+
+.changes-buttons .btn {
+    width: 48%;
+}
+
+.changes-buttons input[type="reset"] {
+    float: right;
+}

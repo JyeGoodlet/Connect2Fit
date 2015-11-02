@@ -52,31 +52,76 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        //public async Task<ActionResult> Index(ManageMessageId? message)
+        public ActionResult Index(ManageMessageId? message)
         {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : "";
+
+            var StatusMessage = GenerateStatusMessage(message);
+            if (StatusMessage != null)
+            {
+                ViewBag.FlashMessage = StatusMessage;
+            }
+
+            var model = GenerateModel();
+            return View(model);
+
+
+            //var userId = User.Identity.GetUserId();
+            //var model = new IndexViewModel
+            //{
+            //    Name = GetName(),
+            //    Email = GetEmail(),
+            //    AccountType = GetAccountType(),
+            //    HasPassword = HasPassword(),
+            //    PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
+            //    TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
+            //    Logins = await UserManager.GetLoginsAsync(userId),
+            //    BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+            //};
+
+
+        }
+
+        //
+        // POST: /Manage/UpdateBasicInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateBasicInfo(BasicInfoViewModel model)
+        {
+            var fullModel = GenerateModel();
+            fullModel.BasicInfoModel = model;
+
+            if (!ModelState.IsValid)
+            {
+                return View("Index", fullModel);
+            }
+
+            // Get the current user
+            var user = UserManager.FindById(User.Identity.GetUserId());
+
+            // Update name
+            user.Name = model.Name;
+
+            // Update email
+            user.UserName = model.Email;
+            user.Email = model.Email;
+
+            // Save changes
+            var result = UserManager.Update(user);
            
 
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            if (result.Succeeded)
             {
-                Name = GetName(),
-                Email = GetEmail(),
-                AccountType = GetAccountType(),
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
+                user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+
+                return RedirectToAction("Index", new { Message = ManageMessageId.BasicInfoUpdateSuccess });
+            }
+            AddErrors(result);
+            return View("Index", fullModel);
         }
 
         //
@@ -217,10 +262,10 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Manage/ChangePassword
-        public ActionResult ChangePassword()
-        {
-            return View();
-        }
+        //public ActionResult ChangePassword()
+        //{
+        //    return View();
+        //}
 
         //
         // POST: /Manage/ChangePassword
@@ -228,10 +273,14 @@ namespace Connect2Fit.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            var fullModel = GenerateModel();
+            fullModel.ChangePasswordModel = model;
+
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Index", fullModel);
             }
+
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
@@ -242,8 +291,11 @@ namespace Connect2Fit.Controllers
                 }
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
-            AddErrors(result);
-            return View(model);
+            else
+            {
+                AddErrors(result);
+                return View("Index", fullModel);
+            }
         }
 
         //
@@ -336,6 +388,34 @@ namespace Connect2Fit.Controllers
         }
 
 #region Helpers
+
+        private FullViewModel GenerateModel()
+        {
+            // Basic Info Model
+            var basic = new BasicInfoViewModel()
+            {
+                Name = GetName(),
+                Email = GetEmail(),
+                AccountType = GetAccountType()
+            };
+
+            // Change Password Model
+            var password = new ChangePasswordViewModel()
+            {
+
+            };
+
+            // Avatar Model
+
+            return new FullViewModel()
+            {
+                BasicInfoModel = basic,
+                ChangePasswordModel = password
+            };
+
+
+        }
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -422,6 +502,53 @@ namespace Connect2Fit.Controllers
             return "";
         }
 
+        private ApplicationUser GetUser()
+        {
+            return UserManager.FindById(User.Identity.GetUserId());
+        }
+
+        private FlashMessage GenerateStatusMessage(ManageMessageId? message)
+        {
+            var flash = new FlashMessage();
+            switch (message)
+            {
+                case ManageMessageId.AddPhoneSuccess:
+                    flash.Message = "Your phone number was added.";
+                    flash.Context = FlashMessage.ContextId.Success;
+                    break;
+                case ManageMessageId.BasicInfoUpdateSuccess:
+                    flash.Message = "Your information has been updated.";
+                    flash.Context = FlashMessage.ContextId.Success;
+                    break;
+                case ManageMessageId.ChangePasswordSuccess:
+                    flash.Message = "Your password has been changed.";
+                    flash.Context = FlashMessage.ContextId.Success;
+                    break;
+                case ManageMessageId.Error:
+                    flash.Message = "Uh oh! An error has occurred.";
+                    flash.Context = FlashMessage.ContextId.Danger;
+                    break;
+                case ManageMessageId.RemovePhoneSuccess:
+                    flash.Message = "Your phone number was removed.";
+                    flash.Context = FlashMessage.ContextId.Info;
+                    break;
+                case ManageMessageId.SetPasswordSuccess:
+                    flash.Message = "Your password has been set.";
+                    flash.Context = FlashMessage.ContextId.Success;
+                    break;
+                case ManageMessageId.SetTwoFactorSuccess:
+                    flash.Message = "Your two-factor authentication provider has been set.";
+                    flash.Context = FlashMessage.ContextId.Success;
+                    break;
+                default:
+                    flash = null;
+                    break;
+
+            }
+
+            return flash;
+        }
+
         public enum ManageMessageId
         {
             AddPhoneSuccess,
@@ -430,6 +557,7 @@ namespace Connect2Fit.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
+            BasicInfoUpdateSuccess,
             Error
         }
 

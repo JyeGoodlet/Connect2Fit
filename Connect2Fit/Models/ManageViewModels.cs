@@ -46,17 +46,17 @@ namespace Connect2Fit.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Current Password")]
         public string OldPassword { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "New Password")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
+        [Display(Name = "Confirm New Password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
@@ -85,5 +85,28 @@ namespace Connect2Fit.Models
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+    }
+
+    public class BasicInfoViewModel
+    {
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        public string AccountType { get; set; }
+
+    }
+
+    // The FullViewModel contains a model for each panel on the 'My Account' page,
+    // which are stored as their own partial and require their own respective models.
+    // For example, the 'Basic Info' panel uses the BasicInfoViewModel model which
+    // contains all the information required to correctly render said panel.
+    public class FullViewModel
+    {
+        public BasicInfoViewModel BasicInfoModel { get; set; }
+        public ChangePasswordViewModel ChangePasswordModel { get; set; }
     }
 }
