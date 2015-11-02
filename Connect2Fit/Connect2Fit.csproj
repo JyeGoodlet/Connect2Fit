@@ -1293,6 +1293,10 @@
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\_LoginNavLinks.cshtml" />
     <Content Include="Views\Account\_RegisterNavLinks.cshtml" />
+    <Content Include="Views\Shared\_FlashMessage.cshtml" />
+    <Content Include="Views\Manage\_BasicInfo.cshtml" />
+    <Content Include="Views\Manage\_ChangesButtons.cshtml" />
+    <Content Include="Views\Manage\_EditButton.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
