@@ -1,27 +1,31 @@
 ﻿<!-- move demo.css code into client.css -->
 <link href="~/Content/css/tracker.css" rel="stylesheet" />
-<link href="~/Content/css/flipclock.css" rel="stylesheet" />
 @{
-    ViewBag.Title = "Arm Tracker";
+    ViewBag.Title = "Avatar Testing";
 }
 
 <!-- add this section to client page -->
 <div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints"  class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-4">
         <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
             <strong>Warning</strong> using fallback Video. 
         </div>
         <h3>Image frame</h3>
-        <video class="" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls></video>
-        <!-- canvas will be overlaid onto webcam -->
-        <canvas class="tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
-        <div class="countdown-clock" ></div>
+            <video class="" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls>
+                <source type="video/ogg" src="/Content/img/Fallback.ogv">
+                <source type="video/mp4" src="/Content/img/Fallback.m4v">
+            </video>     
+            <!-- canvas will be overlaid onto webcam -->
+            <canvas class="tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
+    </div>
+    <div class="col-sm-4">
+        <h3>Avatar</h3>
+        <p>Draw Avatar here</p>
+        
     </div>
     <div class="col-sm-4">
         <h3>Points detecting</h3>
-        <button id="startTracker">Start</button>
-        <button id="restartTracker">Re-Start</button>
         <p>This tracker will lock on to the tracked colour target which in this case is yellow and update the cross and the data below.</p>
         <ul class="list-unstyled list-group" > 
             <li class="list-group-item" ng-repeat="(key, value) in character">
@@ -36,18 +40,23 @@
 
 
 @section Scripts {
-    @{ // databinding references
+    @{
+        // databinding references
     }
+
     <script src='~/Scripts/angular.js'></script>
-    @{ // colour tracker references
+    @{
+        // colour tracker references
      }
     <script src="~/Content/Research/assets/tracking.js"></script>
-    @{ // flip clock references
-    }
-    <script src="~/Scripts/flipclock.min.js"></script>
     <script>
+
         var app = angular.module('Tracking', []);
+
+
+
         app.controller('TrackingPoints', function ($scope, $http) {
+           
             var trackingPoint = function (name, startX, startY) {
                 this.name = name;
                 this.x = startX;
@@ -78,34 +87,11 @@
                 };
                 return false;
             };
-            $scope.startTracker = function (task, delay) {
-                // start tracking after 10 seconds
-                $('.countdown-clock').show();
-                var clock = $('.countdown-clock').FlipClock(99,{
-                    clockFace: 'Counter',
-                    autoStart: false,
-                    countdown: true,
-                });
-                clock.setTime(delay);
-                clock.start();
-                setTimeout(function () { setInterval(function () { clock.decrement(); }, 1000) });
-                setTimeout(function () {
-                    task.run();
-                    clock.stop();
-                    $('.countdown-clock').hide();
-                }, (delay+1) * 1000);
-                return false;
-            };
-            $scope.restartTracker = function (context, task, delay) {
-                task.stop();
-                context.clearRect(0, 0, $scope.cameraX, $scope.cameraY);
-                $scope.character = {};
-                $scope.setPaintPoints();
-                $scope.$apply();
-                $scope.paintPoints(context);
-                $scope.startTracker(task, delay);
-            };
-            $scope.setPaintPoints = function () {
+
+            //on start
+            var init = function () {
+                //640, 480
+                $('#camera-error').hide();
                 var x = $scope.scaleX;
                 var y = $scope.scaleY;
                 $scope.character['L Hand'] = new trackingPoint('L Hand', x(0.28), y(0.6));
@@ -122,21 +108,13 @@
                 $scope.character['R Knee'] = new trackingPoint('R Knee', x(0.57), y(0.70));
                 $scope.character['L Foot'] = new trackingPoint('L Foot', x(0.38), y(0.90));
                 $scope.character['R Foot'] = new trackingPoint('R Foot', x(0.58), y(0.90));
-            };
-            //on start
-            var init = function () {
-                //640, 480
-                $('#camera-error').hide();
                 vm = $scope;
-                vm.setPaintPoints();
-                //
-                var canvas = $("#canvas")[0];
-                var context = canvas.getContext('2d');
-                vm.paintPoints(context);
+
+
                 // tracker setup
                 var trackYellow = new tracking.ColorTracker(['yellow']);
                 // config tracker
-                trackYellow.setMinDimension(1);
+                trackYellow.setMinDimension(2);
                 trackYellow.setMinGroupSize(1);
                 trackYellow.on('track', function (event) {
                     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -161,7 +139,7 @@
                                     newY = rect.y + (rect.height / 2);
                                     // reference to view model function
                                     vm.updatePoint(trackedPoint, new trackingPoint(trackedPoint.name, newX, newY));
-
+            
                                 }
                             };
                         });
@@ -169,34 +147,19 @@
                     // reference to view model function
                     vm.paintPoints(context);
                 });
-
-                // error handler
-                var windowError = function (message) {
-                    div = $('#camera-error');
-                    div.append(message);
-                    div.show();
-                    var source = document.createElement('source');
-                    source.src = "@Url.Content("~/Content/img/Fallback.m4v")";
-                    source.type = "video/mp4";
-                    $('#source-video').append(source);
-                    source = document.createElement('source');
-                    source.src = "@Url.Content("~/Content/img/Fallback.ogv")";
-                    source.type = "video/ogg";
-                    $('#source-video').append(source);
-                    $scope.startTracker(trackingTask, 0);
-                };
-                window.onerror = windowError;
                 // start the colour tracker
-                var trackingTask = tracking.track('#source-video', trackYellow, { camera: true });
-                trackingTask.stop();
-                // start button
-                $("#startTracker").click(function () {
-                    $scope.startTracker(trackingTask, 10);
-                });
-                $("#restartTracker").click(function () {
-                    $scope.restartTracker(context, trackingTask, 10);
-                });
-            }();
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                // initial painting of the points
+                vm.paintPoints(context);
+                
+                var trackingTask = tracking.track('#source-video', trackYellow);
+
+
+            }()
+
+
          });
+
     </script>
 }

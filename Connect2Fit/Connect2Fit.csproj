@@ -258,6 +258,7 @@
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\flipclock.css" />
     <Content Include="Content\css\font-awesome.min.css" />
     <Content Include="Content\css\login.css" />
     <Content Include="Content\css\tracker.css" />
@@ -460,6 +461,7 @@
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\img\Fallback.ogv" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\flipclock.min.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-et.js" />
@@ -1291,10 +1293,6 @@
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\_LoginNavLinks.cshtml" />
     <Content Include="Views\Account\_RegisterNavLinks.cshtml" />
-    <Content Include="Views\Manage\_ChangesButtons.cshtml" />
-    <Content Include="Views\Manage\_EditButton.cshtml" />
-    <Content Include="Views\Manage\_BasicInfo.cshtml" />
-    <Content Include="Views\Shared\_FlashMessage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />

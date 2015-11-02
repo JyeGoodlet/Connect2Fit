@@ -88,6 +88,21 @@ namespace Connect2Fit.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class InviteViewModel
+    {
+
+        [Required]
+        [Display(Name = "Email")]
+        [EmailAddress]
+        [System.Web.Mvc.Remote("checkEmailUsed", "Account", HttpMethod = "POST", ErrorMessage = "Sorry Email already in use")]
+        public string Email { get; set; }
+
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+    }
+
+
     public class ResetPasswordViewModel
     {
         [Required]

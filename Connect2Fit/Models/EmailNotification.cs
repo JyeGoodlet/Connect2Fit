@@ -12,26 +12,26 @@ namespace Connect2Fit.Models
 
         public EmailModel email { get; set; }
 
-
         public EmailNotification(EmailModel email)
         {
             this.email = email;
         }
 
-
-        public  void send()
+        public void send()
         {
 
-
-            var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
+            // Creating the email and populating its details
             var message = new MailMessage();
+            message.To.Add(new MailAddress(email.ToEmail));
             message.To.Add(new MailAddress("justinhart10+55f691ce64b0e7bdce586394+562c8ee6c93209d935c9f59d+89bf4c924ea07f3af7b7788263aabc14e1f86b19@boards.trello.com"));
-            message.From = new MailAddress("developers@connect2fit.com.au");
-            message.Subject = "Test Notification Email";
-            message.Body = string.Format(body, email.FromName, email.FromEmail, email.Message);
+            message.From = new MailAddress(email.FromEmail);
+            message.Subject = email.Subject;
+            message.Body = email.Message;
             message.IsBodyHtml = true;
 
-            using (var smtp = new SmtpClient())
+
+            // SMTP Authentication details, can be changed to any SMTP relay service
+            /*using (var smtp = new SmtpClient())
             {
                 var credential = new NetworkCredential
                 {
@@ -44,13 +44,26 @@ namespace Connect2Fit.Models
                 smtp.EnableSsl = true;
                 //smtp.SendMailAsync(message);
                 smtp.Send(message);
+            }*/
 
-         
-             
+
+            // Justins SMTP details (using for now because its faster than mandrillapp
+            // Simply comment this and uncomment above to test either. 
+            using (var smtp = new SmtpClient())
+            {
+                var credential = new NetworkCredential
+                {
+                    UserName = "webmaster@connect2fit.com.au",  // replace with valid value
+                    Password = "Connect2015"  // replace with valid value
+                };
+                smtp.Credentials = credential;
+                smtp.Host = "mail.rathra.crabdance.com";
+                smtp.Port = 25;
+                smtp.EnableSsl = false;
+                //await smtp.SendMailAsync(message); -- don't think it is worth doing this
+                smtp.Send(message);
             }
-
-
+            
         }
-
     }
 }
