@@ -1,0 +1,110 @@
+﻿<!-- move demo.css code into client.css -->
+<link href="~/Content/css/tracker.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Avatar Testing";
+}
+
+<!-- add this section to client page -->
+<div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints"  class="row">
+    <div class="col-sm-4">
+        <h3>Image frame</h3>
+            <video class="" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls>
+            </video>     
+            <!-- canvas will be overlaid onto webcam -->
+            <canvas class="tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
+    </div>
+    <div class="col-sm-4">
+        <h3>Users Head</h3>
+        <button id="catch-face">Save Face</button>
+        <canvas id="person-head" width="640" height="480"></canvas>
+        
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // databinding references
+    }
+
+    <script src='~/Scripts/angular.js'></script>
+    @{
+        // colour tracker references
+     }
+    <script src="~/Content/Research/assets/tracking.js"></script>
+    <script src="~/Content/Research/assets/face.js"></script>
+    <script>
+
+        var app = angular.module('Tracking', []);
+        app.controller('TrackingPoints', function ($scope, $http) {
+           
+            
+            $scope.character = {};
+            // set viewport res
+            $scope.cameraX = 640;
+            $scope.cameraY = 480;
+            
+            //on start
+            var init = function () {
+                //640, 480
+                var video = $("#source-video")[0];
+                // firefox
+                if (navigator.mediaDevices) {
+                    var constraints = { audio: false, video: { width: 640, height: 480 } };
+                    navigator.mediaDevices.getUserMedia(constraints)
+                      .then(function (stream) {
+                          var video = document.querySelector('video');
+                          video.src = window.URL.createObjectURL(stream);
+                          video.onloadedmetadata = function (e) {
+                              video.play();
+                          };
+                      })
+                      .catch(function (err) {
+                          console.log(err.name + ": " + err.message);
+                      });
+                    // chrome and opera, not working because of the video object?
+                    // working but massive memory leak, once every 30 sec
+                } else if (navigator.webkitGetUserMedia) {
+                    navigator.webkitGetUserMedia({ audio: false, video: true }, function (stream) {
+                        video.src = window.webkitURL.createObjectURL(stream);
+
+                    }, webcamError);
+                } else {
+                    //video.src = 'somevideo.webm'; // fallback.
+                }
+                var canvas = $("#canvas")[0];
+                var context = canvas.getContext('2d');
+                var canvasHead = $("#person-head")[0];
+                var contextHead = canvasHead.getContext('2d');
+                // Face Offset or fO
+                var fO = 30;
+                // tracker setup
+                var trackHead = new tracking.ObjectTracker(['face']);
+                // config tracker
+                trackHead.setStepSize(1.7);
+                $('#catch-face').click(function () {
+                    //send image to server
+                });
+                tracking.track('#source-video', trackHead);
+                trackHead.on('track', function (event) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    if (event.data.length === 0) {
+                        // No colors were detected in this frame.
+                    } else {
+                        event.data.forEach(function (rect) {
+                            contextHead.clearRect(0, 0, canvasHead.width, canvasHead.height);
+                            context.strokeStyle = rect.color;
+                            context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                            contextHead.drawImage(video, rect.x, rect.y - fO, rect.width, rect.height + (2 * fO), 0, 0, rect.width, rect.height + (2 * fO));
+                            
+                        });
+                    }
+                });
+
+            }()
+
+
+         });
+
+    </script>
+}

@@ -1297,6 +1297,8 @@
     <Content Include="Views\Manage\_BasicInfo.cshtml" />
     <Content Include="Views\Manage\_ChangesButtons.cshtml" />
     <Content Include="Views\Manage\_EditButton.cshtml" />
+    <Content Include="Views\Research\AvatarTesterAngular.cshtml" />
+    <Content Include="Views\Research\HeadSnapshot.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />

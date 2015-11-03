@@ -53,5 +53,10 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
+        // GET: Head Snapshot
+        public ActionResult HeadSnapshot()
+        {
+            return View();
+        }
     }
 }
