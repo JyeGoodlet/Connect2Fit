@@ -5,25 +5,27 @@
     ViewBag.Title = "InstructorRoom";
 }
 
-<h2>Instructor Room</h2>
+
 <div ng-app="Room" ng-cloak   >
 <div ng-controller="WebRTCVideo"  class="row" id="ClientAvatars">
-    <div class="col-md-4" ng-repeat="client in clients">
+    <div class="col-md-3" ng-repeat="client in clients">
         <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
         <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
         <canvas style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
-        <span>{{client.name}}</span>
-        <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
-        <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
+        <div>
+            <span>{{client.name}}</span>
+            <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
+            <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
+        </div>
     </div>
 
 </div>
-<div id="status">Connecting</div>
+
 <div class="row">
-    
+    <h3>Instructor Feed</h3>
     <div class="col-md-3" id="videos">
         <video autoplay="autoplay" id="selfVideo" ></video>
-
+        <div>Room Status: <span id="status">Connecting.</span></div>
 
         <video id="box0" style="display:none"></video>
         <video id="box1" style="display:none"></video>
@@ -218,6 +220,7 @@
         function connect() {
             easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
             easyrtc.setVideoDims(320, 240);
+            easyrtc.dontAddCloseButtons();
             easyrtc.setUsername("@User.Identity.Name");
             easyrtc.joinRoom("@Model.id", null, null, null)
             easyrtc.setRoomOccupantListener(callEverybodyElse);

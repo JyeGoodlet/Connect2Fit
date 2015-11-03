@@ -5,12 +5,11 @@
     ViewBag.Title = "Client Room";
 }
 <link href="~/Content/css/tracker.css" rel="stylesheet" />
-<h2>Client Room</h2>
 <div ng-app="Room" class="ng-cloak" ng-controller="webRTCVideo">
-    <div id="status">Connecting.</div>
+   
     <div class="row">
         <div class="col-md-4" id="intructorVideos">
-
+            <h3>Instructor Feed</h3>
             <video style="display:none" autoplay="autoplay" id="callerVideo"></video>
 
             <video id="box0" style="display:none"></video>
@@ -18,13 +17,15 @@
             <video id="box2" style="display:none"></video>
             <video id="box3" style="display:none"></video>
 
-
-            <span> Instructor </span>
-            <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
-            <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
+            <div>
+                <span> Instructor </span>
+                <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
+                <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
+            </div>
         </div>
         <div id="" class="col-md-7 .col-md-offset-1">
             <span>Clients avatar to go here</span>
+            <div>Room Status: <span id="status">Connecting.</span></div>
             <div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints" class="row">
                 <div class="col-sm-8">
                     <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
@@ -35,6 +36,7 @@
                         <video class="" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls></video>
                         <!-- canvas will be overlaid onto webcam -->
                         <canvas class="tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
+                    
                 </div>
                 <div class="col-sm-4">
                     <h3>Points detecting</h3>
@@ -177,6 +179,7 @@
     
                 easyrtc.enableAudio(true);
                 easyrtc.enableVideo(false);
+                easyrtc.dontAddCloseButtons();
                 easyrtc.enableDataChannels(false);
                 easyrtc.setUsername("@User.Identity.Name");
                 easyrtc.joinRoom("@Model.id", null, loginSuccess, loginFailure)
