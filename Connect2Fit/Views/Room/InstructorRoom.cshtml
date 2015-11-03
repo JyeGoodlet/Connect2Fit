@@ -22,7 +22,16 @@
 <div class="row">
     
     <div class="col-md-3" id="videos">
-        <video autoplay="autoplay" id="selfVideo" muted="muted" volume="0"></video>
+        <video autoplay="autoplay" id="selfVideo" ></video>
+
+
+        <video id="box0" style="display:none"></video>
+        <video id="box1" style="display:none"></video>
+        <video id="box2" style="display:none"></video>
+        <video id="box3" style="display:none"></video>
+
+
+
     </div>
 
 </div>
@@ -151,6 +160,7 @@
     //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
     //webrtc is peer to peer so video does not pass through server.
     app.controller('WebRTCVideo', function ($scope, $http, $timeout) {
+        var maxCALLERS = 5;
         $scope.clients;
         $scope.connectedClients = [];
         
@@ -209,12 +219,10 @@
             easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
             easyrtc.setVideoDims(320, 240);
             easyrtc.setUsername("@User.Identity.Name");
-            easyrtc.enableAudio(false);
             easyrtc.joinRoom("@Model.id", null, null, null)
-            easyrtc.enableAudio(true);
-            easyrtc.setRoomOccupantListener(convertListToButtons);
+            easyrtc.setRoomOccupantListener(callEverybodyElse);
 
-            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
+            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["box0", "box1", "box2", "box3"], loginSuccess, loginFailure);
         }
 
 
@@ -224,29 +232,53 @@
         }
 
 
-        function convertListToButtons(roomName, data, isPrimary) {
+
+
+
+        function callEverybodyElse(roomName, otherPeople) {
             clearConnectList();
-            var otherClientDiv = document.getElementById('otherClients');
-            //console.log(data);
-            for (var easyrtcid in data) {
+            for (var easyrtcid in otherPeople) {
 
                 $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
-                //console.log($scope.connectedClients);
-                //console.log(easyrtc.idToName(easyrtcid) + " connected")
-               
-                performCall(easyrtcid);
+                //performCall(easyrtcid);
             }
-            $scope.$apply();
+            $scope.$apply();        
+
+
+            easyrtc.setRoomOccupantListener(null); // so we're only called once.
+
+            var list = [];
+            var connectCount = 0;
+            for(var easyrtcid in otherPeople ) {
+                list.push(easyrtcid);
+            }
+            //
+            // Connect in reverse order. Latter arriving people are more likely to have
+            // empty slots.
+            //
+            function establishConnection(position) {
+                function callSuccess() {
+                    connectCount++;
+                    if( connectCount < maxCALLERS && position > 0) {
+                        establishConnection(position-1);
+                    }
+                }
+                function callFailure(errorCode, errorText) {
+                    easyrtc.showError(errorCode, errorText);
+                    if( connectCount < maxCALLERS && position > 0) {
+                        establishConnection(position-1);
+                    }
+                }
+                easyrtc.call(list[position], callSuccess, callFailure);
+
+            }
+            if( list.length > 0) {
+                establishConnection(list.length-1);
+            }
         }
 
 
-        function performCall(otherEasyrtcid) {
-            easyrtc.hangupAll();
 
-            var successCB = function () { };
-            var failureCB = function () { };
-            easyrtc.call(otherEasyrtcid, successCB, failureCB);
-        }
 
 
         function loginSuccess(easyrtcid) {

@@ -11,7 +11,14 @@
     <div class="row">
         <div class="col-md-4" id="intructorVideos">
 
-            <video autoplay="autoplay" id="callerVideo"></video>
+            <video style="display:none" autoplay="autoplay" id="callerVideo"></video>
+
+            <video id="box0" style="display:none"></video>
+            <video id="box1" style="display:none"></video>
+            <video id="box2" style="display:none"></video>
+            <video id="box3" style="display:none"></video>
+
+
             <span> Instructor </span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
             <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
@@ -45,7 +52,7 @@
     </div>
     <div id="connectedUsers">
         <h4>Connected Users</h4>
-        <span ng-repeat="client in connectedClients">{{client}}</span>
+        <div ng-repeat="client in connectedClients">{{client}}</div>
     </div>
     <div ng-controller="Chat">
         <h2>Client Classes</h2>
@@ -153,6 +160,7 @@
         //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
         //webrtc is peer to peer so video does not pass through server.
         app.controller('webRTCVideo', function ($scope, $http) {
+            var maxCALLERS = 5;
             $scope.instructor = "@Model.instructor.Email";
             $scope.connectedClients = []
 
@@ -160,37 +168,47 @@
                 connect();
 
             })
-            convertListToButtons
+            
             var selfEasyrtcid = "";
 
 
             function connect() {
                 easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
-                //easyrtc.setVideoDims(640, 480);
-                easyrtc.enableAudio(false);
+    
+                easyrtc.enableAudio(true);
                 easyrtc.enableVideo(false);
                 easyrtc.enableDataChannels(false);
                 easyrtc.setUsername("@User.Identity.Name");
                 easyrtc.joinRoom("@Model.id", null, loginSuccess, loginFailure)
-                easyrtc.setRoomOccupantListener(convertListToButtons);
-                //easyrtc.setRoomOccupantListener(null);
+                
+                
+                easyrtc.setRoomOccupantListener(callEverybodyElse);
 
-                //easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", [], loginSuccess, loginFailure);
+                easyrtc.easyApp("easyrtc.audioVideoSimple", "callerVideo", ["box0", "box1", "box2", "box3"], loginSuccess, loginFailure);
 
-                //easyrtc.easyApp("easyrtc.audioVideoSimple", "callerAudio", ["callerVideo"], loginSuccess, loginFailure);
-                easyrtc.connect("easyrtc.audioVideoSimple", loginSuccess, loginFailure);
+                easyrtc.setOnCall( function(easyrtcid, slot) {
+                    console.log(easyrtc.idToName(easyrtcid));
+                    var user = easyrtc.idToName(easyrtcid);
+
+                    if (user == "@Model.instructor.Email") {
+                        console.log("instructor");
+                        $("#box" + slot).show();
+                    }
+                    else {
+                        console.log("not instructor");
+                    }
+                    console.log("slot: "  + slot);
+
+                });
             }
 
+            
+
+            
 
 
 
-
-            easyrtc.setStreamAcceptor(function (easyrtcid, stream) {
-                //setUpMirror();
-                var video = document.getElementById("callerVideo");
-                easyrtc.setVideoObjectSrc(video, stream);
-                //enable("hangupButton");
-            });
+            
 
 
             function clearConnectList() {
@@ -198,29 +216,51 @@
             }
 
 
-            function convertListToButtons(roomName, data, isPrimary) {
-                //console.log(roomName);
-                //console.log(data);
-                //console.log(isPrimary);
+
+
+            function callEverybodyElse(roomName, otherPeople) {
+
                 clearConnectList();
-                for (var easyrtcid in data) {
+                for (var easyrtcid in otherPeople) {
 
                     $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
                     //performCall(easyrtcid);
                 }
-
                 $scope.$apply();
+                easyrtc.setRoomOccupantListener(null); // so we're only called once.
 
+                var list = [];
+                var connectCount = 0;
+                for(var easyrtcid in otherPeople ) {
+                    list.push(easyrtcid);
+                }
+                //
+                // Connect in reverse order. Latter arriving people are more likely to have
+                // empty slots.
+                //
+                function establishConnection(position) {
+                    function callSuccess() {
+                        connectCount++;
+                        if( connectCount < maxCALLERS && position > 0) {
+                            establishConnection(position-1);
+                        }
+                    }
+                    function callFailure(errorCode, errorText) {
+                        easyrtc.showError(errorCode, errorText);
+                        if( connectCount < maxCALLERS && position > 0) {
+                            establishConnection(position-1);
+                        }
+                    }
+                    easyrtc.call(list[position], callSuccess, callFailure);
+
+                }
+                if( list.length > 0) {
+                    establishConnection(list.length-1);
+                }
             }
 
 
-            function performCall(otherEasyrtcid) {
-                easyrtc.hangupAll();
 
-                var successCB = function () { };
-                var failureCB = function () { };
-                easyrtc.call(otherEasyrtcid, successCB, failureCB);
-            }
 
 
             function loginSuccess(easyrtcid) {
