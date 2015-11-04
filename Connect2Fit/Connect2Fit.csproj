@@ -305,6 +305,7 @@
     <Content Include="Content\img\register.jpg" />
     <Content Include="Content\Research\assets\armWavingOO.js" />
     <Content Include="Content\Research\assets\armWaving.js" />
+    <Content Include="Content\Research\assets\Avatar.js" />
     <Content Include="Content\Research\assets\dat.gui.min.js" />
     <Content Include="Content\Research\assets\demo.css" />
     <Content Include="Content\Research\assets\eye.js" />
