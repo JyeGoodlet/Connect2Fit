@@ -8,9 +8,12 @@ body[class~="login"] {
     background: #FFF url('../img/login.jpg') left top / 100% no-repeat;
 }
 
-body[class~="register"] {
+body[class~="contact"],
+body[class~="thanks"] {
     background: #FFF url('../img/register.jpg') left top / 100% no-repeat;
 }
+
+
 
 body > .container-fluid {
     padding: 0;
@@ -104,4 +107,8 @@ body > .container-fluid > .navbar.navbar-default {
   font-weight: 400;
   padding: 5px;
   text-align: center;
+}
+
+.row {
+    padding-bottom: 15px;
 }

@@ -1,0 +1,11 @@
+﻿<li>
+    @if (Request.IsAuthenticated)
+    {
+        <a href="@Url.Action("Index", "Home")">Back to App</a>
+    }
+    else
+    {
+        <a href="@Url.Action("Login", "Account")">Login</a>
+    }
+
+</li>

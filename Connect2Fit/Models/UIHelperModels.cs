@@ -7,6 +7,11 @@ namespace Connect2Fit.Models
 {
     public class FlashMessage
     {
+        public FlashMessage()
+        {
+            Dismissable = true;
+        }
+
         public string Message { get; set; }
 
         public ContextId Context { get; set; }
@@ -38,6 +43,8 @@ namespace Connect2Fit.Models
                 return context;
             }
         }
+
+        public bool Dismissable { get; set; }
 
         public enum ContextId
         {

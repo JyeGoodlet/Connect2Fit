@@ -1,8 +1,35 @@
 ﻿@{
-    ViewBag.Title = "Sent";
-}
-<h3>Your message has been sent successfully. </h3>
+    ViewBag.Title = "Thanks";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    ViewBag.BodyClass = "thanks";
 
-<p>
-    @Html.ActionLink("Click here to return to the main page", "Index")
-</p>
+    ViewBag.SuccessMessage = new Connect2Fit.Models.FlashMessage
+    {
+        Message = "Your message has been sent!",
+        Context = Connect2Fit.Models.FlashMessage.ContextId.Success,
+        Dismissable = false
+    };
+}
+
+<div class="panel-body">
+    <div class="col-sm-10 col-sm-offset-1">
+        <div class="row">
+            @{ Html.RenderPartial("_FlashMessage", (Connect2Fit.Models.FlashMessage) ViewBag.SuccessMessage); }
+        </div>
+        <div class="row">
+            <p>Thanks for taking the time to get in touch with us!</p>
+        </div>
+        <div class="row">
+            @if (Request.IsAuthenticated)
+            {
+                <a href="#" class="btn btn-info">Back to App</a>
+            }
+        </div>
+    </div>
+    
+</div>
+
+@section NavLinks
+{
+    @{ Html.RenderPartial("_ContactNavLinks"); }
+}
