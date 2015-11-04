@@ -58,5 +58,11 @@ namespace Connect2Fit.Controllers
         {
             return View();
         }
+
+        // GET: Audio Dection
+        public ActionResult AudioDetection()
+        {
+            return View();
+        }
     }
 }
