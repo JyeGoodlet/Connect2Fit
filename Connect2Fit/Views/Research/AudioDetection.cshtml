@@ -56,7 +56,7 @@
     };
 
 
-    var throttle = 1000;
+    var throttle = 100;
     var time =  new Date();
     MicrophoneSample.prototype.visualize = function () {
         this.canvas.width = this.WIDTH;
@@ -85,20 +85,18 @@
 
                 if (diffTime > throttle) {
                     
-                    //$("#mic").css('opacity') = '0.6';
+                    $("#mic").each(function () {
+                        fadeoutMic();
+                    }).fadeIn(200)
                     time = new Date();
                 }
 
 
 
 
-                //$("#mic").fadeIn(2000);
-            }
-            else {
                 
-                 
-           
             }
+
 
 
             drawContext.fillStyle = 'black';
@@ -107,7 +105,12 @@
         requestAnimFrame(this.visualize.bind(this));
     };
 
+    var fadeoutMic = _.debounce( function () {
+        $("#mic").fadeOut(200)
+        
+    }, 1000);
 
+    //var fadeoutMic = 
 
 var sample = new MicrophoneSample();
 </script>
