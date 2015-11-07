@@ -193,9 +193,19 @@
                 easyrtc.easyApp("easyrtc.audioVideoSimple", "callerVideo", ["box0", "box1", "box2", "box3", "box4"], loginSuccess, loginFailure);
 
                 easyrtc.setOnCall( function(easyrtcid, slot) {
+                    //kick duplicate users.
+                    if ( easyrtc.idToName(easyrtcid) == "@User.Identity.Name") {
+                        //TODO: go to an error page
+                        window.location.replace("/Scheduler/MyClasses");
+
+                    } 
+
                     $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
                     console.log(easyrtc.idToName(easyrtcid));
                     var user = easyrtc.idToName(easyrtcid);
+                    
+ 
+
 
                     if (user == "@Model.instructor.Email") {
                         console.log("instructor");
@@ -277,6 +287,7 @@
 
 
             function loginFailure(errorCode, message) {
+                console.log(message);
                 easyrtc.showError(errorCode, message);
             }
         })
