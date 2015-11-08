@@ -19,6 +19,15 @@
 
 <div ng-app="schedule" ng-controller="instructorClasses" class="ng-cloak">
     <h2>Instructors Classes</h2>
+    @if (ViewBag.roomKick)
+    {
+        <div class="alert alert-danger" role="alert">
+            <div>You have been kicked from the room because you joined the room twice. Please only enter the room once. </div>
+            <!-- <button type="button" class="btn btn-default" data-dismiss="alert" aria-label="Close">OK</button> -->
+       
+    </div>
+    }
+   
     <table class="table table-striped">
         <thead>
             <tr>
@@ -76,13 +85,16 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
 
-
+            
 
                 </div>
 
             </div>
         </div>
     }
+
+
+
 
 
 </div>
@@ -96,7 +108,8 @@
 
 
     <script>
-
+        
+ 
 
         //signalr connection
         chat = $.connection.scheduleItemHub;

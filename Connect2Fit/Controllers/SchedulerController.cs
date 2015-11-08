@@ -50,8 +50,12 @@ namespace Connect2Fit.Controllers
         //instead of having seperate functions for instructor and client i an instead going to have one controller and return a 
         //different view bad on if they are a client or instructor
         [Authorize(Roles = "Instructor,Client")]
-        public ActionResult MyClasses()
+        public ActionResult MyClasses(bool roomKick = false)
         {
+            
+                ViewBag.roomKick = roomKick;
+            
+
             //Instructor role
             if (User.IsInRole("Instructor"))
             {
