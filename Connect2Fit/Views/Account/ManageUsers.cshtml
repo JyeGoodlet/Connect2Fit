@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Connect2Fit.Models.DBUsersModel>
+@{
+    ViewBag.Title = "Manage Users";
+}
+
+@if (User.IsInRole("Administrator"))
+{
+
+    <h2>@ViewBag.Title.</h2>
+
+    <table class="table">
+        <tr>
+            <th>
+                Username
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Account Type
+            </th>
+            <th>
+                Reset Password
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Name)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => user.RoleName)                
+                </td>
+                <td>
+                    Reset Password
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <h3>You are not authorised to view this page. Please log in. </h3>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

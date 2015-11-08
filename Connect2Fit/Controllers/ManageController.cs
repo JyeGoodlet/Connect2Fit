@@ -483,7 +483,7 @@ namespace Connect2Fit.Controllers
             return "";
         }
 
-        // Returns the account type of the user. Will be either "Instructor" or "Client"
+        // Returns the account type of the user. Will be either "Instructor" "Client" "Administrator"
         // or an empty string if it is neither.
         private string GetAccountType()
         {
@@ -497,6 +497,10 @@ namespace Connect2Fit.Controllers
                 else if (UserManager.IsInRole(user.Id, "Client"))
                 {
                     return "Client";
+                }
+                else if (UserManager.IsInRole(user.Id, "Administrator"))
+                {
+                    return "Administrator";
                 }
             }
             return "";
