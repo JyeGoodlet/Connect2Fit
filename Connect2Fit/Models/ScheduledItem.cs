@@ -30,6 +30,8 @@ namespace Connect2Fit.Models
         [Display(Name = "Session Time")]
         public string sessionTime { get; set; }
 
+        public bool sessionEnded { get; set; } 
+
         public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
 
     }

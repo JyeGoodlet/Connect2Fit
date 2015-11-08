@@ -30,8 +30,10 @@ namespace Connect2Fit.Models
 
         public int maxAttendies { get; set; }
 
-        
-       
+        public bool sessionEnded { get; set; }
+
+
+
 
 
 

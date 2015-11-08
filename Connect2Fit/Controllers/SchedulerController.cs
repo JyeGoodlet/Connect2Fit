@@ -134,6 +134,7 @@ namespace Connect2Fit.Controllers
                     title = item.ClassName,
                     instructor = item.instructor.Name,
                     attendiesCount = item.ApplicationUsers.Count(),
+                    sessionEnded = item.sessionEnded,
                     attendies = (from email in item.ApplicationUsers
                                  select  email.Email ).ToArray()
                    
@@ -170,6 +171,7 @@ namespace Connect2Fit.Controllers
                     title = item.ClassName,
                     instructor = item.instructor.Name,
                     attendiesCount = item.ApplicationUsers.Count(),
+                    sessionEnded = item.sessionEnded,
                     LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId()))
                 });
 
@@ -196,8 +198,19 @@ namespace Connect2Fit.Controllers
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
             {
-                calEventItems.Add(item.id.ToString(), new CalendarEvent{ id = item.id, date = item.ClassDateTime.ToShortDateString(), time = item.ClassDateTime.ToShortTimeString(), duration = item.sessionTime, maxAttendies = item.maxAttendies,
-                    title = item.ClassName, instructor = item.instructor.Name, attendiesCount = item.ApplicationUsers.Count(), LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId())) });
+                calEventItems.Add(item.id.ToString(), new CalendarEvent
+                {
+                    id = item.id,
+                    date = item.ClassDateTime.ToShortDateString(),
+                    time = item.ClassDateTime.ToShortTimeString(),
+                    duration = item.sessionTime,
+                    maxAttendies = item.maxAttendies,
+                    title = item.ClassName,
+                    instructor = item.instructor.Name,
+                    sessionEnded = item.sessionEnded,
+                    attendiesCount = item.ApplicationUsers.Count(),
+                    LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId()))
+                });
 
             }
 

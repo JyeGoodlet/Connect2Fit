@@ -58,7 +58,7 @@
 
                 </td>
                 <td>
-                    <a ng-if="nearTime(class.date, class.time)" class="btn btn btn-success pull-right" ng-href="/Room/Room/{{class.id}}">Join Room</a>
+                    <a ng-if="nearTime(class.date, class.time) && class.sessionEnded == false" class="btn btn btn-success pull-right" ng-href="/Room/Room/{{class.id}}">Join Room</a>
 
 
 

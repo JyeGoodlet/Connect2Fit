@@ -118,7 +118,7 @@
 
 
         //The Chat Controller allows the client to send and recieve text messages. Uses signalr
-        app.controller('Chat', function ($scope, $http) {
+        app.controller('Chat', function ($scope, $http, $timeout) {
             //group id so messages are only sent to users in the same group. This is the room id
             var groupId = @Model.id;
             //users id
@@ -151,6 +151,23 @@
                 $scope.$apply();
 
             }
+
+            chat.client.endClassNotify = function() {
+
+                //show notification
+                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+
+            }
+
+            chat.client.endClass = function() {
+                $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
+
+                $timeout(function() {
+                    window.location.replace("/Scheduler/MyClasses"); 
+                }, 2000);
+
+            }
+
 
             chat.client.recievePoint = function(point) {
                 //console.log(point);
