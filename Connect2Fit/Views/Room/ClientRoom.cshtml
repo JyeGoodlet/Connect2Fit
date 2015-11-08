@@ -200,8 +200,7 @@
 
                     } 
 
-                    $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
-                    console.log(easyrtc.idToName(easyrtcid));
+
                     var user = easyrtc.idToName(easyrtcid);
                     
  
@@ -216,7 +215,8 @@
                     else {
                         console.log("not instructor");
                     }
-                    console.log("slot: "  + slot);
+                    $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
+                    $scope.$apply(); 
 
                 });
 
@@ -231,7 +231,7 @@
                     //remove client from list
                     delete $scope.connectedClients[easyrtcid];
                     
-                    $scope.$apply;
+                    $scope.$apply();
                     
                     
                 });
@@ -243,13 +243,14 @@
 
                 
                 
-                $scope.$apply();
+               
                 easyrtc.setRoomOccupantListener(null); // so we're only called once.
 
                 var list = [];
                 var connectCount = 0;
                 for(var easyrtcid in otherPeople ) {
                     list.push(easyrtcid);
+                    $scope.$apply();
                 }
                 //
                 // Connect in reverse order. Latter arriving people are more likely to have

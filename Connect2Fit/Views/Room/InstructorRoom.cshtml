@@ -165,7 +165,7 @@
     app.controller('WebRTCVideo', function ($scope, $http, $timeout) {
         var maxCALLERS = 5;
         $scope.clients;
-        $scope.connectedClients = [];
+        $scope.connectedClients = {};
         
         $scope.getConnectedClients = function() {
             return $scope.connectedClients;
@@ -235,28 +235,31 @@
                     window.location.replace("/Scheduler/MyClasses?roomKick=true");
 
                 }
+                //add member to list
+                $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
+                $scope.$apply(); 
             })
+
+            easyrtc.setOnHangup(function(easyrtcid, slot) {
+                    
+                //remove client from list
+                delete $scope.connectedClients[easyrtcid];
+                    
+                $scope.$apply();
+                    
+                    
+            });
 
         }
 
         
-
-        function clearConnectList() {
-            $scope.connectedClients = [];
-        }
 
 
 
 
 
         function callEverybodyElse(roomName, otherPeople) {
-            clearConnectList();
-            for (var easyrtcid in otherPeople) {
-
-                $scope.connectedClients.push(easyrtc.idToName(easyrtcid));
-                //performCall(easyrtcid);
-            }
-            $scope.$apply();        
+   
 
 
             easyrtc.setRoomOccupantListener(null); // so we're only called once.
