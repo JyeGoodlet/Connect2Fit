@@ -241,6 +241,7 @@
     <Compile Include="Models\EmailNotification.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\DBUsersModel.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ClientPoint3d.cs" />
     <Compile Include="Models\Notification.cs" />
@@ -1303,6 +1304,8 @@
     <Content Include="Views\Research\HeadSnapshot.cshtml" />
     <Content Include="Views\Research\AudioDetection.cshtml" />
     <Content Include="Views\Home\_ContactNavLinks.cshtml" />
+    <Content Include="Views\Account\RegisterAdministrator.cshtml" />
+    <Content Include="Views\Account\ManageUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />

@@ -12,6 +12,8 @@ using Microsoft.Owin.Security;
 using Connect2Fit.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace Connect2Fit.Controllers
 {
@@ -20,9 +22,12 @@ namespace Connect2Fit.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db;
+
 
         public AccountController()
         {
+            db = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -157,7 +162,7 @@ namespace Connect2Fit.Controllers
 
 
         //
-        // GET: /Account/Register
+        // GET: /Account/RegisterInstructor
         [AllowAnonymous]
         public ActionResult RegisterInstructor()
         {
@@ -167,7 +172,7 @@ namespace Connect2Fit.Controllers
 
 
         //
-        // POST: /Account/Register
+        // POST: /Account/RegisterInstructor
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -211,6 +216,67 @@ namespace Connect2Fit.Controllers
             // If we got this far, something failed, redisplay form
             return View( model);
         }
+
+
+        //
+        // GET: /Account/RegisterAdministrator
+        [AllowAnonymous]
+        public ActionResult RegisterAdministrator()
+        {
+            return View();
+        }
+
+
+
+        //
+        // POST: /Account/RegisterAdministrator
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterAdministrator(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
+
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    //check if client role exists, if not create client role
+                    var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    if (!roleManager.RoleExists("Administrator"))
+                    {
+                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                        role.Name = "Administrator";
+                        roleManager.Create(role);
+
+                    }
+
+                    //when user signs up they have a default role as client.
+                    UserManager.AddToRole(user.Id, "Administrator");
+                    // Give administrators full instructor rights also
+                    UserManager.AddToRole(user.Id, "Instructor");
+
+
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
 
         //
         // GET: /Account/Invite
@@ -282,6 +348,17 @@ namespace Connect2Fit.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+
+        //
+        // GET: /Account/ManageUsers
+        [AllowAnonymous]
+        public ActionResult ManageUsers()
+        {        
+            var users = db.Database.SqlQuery<DBUsersModel>("GetDBUsersModel");
+
+            return View(users);
         }
 
 
