@@ -5,84 +5,85 @@
     ViewBag.Title = "Client Room";
 }
 <link href="~/Content/css/tracker.css" rel="stylesheet" />
-<div ng-app="Room" class="ng-cloak" ng-controller="webRTCVideo">
-   
-    <div class="row">
-        <div class="col-md-4" id="intructorVideos">
-            <h3>Instructor Feed</h3>
-            <video style="display:none" autoplay="autoplay" id="callerVideo"></video>
+<div ng-app="Room" class="ng-cloak" ng-controller="roomfunctions">
+    <div ng-controller="webRTCVideo">
+        <div class="row">
+            <div class="col-md-4" id="intructorVideos">
+                <h3>Instructor Feed</h3>
+                <video style="display:none" autoplay="autoplay" id="callerVideo"></video>
 
-            <video id="box0" style="display:none"></video>
-            <video id="box1" style="display:none"></video>
-            <video id="box2" style="display:none"></video>
-            <video id="box3" style="display:none"></video>
-            <video id="box4" style="display:none"></video>
-            <div id="InstructorPlaceHolder" style="width: 320px;height: 240px; background: #337AB7;font-size:12em;color:#F3F3F4; text-align: center;"><i class="fa fa-video-camera "></i></div>
+                <video id="box0" style="display:none"></video>
+                <video id="box1" style="display:none"></video>
+                <video id="box2" style="display:none"></video>
+                <video id="box3" style="display:none"></video>
+                <video id="box4" style="display:none"></video>
+                <div id="InstructorPlaceHolder" style="width: 320px;height: 240px; background: #337AB7;font-size:12em;color:#F3F3F4; text-align: center;"><i class="fa fa-video-camera "></i></div>
 
-            <div style="margin-top:10px  ">
-                <span> Instructor </span>
-                <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
-                <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
+                <div style="margin-top:10px  ">
+                    <span> Instructor </span>
+                    <span ng-if="(instructor | InstructorConnected:connectedClients) == true" class="label label-success">Online</span>
+                    <span ng-if="(instructor | InstructorConnected:connectedClients) == false" class="label label-danger">Offline</span>
+                </div>
             </div>
-        </div>
-        <div id="" class="col-md-7 .col-md-offset-1">
-            <span>Clients avatar to go here</span>
-            <div>Room Status: <span id="status">Connecting.</span></div>
-            <div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints" class="row">
-                <div class="col-sm-8">
-                    <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <strong>Warning</strong> using fallback Video.
-                    </div>
-                    <h3>Image frame</h3>
+            <div id="" class="col-md-7 .col-md-offset-1">
+                <span>Clients avatar to go here</span>
+                <div>Room Status: <span id="status">Connecting.</span></div>
+                <div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints" class="row">
+                    <div class="col-sm-8">
+                        <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <strong>Warning</strong> using fallback Video.
+                        </div>
+                        <h3>Image frame</h3>
                         <video class="" id="source-video" width="{{cameraX}}" height="{{cameraY}}" preload autoplay loop muted controls></video>
                         <!-- canvas will be overlaid onto webcam -->
                         <canvas class="tracking-overlay" id="canvas" width="{{cameraX}}" height="{{cameraY}}"></canvas>
-                    
-                </div>
-                <div class="col-sm-4">
-                    <h3>Points detecting</h3>
-                    <p>This tracker will lock on to the tracked colour target which in this case is yellow and update the cross and the data below.</p>
-                    <ul class="list-unstyled list-group">
-                        <li class="list-group-item" ng-repeat="(key, value) in character">
-                            Name: <span class="text-info"> {{value.name}}</span>
-                            x: <span class="text-info">{{value.x}}</span>
-                            y: <span class="text-info">{{value.y}}</span>
-                        </li>
-                    </ul>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <h3>Points detecting</h3>
+                        <p>This tracker will lock on to the tracked colour target which in this case is yellow and update the cross and the data below.</p>
+                        <ul class="list-unstyled list-group">
+                            <li class="list-group-item" ng-repeat="(key, value) in character">
+                                Name: <span class="text-info"> {{value.name}}</span>
+                                x: <span class="text-info">{{value.x}}</span>
+                                y: <span class="text-info">{{value.y}}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="connectedUsers">
-        <h4>Connected Users</h4>
-        <div ng-repeat="(key, value) in connectedClients">{{value}}</div>
-    </div>
-    <div ng-controller="Chat">
-        <h2>Client Classes</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Person</th>
-                    <th>Message</th>
+        <div id="connectedUsers">
+            <h4>Connected Users</h4>
+            <div ng-repeat="(key, value) in connectedClients">{{value}}</div>
+        </div>
+        <div ng-controller="Chat">
+            <h2>Client Classes</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th>Message</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="animation" ng-repeat="message in messages">
-                    <td>{{message.person}}</td>
-                    <td>{{message.text}}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animation" ng-repeat="message in messages">
+                        <td>{{message.person}}</td>
+                        <td>{{message.text}}</td>
 
-                </tr>
-            </tbody>
+                    </tr>
+                </tbody>
 
-        </table>
-        <form>
-            <input type="text" ng-model="newMessage" />
-            <input type="submit" ng-click="addMessage()" value="Save" />
-        </form>
+            </table>
+            <form>
+                <input type="text" ng-model="newMessage" />
+                <input type="submit" ng-click="addMessage()" value="Save" />
+            </form>
 
 
+        </div>
     </div>
 </div>
 
@@ -101,7 +102,7 @@
     <script type="text/javascript">
 
 
-        //signalr connection
+        //start signalr connection
         //used to send and recieve data via server
         chat = $.connection.roomHub;
         $.connection.hub.start(
@@ -117,47 +118,7 @@
         //this is the module that all the angular controllers on this page use
         var app = angular.module('Room', []);
 
-        //this controller controllers room general functions, eg end class.
-        app.controller('roomFunctions', function ($scope, $http, $timeout) {
-
-            //end class notification
-            chat.client.endClassNotify = function() {
-
-                //show notification
-                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
-
-            }
-
-
-            //end class 1 hour after class start. This is to prevent anyone just setting in a room forever
-            var classEndTimeout = function() {
-
-                //create time object
-
-                //check if an hour has passed every 5 minutes 
-                
-                //if 5 minutes to class end send notification
-
-                //if class has ended kick user
-
-            }
-
-
-            //end class
-            chat.client.endClass = function() {
-                $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
-
-                $timeout(function() {
-                    window.location.replace("/Scheduler/MyClasses"); 
-                }, 2000);
-
-            }
-
-
-
-
-        });
-
+        
 
 
         //The Chat Controller allows the client to send and recieve text messages. Uses signalr
@@ -195,13 +156,6 @@
 
             }
 
-
-
-
-            chat.client.recievePoint = function(point) {
-                //console.log(point);
-
-            }
 
 
         });
@@ -325,8 +279,6 @@
 
 
 
-
-
             function loginSuccess(easyrtcid) {
                 selfEasyrtcid = easyrtcid;
                 document.getElementById("status").innerHTML = "Connected";
@@ -338,6 +290,50 @@
                 easyrtc.showError(errorCode, message);
             }
         })
+
+        //this controller controllers room general functions, eg end class.
+        app.controller('roomfunctions', function ($scope, $http, $timeout) {
+
+            //end class notification
+            chat.client.endClassNotify = function() {
+                
+
+                //show notification
+                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+
+            }
+
+
+            //end class 1 hour after class start. This is to prevent anyone just setting in a room forever
+            var classEndTimeout = function() {
+
+                //create time object
+
+                //check if an hour has passed every 5 minutes 
+                
+                //if 5 minutes to class end send notification
+
+                //if class has ended kick user
+
+            }
+
+
+            //end class
+            chat.client.endClass = function() {
+                $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
+
+                $timeout(function() {
+                    window.location.replace("/Scheduler/MyClasses"); 
+                }, 2000);
+
+            }
+
+
+
+
+        });
+
+
 
         //The trackingpoints controllers sends the clients tracking points to the instructor via signalr
         app.controller('TrackingPoints', function ($scope, $http) {

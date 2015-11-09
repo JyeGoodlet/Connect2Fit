@@ -59,12 +59,12 @@
                 </td>
                 <td>
                     <a ng-if="nearTime(class.date, class.time) && class.sessionEnded == false" class="btn btn btn-success pull-right" ng-href="/Room/Room/{{class.id}}">Join Room</a>
-
+                    <span ng-if="class.sessionEnded">Class Has Ended</span>
 
 
                 </td>
                 <td>
-                    <button ng-dblclick="deleteClass(class)" tooltip-placement="right" uib-tooltip="Double Click To Delete" tooltip-trigger="mouseenter" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button ng-if="class.sessionEnded == false" ng-dblclick="deleteClass(class)" tooltip-placement="right" uib-tooltip="Double Click To Delete" tooltip-trigger="mouseenter" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
                 </td>
             </tr>
         </tbody>
@@ -220,6 +220,8 @@
                 })
                 .success(
                     function (deleteStatus) {
+                        console.log(instructorsClass);
+                        $.notify("Deleting Class " + instructorsClass.title, { globalPosition: 'top center', className: "error" });
                         delete $scope.classes[instructorsClass.id];
                         chat.server.updateDataServer();
 

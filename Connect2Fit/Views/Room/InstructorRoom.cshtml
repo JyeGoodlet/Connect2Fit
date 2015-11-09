@@ -6,64 +6,66 @@
 }
 
 
-<div ng-app="Room" ng-cloak ng-controller="WebRTCVideo"   >
-<div  class="row" id="ClientAvatars">
-    <div class="col-md-3" ng-repeat="client in clients">
-        <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
-        <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
-        <canvas style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
-        <div>
-            <span>{{client.name}}</span>
-            <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
-            <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
+<div ng-app="Room" ng-cloak ng-controller="roomFunctions">
+    <div ng-controller="WebRTCVideo">
+        <div class="row" id="ClientAvatars">
+            <div class="col-md-3" ng-repeat="client in clients">
+                <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
+                <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
+                <canvas style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
+                <div>
+                    <span>{{client.name}}</span>
+                    <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
+                    <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <h3>Instructor Feed</h3>
+            <div class="col-md-3" id="videos">
+                <video autoplay="autoplay" id="selfVideo"></video>
+                <div>Room Status: <span id="status">Connecting.</span></div>
+
+                <video id="box0" style="display:none"></video>
+                <video id="box1" style="display:none"></video>
+                <video id="box2" style="display:none"></video>
+                <video id="box3" style="display:none"></video>
+                <video id="box4" style="display:none"></video>
+
+
+                <button class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
+
+            </div>
+        </div>
+        <div ng-controller="Chat">
+            <h3>Chat</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th>Message</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animation" ng-repeat="message in messages">
+                        <td>{{message.person}}</td>
+                        <td>{{message.text}}</td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+            <form>
+                <input type="text" ng-model="newMessage" />
+                <input type="submit" ng-click="addMessage()" value="Save" />
+            </form>
+
+
         </div>
     </div>
-
-</div>
-
-<div class="row">
-    <h3>Instructor Feed</h3>
-    <div class="col-md-3" id="videos">
-        <video autoplay="autoplay" id="selfVideo" ></video>
-        <div>Room Status: <span id="status">Connecting.</span></div>
-
-        <video id="box0" style="display:none"></video>
-        <video id="box1" style="display:none"></video>
-        <video id="box2" style="display:none"></video>
-        <video id="box3" style="display:none"></video>
-        <video id="box4" style="display:none"></video>
-
-
-        <button class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
-
-    </div>
-</div>
-<div ng-controller="Chat" >
-    <h3>Chat</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Person</th>
-                <th>Message</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="animation" ng-repeat="message in messages">
-                <td>{{message.person}}</td>
-                <td>{{message.text}}</td>
-
-            </tr>
-        </tbody>
-
-    </table>
-    <form>
-        <input type="text" ng-model="newMessage" />
-        <input type="submit" ng-click="addMessage()" value="Save" />
-    </form>
-
-
-</div>
 </div>
 
 
@@ -213,9 +215,6 @@
             
             //hangup call
             easyrtc.hangupAll();
-
-            //set class to ended in database
-
 
 
         }
