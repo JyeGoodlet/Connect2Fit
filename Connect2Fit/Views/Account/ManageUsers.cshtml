@@ -1,10 +1,19 @@
-﻿@model IEnumerable<Connect2Fit.Models.DBUsersModel>
+﻿@model IEnumerable<DBUsersModel>
+@using PagedList
+@using PagedList.Mvc
+@using Connect2Fit.Models;
 @{
     ViewBag.Title = "Manage Users";
 }
 
 @if (User.IsInRole("Administrator"))
 {
+
+    int pageNumber = ViewBag.PageNumber;
+    int pageSize = ViewBag.PageSize;
+
+    IPagedList<DBUsersModel> pagedList = new PagedList<DBUsersModel>(Model, pageNumber, pageSize);
+
 
     <h2>@ViewBag.Title.</h2>
 
@@ -28,7 +37,7 @@
             <th></th>
         </tr>
 
-        @foreach (var user in Model)
+        @foreach (var user in pagedList)
         {
             <tr>
                 <td>
@@ -53,6 +62,11 @@
         }
 
     </table>
+
+    <div class="pagerDiv">
+        Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of @pagedList.PageCount
+        @Html.PagedListPager(pagedList, page => Url.Action("ManageUsers", new { pageNumber = page }))
+    </div>
 }
 else
 {

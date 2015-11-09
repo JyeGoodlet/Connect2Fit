@@ -354,10 +354,12 @@ namespace Connect2Fit.Controllers
         //
         // GET: /Account/ManageUsers
         [AllowAnonymous]
-        public ActionResult ManageUsers()
+        public ActionResult ManageUsers(int pageNumber = 1)
         {        
             var users = db.Database.SqlQuery<DBUsersModel>("GetDBUsersModel");
-
+            const int PageSize = 16;
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.PageSize = PageSize;
             return View(users);
         }
 
