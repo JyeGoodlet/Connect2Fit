@@ -176,11 +176,12 @@
                         if (respone.message == "success") {
                             classEvent.attendiesCount++;
                             classEvent.LoggedInUserAttending = true;
-                            alert("Class Booked");
+                            $.notify("Class Booked", { globalPosition: 'top center', className: "info" });
                             chat.server.updateDataServer();
                         }
                         else {
-                            alert(respone.message);
+                     
+                            $.notify(respone.message, { globalPosition: 'top center', className: "info" });
                         }
                     });
 
@@ -226,10 +227,10 @@
                             classItem.attendiesCount--;
                             classItem.LoggedInUserAttending = false;
                             chat.server.updateDataServer();
-                            alert("Class Left");
+                            $.notify("Class Left", { globalPosition: 'top center', className: "info" });
                         }
                         else {
-                            alert(respone.message);
+                            $.notify(respone.message, { globalPosition: 'top center', className: "info" });
                         }
                     });
 

@@ -149,10 +149,11 @@
                             classItem.attendiesCount--;
                             classItem.LoggedInUserAttending = false;
                             chat.server.updateDataServer();
-                            alert("Class Left");
+                            $.notify("Class Left", { globalPosition: 'top center', className: "info" });
                         }
                         else {
-                            alert(respone.message);
+                
+                            $.notify(respone.message, { globalPosition: 'top center', className: "info" });
                         }
                     });
 

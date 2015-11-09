@@ -153,6 +153,15 @@
 
         }
 
+
+
+
+    });
+
+    //this controller controllers room general functions, eg end class.
+    app.controller('roomFunctions', function ($scope, $http, $timeout) {
+
+        //exit class
         chat.client.endClass = function() {
             $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
 
@@ -162,10 +171,7 @@
 
         }
 
-
     });
-
-
 
 
 
