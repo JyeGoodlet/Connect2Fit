@@ -43,7 +43,7 @@
                 </td>
                 <td>
                     
-                    <button ng-if="class.LoggedInUserAttending == true && class.sessionEnded == false" ng-click="leaveClass(class)" type="button" class="btn btn btn-danger  " style="width: 100px;">Leave Class</button>
+                    <button ng-if="class.LoggedInUserAttending == true && class.sessionEnded == false " ng-click="leaveClass(class)" type="button" class="btn btn btn-danger  " style="width: 100px;">Leave Class</button>
                     <span ng-if="class.sessionEnded">Class Has Ended</span>
                     <a ng-if="nearTime(class.date, class.time) && class.sessionEnded == false" class="btn btn btn-success" ng-href="/Room/Room/{{class.id}}">Join Room</a>
                 </td>

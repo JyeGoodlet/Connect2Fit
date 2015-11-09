@@ -118,7 +118,7 @@
         //this is the module that all the angular controllers on this page use
         var app = angular.module('Room', []);
 
-        
+
 
 
         //The Chat Controller allows the client to send and recieve text messages. Uses signalr
@@ -173,21 +173,21 @@
                 connect();
 
             })
-            
+
             var selfEasyrtcid = "";
 
 
             function connect() {
                 easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
-    
+
                 easyrtc.enableAudio(true);
                 easyrtc.enableVideo(false);
                 easyrtc.dontAddCloseButtons();
                 easyrtc.enableDataChannels(false);
                 easyrtc.setUsername("@User.Identity.Name");
                 easyrtc.joinRoom("@Model.id", null, loginSuccess, loginFailure)
-                
-                
+
+
                 easyrtc.setRoomOccupantListener(callEverybodyElse);
 
                 easyrtc.easyApp("easyrtc.audioVideoSimple", "callerVideo", ["box0", "box1", "box2", "box3", "box4"], loginSuccess, loginFailure);
@@ -198,12 +198,12 @@
                         //TODO: go to an error page
                         window.location.replace("/Scheduler/MyClasses?roomKick=true");
 
-                    } 
+                    }
 
 
                     var user = easyrtc.idToName(easyrtcid);
-                    
- 
+
+
 
 
                     if (user == "@Model.instructor.Email") {
@@ -216,12 +216,12 @@
                         console.log("not instructor");
                     }
                     $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
-                    $scope.$apply(); 
+                    $scope.$apply();
 
                 });
 
                 easyrtc.setOnHangup(function(easyrtcid, slot) {
-                    
+
                     //check if instructor has left room
                     if ($scope.instructorId == easyrtcid) {
                         $("#box" + slot).hide();
@@ -230,10 +230,10 @@
 
                     //remove client from list
                     delete $scope.connectedClients[easyrtcid];
-                    
+
                     $scope.$apply();
-                    
-                    
+
+
                 });
             }
 
@@ -241,9 +241,9 @@
 
             function callEverybodyElse(roomName, otherPeople) {
 
-                
-                
-               
+
+
+
                 easyrtc.setRoomOccupantListener(null); // so we're only called once.
 
                 var list = [];
@@ -292,11 +292,11 @@
         })
 
         //this controller controllers room general functions, eg end class.
-        app.controller('roomfunctions', function ($scope, $http, $timeout) {
+        app.controller('roomfunctions', function ($scope, $http, $timeout, $interval) {
 
             //end class notification
             chat.client.endClassNotify = function() {
-                
+
 
                 //show notification
                 $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
@@ -308,14 +308,33 @@
             var classEndTimeout = function() {
 
                 //create time object
+                classDateTime = moment("@Model.ClassDateTime", "DD-MM-YYYY HH:mm A");
 
-                //check if an hour has passed every 5 minutes 
+                //check if an hour has passed every 5 minutes
+                endNotification = false;
+                $interval(function() {
+                    
+                    
+                    //if class has ended kick user
+                    if (classDateTime.clone().add(1,'h').isBefore(moment()) ) {
+                        $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
+                        $timeout(function() {
+                            window.location.replace("/Scheduler/MyClasses");
+                        }, 2000);
+                    }
+
+                    //if 5 minutes to class end send notification
+                    if (classDateTime.clone().add(55,'m').isBefore(moment()) && endNotification == false) {
+                        $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+                        endNotification = true;
+                    }
+
+                    
+
+                }, 1000 * 60  );
                 
-                //if 5 minutes to class end send notification
-
-                //if class has ended kick user
-
-            }
+                    
+            }()
 
 
             //end class
@@ -323,7 +342,7 @@
                 $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
 
                 $timeout(function() {
-                    window.location.replace("/Scheduler/MyClasses"); 
+                    window.location.replace("/Scheduler/MyClasses");
                 }, 2000);
 
             }
