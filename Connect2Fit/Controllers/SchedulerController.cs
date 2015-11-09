@@ -123,6 +123,15 @@ namespace Connect2Fit.Controllers
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
             {
+                //check if class has ended
+                if (item.sessionEnded == false && DateTime.Now > item.ClassDateTime.AddHours(1))
+                {
+                    item.sessionEnded = true;
+                    db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+
+                }
+
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
@@ -160,6 +169,15 @@ namespace Connect2Fit.Controllers
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
             {
+                //check if class has ended
+                if (item.sessionEnded == false && DateTime.Now > item.ClassDateTime.AddHours(1))
+                {
+                    item.sessionEnded = true;
+                    db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+
+                }
+
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
@@ -198,6 +216,14 @@ namespace Connect2Fit.Controllers
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
             {
+                //check if class has ended
+                if (item.sessionEnded == false && DateTime.Now > item.ClassDateTime.AddHours(1))
+                {
+                    item.sessionEnded = true;
+                    db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+
+                }
                 calEventItems.Add(item.id.ToString(), new CalendarEvent
                 {
                     id = item.id,
