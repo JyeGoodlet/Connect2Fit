@@ -644,12 +644,12 @@
             this.trackedPoint_Body.pointY = angularCharacter['Body'].y;
             this.trackedPoint_Head.pointX = angularCharacter['Head'].x;
             this.trackedPoint_Head.pointY = angularCharacter['Head'].y;
-            this.trackedPoint_RightShoulder.pointX = angularCharacter['R Shoulder'].x;
-            this.trackedPoint_RightShoulder.pointY = angularCharacter['R Shoulder'].y;
+            this.trackedPoint_RightShoulder.pointX = angularCharacter['R Shoulder'].x - 20;
+            this.trackedPoint_RightShoulder.pointY = angularCharacter['R Shoulder'].y + 20;
             this.trackedPoint_RightElbow.pointX = angularCharacter['R Elbow'].x;
             this.trackedPoint_RightElbow.pointY = angularCharacter['R Elbow'].y;
-            this.trackedPoint_LeftShoulder.pointX = angularCharacter['L Shoulder'].x;
-            this.trackedPoint_LeftShoulder.pointY = angularCharacter['L Shoulder'].y;
+            this.trackedPoint_LeftShoulder.pointX = angularCharacter['L Shoulder'].x + 10;
+            this.trackedPoint_LeftShoulder.pointY = angularCharacter['L Shoulder'].y + 40;
             this.trackedPoint_LeftElbow.pointX = angularCharacter['L Elbow'].x;
             this.trackedPoint_LeftElbow.pointY = angularCharacter['L Elbow'].y;
             this.trackedPoint_LeftWrist.pointX = angularCharacter['L Hand'].x;
@@ -657,9 +657,19 @@
             this.trackedPoint_RightWrist.pointX = angularCharacter['R Hand'].x;
             this.trackedPoint_RightWrist.pointY = angularCharacter['R Hand'].y;
             this.trackedPoint_LeftHip.pointX = angularCharacter['L Hip'].x;
-            this.trackedPoint_LeftHip.pointY = angularCharacter['L Hip'].y;;
-            this.trackedPoint_RightHip.pointX = angularCharacter['R Hip'].x;
-            this.trackedPoint_RightHip.pointY = angularCharacter['R Hip'].y;
+            this.trackedPoint_LeftHip.pointY = angularCharacter['L Hip'].y;
+
+            if (angularCharacter['R Hip'].x == angularCharacter['R Elbow'].x)
+            {
+                this.trackedPoint_RightHip.pointX = this.trackedPoint_LeftHip.pointX + 60;
+                this.trackedPoint_RightHip.pointY = this.trackedPoint_LeftHip.pointY;
+            }
+            else
+            {
+                this.trackedPoint_RightHip.pointX = angularCharacter['R Hip'].x;
+                this.trackedPoint_RightHip.pointY = angularCharacter['R Hip'].y;
+            }
+                        
             this.trackedPoint_LeftKnee.pointX = angularCharacter['L Knee'].x;
             this.trackedPoint_LeftKnee.pointY = angularCharacter['L Knee'].y;
             this.trackedPoint_RightKnee.pointX = angularCharacter['R Knee'].x;
