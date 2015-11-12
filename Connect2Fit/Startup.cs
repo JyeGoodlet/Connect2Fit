@@ -11,8 +11,15 @@ namespace Connect2Fit
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            string sqlConnectionString = "Server=tcp:f5bbrkoevs.database.windows.net,1433;Database=connect2fit;User ID=jye.goodlet@f5bbrkoevs;Password=RandomPassword123;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-            GlobalHost.DependencyResolver.UseSqlServer(sqlConnectionString);
+            string connectionString = "Endpoint=sb://connectfit.servicebus.windows.net/;SharedAccessKeyName=jgoodlet;SharedAccessKey=D4NBMm0zw9xbvDZutj79P3lrS5cQWrx42GsnfoPfgkQ";
+
+
+            var config = new ServiceBusScaleoutConfiguration(connectionString, "blast")
+            {
+                TopicCount = 3,
+                MaxQueueLength = 50
+            };
+            GlobalHost.DependencyResolver.UseServiceBus(config);
             app.MapSignalR();
         }
     }
