@@ -12,7 +12,6 @@ namespace Connect2Fit
         {
             ConfigureAuth(app);
 
-            GlobalHost.DependencyResolver.UseServiceBus(ConfigurationManager.ConnectionStrings["Connect2FitServiceBus"].ConnectionString, "Chat");
             app.MapSignalR();
         }
     }
