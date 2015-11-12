@@ -11,10 +11,10 @@ namespace Connect2Fit
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            string connectionString = "Endpoint=sb://connectfit.servicebus.windows.net/;SharedAccessKeyName=jgoodlet;SharedAccessKey=D4NBMm0zw9xbvDZutj79P3lrS5cQWrx42GsnfoPfgkQ";
+            string connectionString = "Endpoint=sb://connect2fit.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=WPxH/8w8B2Mqx47PfU6H2h8dhQeLwXWzb7L1E6CHZDU=";
 
 
-            var config = new ServiceBusScaleoutConfiguration(connectionString, "blast")
+            var config = new ServiceBusScaleoutConfiguration(connectionString, "blah")
             {
                 TopicCount = 3,
                 MaxQueueLength = 50
