@@ -37,6 +37,8 @@ namespace Connect2Fit.Controllers
             //also check if room exists
             if (scheduleItem == null || DateTime.Now > scheduleItem.ClassDateTime.AddHours(1) || DateTime.Now < scheduleItem.ClassDateTime.AddHours(-1) || scheduleItem.sessionEnded)
             {
+
+
                 //redirect to my classes for now
                 return RedirectToAction("MyClasses", "Scheduler");
 
