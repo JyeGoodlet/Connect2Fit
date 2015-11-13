@@ -206,6 +206,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="helpers\DatetimeHelpers.cs" />
     <Compile Include="hubs\RoomHub.cs" />
     <Compile Include="hubs\ScheduleItemHub.cs" />
     <Compile Include="Migrations\201509271221025_InitialCreate.cs" />

@@ -1,4 +1,5 @@
-﻿using Connect2Fit.hubs;
+﻿using Connect2Fit.helpers;
+using Connect2Fit.hubs;
 using Connect2Fit.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -124,7 +125,7 @@ namespace Connect2Fit.Controllers
             foreach (var item in items)
             {
                 //check if class has ended
-                if (item.sessionEnded == false && DateTime.Now > item.ClassDateTime.AddHours(1))
+                if (item.sessionEnded == false && DateTime.Now.NowServerFix() > item.ClassDateTime.AddHours(1))
                 {
                     item.sessionEnded = true;
                     db.Entry(item).State = System.Data.Entity.EntityState.Modified;
@@ -170,7 +171,8 @@ namespace Connect2Fit.Controllers
             foreach (var item in items)
             {
                 //check if class has ended
-                if (item.sessionEnded == false && DateTime.Now > item.ClassDateTime.AddHours(1))
+
+                if (item.sessionEnded == false && DateTime.Now.NowServerFix() > item.ClassDateTime.AddHours(1))
                 {
                     item.sessionEnded = true;
                     db.Entry(item).State = System.Data.Entity.EntityState.Modified;
@@ -217,7 +219,7 @@ namespace Connect2Fit.Controllers
             foreach (var item in items)
             {
                 //check if class has ended
-                if (item.sessionEnded == false && DateTime.Now > item.ClassDateTime.AddHours(1))
+                if (item.sessionEnded == false && DateTime.Now.NowServerFix() > item.ClassDateTime.AddHours(1))
                 {
                     item.sessionEnded = true;
                     db.Entry(item).State = System.Data.Entity.EntityState.Modified;
