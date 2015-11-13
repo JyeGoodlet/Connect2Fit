@@ -35,10 +35,8 @@ namespace Connect2Fit.Controllers
 
             //Check if room can be entered yet. (hour before and hour after block)
             //also check if room exists
-            var test = scheduleItem.ClassDateTime.ToUniversalTime();
-            if (scheduleItem == null || DateTime.UtcNow > scheduleItem.ClassDateTime.ToUniversalTime().AddHours(1) || DateTime.UtcNow < scheduleItem.ClassDateTime.ToUniversalTime().AddHours(-1) || scheduleItem.sessionEnded)
+            if (scheduleItem == null || DateTime.Now.ToLocalTime() > scheduleItem.ClassDateTime.ToLocalTime().AddHours(1) || DateTime.Now.ToLocalTime() < scheduleItem.ClassDateTime.ToLocalTime().AddHours(-1) || scheduleItem.sessionEnded)
             {
-
 
                 //redirect to my classes for now
                 return RedirectToAction("MyClasses", "Scheduler");
