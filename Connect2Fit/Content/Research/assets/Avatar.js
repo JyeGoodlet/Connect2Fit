@@ -554,7 +554,7 @@
     this.paintAvatar = function () {
 
         document.getElementById(this.divName).innerHTML =
-            "<svg viewBox='0 0 700 700' preserveAspectRatio='xMinYMax meet'  height='500' width='500'>" +
+            "<svg viewBox='0 0 500 500' preserveAspectRatio='xMinYMax meet'  height='300' width='300'>" +
                 // Right Shoe
                 "<path fill=" + this.shoesColour + " d='M" + this.rShoeTPT1.pointX + "," + this.rShoeTPT1.pointY + " L" + this.rShoeTPT2.pointX + "," + this.rShoeTPT2.pointY + " L" + this.rShoeTPT3.pointX + "," + this.rShoeTPT3.pointY +
                     " L" + this.rShoeTPT4.pointX + "," + this.rShoeTPT4.pointY + " C" + this.rShoeTPT4.pointX + "," + this.rShoeTPT4.pointY + " " + this.rShoeTPT5.pointX + "," + this.rShoeTPT5.pointY + " " + this.rShoeTPT6.pointX + "," + this.rShoeTPT6.pointY +

@@ -176,7 +176,7 @@
 
 
             function connect() {
-                easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
+                easyrtc.setSocketUrl("@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString");
 
                 easyrtc.enableAudio(true);
                 easyrtc.enableVideo(false);
@@ -472,6 +472,7 @@
 
                                 }
                             };
+                            console.log(vm.character);
                             avatar.update(vm.character);
                         });
                     }

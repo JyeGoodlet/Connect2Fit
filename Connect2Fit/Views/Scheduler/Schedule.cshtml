@@ -159,6 +159,7 @@
             $scope.classesDataLink = "/Scheduler/scheduledClasses";
 
             $scope.getData = function (date) {
+
                 console.log(date);
                 $http({
                     url: $scope.classesDataLink,
@@ -275,10 +276,15 @@
                 var day;
                 var cookieDay = $cookies.get("day");
                 console.log(cookieDay);
+                console.log()
                 if (cookieDay != null) {
                     day = moment(cookieDay, "YYYY-MM-DD");
                 }
                 else {
+                    day = moment();
+                }
+                //check if day is over
+                if (day < moment()) {
                     day = moment();
                 }
                 for (var x = 0; x < 7; x++) {
@@ -300,6 +306,7 @@
 
 
                 //load today
+                
                 $scope.getData($scope.selectedDay );
 
             }();

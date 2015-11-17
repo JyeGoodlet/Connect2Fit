@@ -14,6 +14,7 @@
                 <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
                 <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
                 <canvas style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
+                <div id="avatar-{{client.id}}" style="width:400px; height:500px;"></div>
                 <div>
                     <span>{{client.name}}</span>
                     <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
@@ -76,6 +77,7 @@
 <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
 <script src="~/signalr/hubs"></script>
 <script src="~/Content/Research/assets/armWavingOO.js"></script>
+<script src="~/Content/Research/assets/Avatar.js"></script>
 
 <link rel="stylesheet" type="text/css" href="~/Content/easyrtc/easyrtc.css" />
 
@@ -83,6 +85,8 @@
 <script src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/easyrtc/easyrtc.js"></script>
 <script type="text/javascript">
+    //instructor room really needs to rewritten from the ground up.
+
 
     //signalr connection - used to send messages between clients via server
     chat = $.connection.roomHub;
@@ -117,11 +121,6 @@
             $scope.newMessage = "";
         }
 
-        //onload
-        var init = function() {
-            //DO STUFF HERE
-
-        }();
 
         //signalr functions
         chat.client.message = function (message) {
@@ -132,29 +131,7 @@
 
         }
 
-        //paint points on to canvas
-        var paintPoints = function (context, points) {
-      
-            context.font = '24px Helvetica';
-            context.fillStyle = "#fff";
-            for (x in points) {
-                var point = points[x];
-                context.fillText('+', point.x - 6, point.y + 6);
-            };
 
-
-            return false;
-        };
-
-        chat.client.recievePoint = function(point, clientId) {
-            //console.log(clientId);
-            var canvas = $("#" + clientId)[0];
-            var context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            paintPoints(context, point);
-
-
-        }
 
 
 
@@ -163,6 +140,7 @@
 
     //this controller controllers room general functions, eg end class.
     app.controller('roomFunctions', function ($scope, $http, $timeout) {
+
 
         //exit class
         chat.client.endClass = function() {
@@ -174,7 +152,70 @@
 
         }
 
+
+        //AVATAR stuff start -
+
+        //hold reference to each clients avatar
+        avatars = {};
+
+        //Recieve Points from cients
+        chat.client.recievePoint = function(point, clientId) {
+            //console.log(clientId);
+
+            //paint points to blue canvas
+            paintPoints( point, clientId);
+
+            //send points to avatar
+            avatarPoints(point, clientId);
+
+            //add points to avatar
+
+
+        }
+
+        
+
+
+        var avatarPoints = function(points, clientId) 
+        {
+            
+            //check if avatar already exists if not add it
+            if (typeof avatars[clientId] == 'undefined') {
+                console.log('avatar-' + clientId);
+                avatars[clientId]  = new avatar('avatar-' + clientId ) ;
+                avatars[clientId].setInitialPoints();
+                avatars[clientId].paintAvatar();
+            }
+            avatars[clientId].update(points)
+            avatar.update(vm.character);
+                
+
+        }
+
+        //paint points on to canvas
+        var paintPoints = function (points, clientId) {
+            var canvas = $("#" + clientId)[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.font = '24px Helvetica';
+            context.fillStyle = "#fff";
+            for (x in points) {
+                var point = points[x];
+                context.fillText('+', point.x - 6, point.y + 6);
+            };
+
+
+            return false;
+        };
+
+        //AVATAR stuff end
+
+
+
     });
+
+
+
 
 
 
@@ -197,13 +238,6 @@
             });
         }
 
-        $scope.addAvatarToUser = function(user) {
-            console.log(user.id);
-            var id = user.id;
-            $timeout(function(){
-                user.avatar = new armWaving(String(id));
-            });
-        }
 
 
         $scope.endClass = function() {
@@ -250,7 +284,7 @@
         var selfEasyrtcid = "";
 
         function connect() {
-            easyrtc.setSocketUrl("http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080");
+            easyrtc.setSocketUrl("@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString");
             easyrtc.setVideoDims(320, 240);
             easyrtc.dontAddCloseButtons();
             easyrtc.setUsername("@User.Identity.Name");
