@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 @using Connect2Fit.Models;
+@using System.Configuration;
 @model  ScheduleItem
 @{
     ViewBag.Title = "InstructorRoom";
@@ -76,11 +77,11 @@
 <script src="~/signalr/hubs"></script>
 <script src="~/Content/Research/assets/armWavingOO.js"></script>
 
-<link rel="stylesheet" type="text/css" href="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/easyrtc/easyrtc.css" />
 
 <!-- Assumes global locations for socket.io.js and easyrtc.js -->
-<script src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="http://ec2-52-64-224-50.ap-southeast-2.compute.amazonaws.com:8080/easyrtc/easyrtc.js"></script>
+<script src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/easyrtc/easyrtc.js"></script>
 <script type="text/javascript">
 
     //signalr connection - used to send messages between clients via server
