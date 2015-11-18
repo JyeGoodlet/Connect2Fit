@@ -8,398 +8,424 @@
 
 
 <div ng-app="Room" ng-cloak ng-controller="roomFunctions">
-    <div ng-controller="WebRTCVideo">
-        <div class="row" id="ClientAvatars">
-            <div class="col-md-3" ng-repeat="client in clients">
-                <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
-                <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
-                <canvas ng-show="" style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
-                <div ng-hide="showPoints" id="avatar-{{client.id}}" style="width:400px; height:300px;"></div>
-                <div>
-                    <span>{{client.name}}</span>
-                    <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
-                    <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <h3>Instructor Feed</h3>
-            <div class="col-md-3" id="videos">
-                <video autoplay="autoplay" id="selfVideo"></video>
-                <div>Room Status: <span id="status">Connecting.</span></div>
-
-                <video id="box0" style="display:none"></video>
-                <video id="box1" style="display:none"></video>
-                <video id="box2" style="display:none"></video>
-                <video id="box3" style="display:none"></video>
-                <video id="box4" style="display:none"></video>
-
-
-                <button class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
-                <input type="checkbox" ng-model="showPoints" /> Show Points
-
+    <div class="row" id="ClientAvatars">
+        <div class="col-md-3" ng-repeat="client in clients">
+            <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
+            <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
+            <canvas ng-show="showPoints" style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
+            <div ng-hide="showPoints" id="avatar-{{client.id}}" style="width:400px; height:300px;"></div>
+            <div>
+                <span>{{client.name}}</span>
+                <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
+                <span ng-if="(client.name | userOnline:getConnectedClients()) == false" class="label label-danger">Offline</span>
             </div>
         </div>
-        <div ng-controller="Chat">
-            <h3>Chat</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Person</th>
-                        <th>Message</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="animation" ng-repeat="message in messages">
-                        <td>{{message.person}}</td>
-                        <td>{{message.text}}</td>
+    </div>
 
-                    </tr>
-                </tbody>
+    <div class="row">
+        <h3>Instructor Feed</h3>
+        <div class="col-md-3" id="videos">
+            <video autoplay="autoplay" id="selfVideo"></video>
+            <div>Room Status: <span id="status">Connecting.</span></div>
 
-            </table>
-            <form>
-                <input type="text" ng-model="newMessage" />
-                <input type="submit" ng-click="addMessage()" value="Save" />
-            </form>
+            <video id="box0" style="display:none"></video>
+            <video id="box1" style="display:none"></video>
+            <video id="box2" style="display:none"></video>
+            <video id="box3" style="display:none"></video>
+            <video id="box4" style="display:none"></video>
 
+
+            <button class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
+            <input type="checkbox" ng-model="showPoints" /> Show Points
 
         </div>
+    </div>
+    <div>
+        <h3>Chat</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Person</th>
+                    <th>Message</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animation" ng-repeat="message in messages">
+                    <td>{{message.person}}</td>
+                    <td>{{message.text}}</td>
+
+                </tr>
+            </tbody>
+
+        </table>
+        <form>
+            <input type="text" ng-model="newMessage" />
+            <input type="submit" ng-click="addMessage()" value="Save" />
+        </form>
+
+
     </div>
 </div>
 
 
 
 @section scripts {
-<script src='~/Scripts/angular.js'></script>
-<script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
-<script src="~/signalr/hubs"></script>
-<script src="~/Content/Research/assets/armWavingOO.js"></script>
-<script src="~/Content/Research/assets/Avatar.js"></script>
+    <script src='~/Scripts/angular.js'></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Content/Research/assets/armWavingOO.js"></script>
+    <script src="~/Content/Research/assets/Avatar.js"></script>
 
-<link rel="stylesheet" type="text/css" href="~/Content/easyrtc/easyrtc.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/easyrtc/easyrtc.css" />
 
-<!-- Assumes global locations for socket.io.js and easyrtc.js -->
-<script src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/easyrtc/easyrtc.js"></script>
-<script type="text/javascript">
-    //instructor room really needs to rewritten from the ground up.
+    <!-- Assumes global locations for socket.io.js and easyrtc.js -->
+    <script src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString/easyrtc/easyrtc.js"></script>
+    <script type="text/javascript">
 
 
-    //signalr connection - used to send messages between clients via server
-    chat = $.connection.roomHub;
-    $.connection.hub.start(
-        function () {
-            chat.server.joinRoom(@Model.id);
-        }).done(function () {
-            //closing stuff here
-            //chat.server.leaveRoom(@Model.id);
+        //signalr connection - used to send messages between clients via server
+        chat = $.connection.roomHub;
+        $.connection.hub.start(
+            function () {
+                chat.server.joinRoom(@Model.id);
+            }).done(function () {
+                //closing stuff here
+                //chat.server.leaveRoom(@Model.id);
+            });
+
+
+        //this is the module that all the angular controllers on this page use
+        var app = angular.module('Room', []);
+
+
+        //this controller controllers room general functions, eg end class.
+        app.controller('roomFunctions', function ($scope, $http, $timeout, ChatService, InstructorFunctions, AvatarService, WebRtcService) {
+            
+            //chat functions - start
+            $scope.userId = ChatService.userId;
+            $scope.messages = ChatService.getMessages();
+            $scope.addMessage = ChatService.addMessage;
+
+
+            //chat functions - end
+
+            //instructor functions - start
+            //show or hide avatar points
+            $scope.showPoints = InstructorFunctions.showPoints;
+
+
+            //instructor functions - end
+
+
+
+
+            //WEBTC -start
+            var maxCALLERS = 5;
+            $scope.clients;
+            $scope.connectedClients = {};
+
+            $scope.getConnectedClients = function() {
+                return $scope.connectedClients;
+            }
+
+
+            
+
+
+            $scope.getUsers = function() {
+                $http.get('/Room/GetAttendies/' + @Model.id).then(function(response) {
+                    //console.log(response.data)
+                    $scope.clients = response.data;
+
+                });
+            }
+
+            var init = function() {
+
+                $scope.getUsers();
+                connect();
+
+            }();
+
+            //allow instructor to end class
+            $scope.endClass = function() {
+
+                //show notification
+                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+
+                //send notification to other user via signalr
+                chat.server.endClass("@Model.id");
+
+                //hangup call
+                easyrtc.hangupAll();
+
+
+            }
+
+            //check if user is online
+            $scope.online = function(id) {
+                id = id;
+                items = $scope.connectedClients;
+
+                for (var x = 0; x < items.length;x++) {
+
+                    //console.log(item);
+                    if (items[x] == id) {
+                        return "Connected";
+                    }
+                }
+                return "Not Connected"
+            }
+
+
+
+            var selfEasyrtcid = "";
+
+            //connect to room
+            function connect() {
+                easyrtc.setSocketUrl("@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString");
+                easyrtc.setVideoDims(320, 240);
+                easyrtc.dontAddCloseButtons();
+                easyrtc.setUsername("@User.Identity.Name");
+                easyrtc.joinRoom("@Model.id", null, null, null)
+                easyrtc.setRoomOccupantListener(WebRtcService.callEverybodyElse);
+
+                easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["box0", "box1", "box2", "box3", "box4"], WebRtcService.loginSuccess, WebRtcService.loginFailure);
+
+                easyrtc.setOnCall( function(easyrtcid, slot) {
+                    //kick duplicate users.
+                    if ( easyrtc.idToName(easyrtcid) == "@User.Identity.Name") {
+                        //TODO: go to an error page
+                        window.location.replace("/Scheduler/MyClasses?roomKick=true");
+
+                    }
+                    //add member to list
+                    $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
+                    $scope.$apply();
+                })
+
+                easyrtc.setOnHangup(function(easyrtcid, slot) {
+
+                    //remove client from list
+                    delete $scope.connectedClients[easyrtcid];
+                    if(!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+
+                });
+
+            }
+
+
+            //WEBRTC -end
+
+
         });
 
 
-    //this is the module that all the angular controllers on this page use
-    var app = angular.module('Room', []);
-    
-    
-    //The Chat Controller allows the client to send and recieve text messages. Uses signalr
-    app.controller('Chat', function ($scope, $http, $timeout) {
-        var groupId = @Model.id;
-        $scope.userId = "@User.Identity.Name";
+        app.service('WebRtcService', function() {
+            var maxCALLERS = 5;
+            var selfEasyrtcid = "";
 
-
-         
-        //hold a list of all the classes
-        $scope.messages = [];
-
-        $scope.addMessage = function () {
-            //add message
-            var newMessage = { person: $scope.userId, text: $scope.newMessage }
-            $scope.messages.push(newMessage);
-            chat.server.message(groupId, newMessage);
-            $scope.newMessage = "";
-        }
-
-
-        //signalr functions
-        chat.client.message = function (message) {
-
-            //console.log(message);
-            $scope.messages.push(message);
-            $scope.$apply();
-
-        }
-
-
-
-
-        
-
-    });
-
-    //this controller controllers room general functions, eg end class.
-    app.controller('roomFunctions', function ($scope, $http, $timeout) {
-
-
-        //exit class
-        chat.client.endClass = function() {
-            $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
-
-            $timeout(function() {
-                window.location.replace("/Scheduler/MyClasses"); 
-            }, 2000);
-
-        }
-
-
-        //AVATAR stuff start -
-
-        $scope.showPoints = false; 
-
-
-        //hold reference to each clients avatar
-        avatars = {};
-
-        //Recieve Points from cients
-        chat.client.recievePoint = function(point, clientId) {
-            //console.log(clientId);
-
-            //paint points to blue canvas
-            paintPoints( point, clientId);
-
-            //send points to avatar
-            avatarPoints(point, clientId);
-
-            //add points to avatar
-
-
-        }
-
-        
-
-
-        var avatarPoints = function(points, clientId) 
-        {
-            
-            //check if avatar already exists if not add it
-            if (typeof avatars[clientId] == 'undefined') {
-                console.log('avatar-' + clientId);
-                avatars[clientId]  = new avatar('avatar-' + clientId ) ;
-                avatars[clientId].setInitialPoints();
-                avatars[clientId].paintAvatar();
+            this.loginSuccess = function (easyrtcid) {
+                selfEasyrtcid = easyrtcid;
+                document.getElementById("status").innerHTML = "Connected";
             }
-            avatars[clientId].update(points);
-                
 
-        }
 
-        //paint points on to canvas
-        var paintPoints = function (points, clientId) {
-            var canvas = $("#" + clientId)[0];
-            var context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.font = '24px Helvetica';
-            context.fillStyle = "#fff";
-            for (x in points) {
-                var point = points[x];
-                context.fillText('+', point.x - 6, point.y + 6);
+            this.loginFailure = function (errorCode, message) {
+                easyrtc.showError(errorCode, message);
+            }
+
+
+            this.callEverybodyElse = function(roomName, otherPeople) {
+
+
+
+                easyrtc.setRoomOccupantListener(null); // so we're only called once.
+
+                var list = [];
+                var connectCount = 0;
+                for(var easyrtcid in otherPeople ) {
+                    list.push(easyrtcid);
+                }
+                //
+                // Connect in reverse order. Latter arriving people are more likely to have
+                // empty slots.
+                //
+                function establishConnection(position) {
+                    function callSuccess() {
+                        connectCount++;
+                        if( connectCount < maxCALLERS && position > 0) {
+                            establishConnection(position-1);
+                        }
+                    }
+                    function callFailure(errorCode, errorText) {
+                        easyrtc.showError(errorCode, errorText);
+                        if( connectCount < maxCALLERS && position > 0) {
+                            establishConnection(position-1);
+                        }
+                    }
+                    easyrtc.call(list[position], callSuccess, callFailure);
+
+                }
+                if( list.length > 0) {
+                    establishConnection(list.length-1);
+                }
+            }
+
+
+
+        });
+
+
+        //the chat services
+        app.service('ChatService' , function($rootScope) {
+            //signar grouid
+            var groupId = @Model.id;
+
+            //user id
+            this.userId = "@User.Identity.Name";
+
+            //store messages
+            var messages = [];
+
+            this.getMessages = function() {
+                return messages;
+            }
+
+            function addMessageLocal(message) {
+                messages.push(message)
+
+            }
+
+            //send a message
+            this.addMessage = function () {
+                //add message
+                var newMessage = { person: this.userId, text: this.newMessage }
+                messages.push(newMessage);
+                chat.server.message(groupId, newMessage);
+                //$scope.newMessage = "";
+            }
+
+            //recieve message - signalr
+            chat.client.message = function (message) {
+                addMessageLocal(message);
+                //$scope.messages.push(message);
+                if(!$rootScope.$$phase) {
+                    $rootScope.$apply();
+                }
+
+            }
+
+
+
+
+        });
+
+        //instructor functions
+        app.service('InstructorFunctions', function($timeout) {
+            //end class notification and redirect
+            chat.client.endClass = function() {
+                $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
+
+                $timeout(function() {
+                    window.location.replace("/Scheduler/MyClasses");
+                }, 2000);
+
+            }
+
+            //show or hide avatar points
+            this.showPoints = false;
+
+
+
+        });
+
+        app.service('AvatarService' , function() {
+
+            //hold reference to each clients avatar
+            var avatars = {};
+
+
+            //Recieve Points from cients
+            chat.client.recievePoint = function(point, clientId) {
+                //console.log(clientId);
+
+                //paint points to blue canvas
+                paintPoints( point, clientId);
+
+                //send points to avatar
+                avatarPoints(point, clientId);
+
+                //add points to avatar
+
+
+            }
+
+
+            //update points
+            var avatarPoints = function(points, clientId)
+            {
+
+                //check if avatar already exists if not add it
+                if (typeof avatars[clientId] == 'undefined') {
+                    console.log('avatar-' + clientId);
+                    avatars[clientId]  = new avatar('avatar-' + clientId ) ;
+                    avatars[clientId].setInitialPoints();
+                    avatars[clientId].paintAvatar();
+                }
+                avatars[clientId].update(points);
+
+
+            }
+
+            //paint points on to canvas
+            var paintPoints = function (points, clientId) {
+                var canvas = $("#" + clientId)[0];
+                var context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.font = '24px Helvetica';
+                context.fillStyle = "#fff";
+                for (x in points) {
+                    var point = points[x];
+                    context.fillText('+', point.x - 6, point.y + 6);
+                };
+
+
+                return false;
             };
 
-
-            return false;
-        };
-
-        //AVATAR stuff end
+            //AVATAR - end
 
 
-
-    });
+        });
 
 
 
+        //this filter is used to show which clients are offline or online
+        angular.module('Room').filter('userOnline', function() {
+            return function(user, onlineUsers) {
 
+                for (var i in onlineUsers) {
 
+                    if (onlineUsers[i] == user) {
 
-    //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
-    //webrtc is peer to peer so video does not pass through server.
-    app.controller('WebRTCVideo', function ($scope, $http, $timeout) {
-        var maxCALLERS = 5;
-        $scope.clients;
-        $scope.connectedClients = {};
-        
-        $scope.getConnectedClients = function() {
-            return $scope.connectedClients;
-        }
-
-        $scope.getUsers = function() {
-            $http.get('/Room/GetAttendies/' + @Model.id).then(function(response) {
-                //console.log(response.data)
-                $scope.clients = response.data;
-                
-            });
-        }
-
-
-
-        $scope.endClass = function() {
-
-            //show notification
-            $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
-
-            //send notification to other user via signalr
-            chat.server.endClass("@Model.id");
-            
-            //hangup call
-            easyrtc.hangupAll();
-
-
-        }
-  
-
-        $scope.online = function(id) {
-            id = id;
-            items = $scope.connectedClients;
-
-            for (var x = 0; x < items.length;x++) {
-
-                //console.log(item);
-                if (items[x] == id) {
-                    return "Connected";
-                } 
-            }
-            return "Not Connected"
-        }
-
-        var init = function() {
-           
-            $scope.getUsers();
-            
-        }();
-
-
-        $(document).ready(function() {
-            connect();
-
-        })
-
-        var selfEasyrtcid = "";
-
-        function connect() {
-            easyrtc.setSocketUrl("@ConfigurationManager.ConnectionStrings["easyrtc"].ConnectionString");
-            easyrtc.setVideoDims(320, 240);
-            easyrtc.dontAddCloseButtons();
-            easyrtc.setUsername("@User.Identity.Name");
-            easyrtc.joinRoom("@Model.id", null, null, null)
-            easyrtc.setRoomOccupantListener(callEverybodyElse);
-
-            easyrtc.easyApp("easyrtc.audioVideoSimple", "selfVideo", ["box0", "box1", "box2", "box3", "box4"], loginSuccess, loginFailure);
-
-            easyrtc.setOnCall( function(easyrtcid, slot) {
-                //kick duplicate users.
-                if ( easyrtc.idToName(easyrtcid) == "@User.Identity.Name") {
-                    //TODO: go to an error page
-                    window.location.replace("/Scheduler/MyClasses?roomKick=true");
-
-                }
-                //add member to list
-                $scope.connectedClients[easyrtcid] = easyrtc.idToName(easyrtcid);
-                $scope.$apply(); 
-            })
-
-            easyrtc.setOnHangup(function(easyrtcid, slot) {
-                    
-                //remove client from list
-                delete $scope.connectedClients[easyrtcid];
-                if(!$scope.$$phase) {  
-                    $scope.$apply();
-                }
-                    
-            });
-
-        }
-
-        
-
-
-
-
-
-        function callEverybodyElse(roomName, otherPeople) {
-   
-
-
-            easyrtc.setRoomOccupantListener(null); // so we're only called once.
-
-            var list = [];
-            var connectCount = 0;
-            for(var easyrtcid in otherPeople ) {
-                list.push(easyrtcid);
-            }
-            //
-            // Connect in reverse order. Latter arriving people are more likely to have
-            // empty slots.
-            //
-            function establishConnection(position) {
-                function callSuccess() {
-                    connectCount++;
-                    if( connectCount < maxCALLERS && position > 0) {
-                        establishConnection(position-1);
-                    }
-                }
-                function callFailure(errorCode, errorText) {
-                    easyrtc.showError(errorCode, errorText);
-                    if( connectCount < maxCALLERS && position > 0) {
-                        establishConnection(position-1);
-                    }
-                }
-                easyrtc.call(list[position], callSuccess, callFailure);
-
-            }
-            if( list.length > 0) {
-                establishConnection(list.length-1);
-            }
-        }
-
-
-
-
-
-        function loginSuccess(easyrtcid) {
-            selfEasyrtcid = easyrtcid;
-            document.getElementById("status").innerHTML = "Connected";
-        }
-
-
-        function loginFailure(errorCode, message) {
-            easyrtc.showError(errorCode, message);
-        }
-
-
-    });
-
-
-    //this filter is used to show which clients are offline or online
-    angular.module('Room').filter('userOnline', function() {
-        return function(user, onlineUsers) {
-
-            for (var i in onlineUsers) {
-
-                if (onlineUsers[i] == user) {
-                        
                         return true;
                     }
                 }
                 return false;
 
-           
-        };
-    });
 
-       
-    
+            };
+        });
 
-</script>
 
-    }
+
+
+    </script>
+
+}
