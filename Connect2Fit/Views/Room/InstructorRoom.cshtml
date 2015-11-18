@@ -13,8 +13,8 @@
             <div class="col-md-3" ng-repeat="client in clients">
                 <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
                 <div><button type="button" class="btn btn-primary" ng-click="client.avatar.animation()">Wave</button></div> -->
-                <canvas style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
-                <div id="avatar-{{client.id}}" style="width:400px; height:500px;"></div>
+                <canvas ng-show="" style="background-color:blue;height:250px;" id="{{client.id}}" width="640" height="480"></canvas>
+                <div ng-hide="showPoints" id="avatar-{{client.id}}" style="width:400px; height:300px;"></div>
                 <div>
                     <span>{{client.name}}</span>
                     <span ng-if="(client.name | userOnline:getConnectedClients()) == true" class="label label-success">Online</span>
@@ -38,6 +38,7 @@
 
 
                 <button class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
+                <input type="checkbox" ng-model="showPoints" /> Show Points
 
             </div>
         </div>
@@ -134,7 +135,7 @@
 
 
 
-
+        
 
     });
 
@@ -154,6 +155,9 @@
 
 
         //AVATAR stuff start -
+
+        $scope.showPoints = false; 
+
 
         //hold reference to each clients avatar
         avatars = {};
@@ -186,8 +190,7 @@
                 avatars[clientId].setInitialPoints();
                 avatars[clientId].paintAvatar();
             }
-            avatars[clientId].update(points)
-            avatar.update(vm.character);
+            avatars[clientId].update(points);
                 
 
         }
