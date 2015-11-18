@@ -143,9 +143,9 @@ namespace Connect2Fit.Controllers
                     maxAttendies = item.maxAttendies,
                     title = item.ClassName,
                     instructor = item.instructor.Name,
-                    attendiesCount = item.ApplicationUsers.Count(),
+                    attendiesCount = item.Clients.Count(),
                     sessionEnded = item.sessionEnded,
-                    attendies = (from email in item.ApplicationUsers
+                    attendies = (from email in item.Clients
                                  select  email.Email ).ToArray()
                    
                 });
@@ -162,10 +162,10 @@ namespace Connect2Fit.Controllers
         {
             var clientId = User.Identity.GetUserId();
             /* var items = (from item in db.scheduleItems
-                         where item.ApplicationUsers.Contains(ClientId) == true
+                         where item.Clients.Contains(ClientId) == true
                          select item).ToList(); */
             var yesterday = DateTime.Today.AddDays(-1);
-            var items = db.scheduleItems.Where(x => x.ApplicationUsers.Select(c => c.Id).Contains(clientId) && x.ClassDateTime > yesterday ).ToList();
+            var items = db.scheduleItems.Where(x => x.Clients.Select(c => c.Id).Contains(clientId) && x.ClassDateTime > yesterday ).ToList();
 
             Dictionary<string, CalendarEvent> calEventItems = new Dictionary<string, CalendarEvent>();
             foreach (var item in items)
@@ -190,9 +190,9 @@ namespace Connect2Fit.Controllers
                     maxAttendies = item.maxAttendies,
                     title = item.ClassName,
                     instructor = item.instructor.Name,
-                    attendiesCount = item.ApplicationUsers.Count(),
+                    attendiesCount = item.Clients.Count(),
                     sessionEnded = item.sessionEnded,
-                    LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId()))
+                    LoggedInUserAttending = item.Clients.Contains(db.Users.Find(User.Identity.GetUserId()))
                 });
 
             }
@@ -236,8 +236,8 @@ namespace Connect2Fit.Controllers
                     title = item.ClassName,
                     instructor = item.instructor.Name,
                     sessionEnded = item.sessionEnded,
-                    attendiesCount = item.ApplicationUsers.Count(),
-                    LoggedInUserAttending = item.ApplicationUsers.Contains(db.Users.Find(User.Identity.GetUserId()))
+                    attendiesCount = item.Clients.Count(),
+                    LoggedInUserAttending = item.Clients.Contains(db.Users.Find(User.Identity.GetUserId()))
                 });
 
             }
@@ -265,13 +265,13 @@ namespace Connect2Fit.Controllers
 
 
             //check if user is already in class
-            if (classX.ApplicationUsers.Any(x => x.Id == User.Identity.GetUserId() ))
+            if (classX.Clients.Any(x => x.Id == User.Identity.GetUserId() ))
             {
                 return Json(new { message = "Error: Already Attending Class" });
             }
 
             //check if class is full
-            if (classX.ApplicationUsers.Count == classX.maxAttendies)
+            if (classX.Clients.Count == classX.maxAttendies)
             {
                 return Json(new { message = "Error: Class Full" });
 
@@ -282,7 +282,7 @@ namespace Connect2Fit.Controllers
             
 
             //if everything is ok book the the class
-            classX.ApplicationUsers.Add(db.Users.Find(User.Identity.GetUserId()));
+            classX.Clients.Add(db.Users.Find(User.Identity.GetUserId()));
             db.Entry(classX).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
 
@@ -307,7 +307,7 @@ namespace Connect2Fit.Controllers
             {
 
                 //TODO send notication (email)
-                foreach(var attendee in classX.ApplicationUsers)
+                foreach(var attendee in classX.Clients)
                 {
                     EmailModel email = new EmailModel();
                     email.FromEmail = "classes@connect2fit.com.au";
@@ -351,10 +351,10 @@ namespace Connect2Fit.Controllers
 
 
             //check if user is in class
-            if (classX.ApplicationUsers.Any(x => x.Id == User.Identity.GetUserId()))
+            if (classX.Clients.Any(x => x.Id == User.Identity.GetUserId()))
             {
                 //delete user
-                classX.ApplicationUsers.Remove(db.Users.Find(User.Identity.GetUserId()));
+                classX.Clients.Remove(db.Users.Find(User.Identity.GetUserId()));
                 db.Entry(classX).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 

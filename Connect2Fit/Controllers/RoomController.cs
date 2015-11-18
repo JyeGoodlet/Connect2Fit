@@ -61,7 +61,7 @@ namespace Connect2Fit.Controllers
             else if (User.IsInRole("Client"))
             {
                 //check if user is client of the class
-                if (scheduleItem.ApplicationUsers.Where(x => x.Email == User.Identity.Name).ToList().Count == 0)
+                if (scheduleItem.Clients.Where(x => x.Email == User.Identity.Name).ToList().Count == 0)
                 {
                     return RedirectToAction("MyClasses", "Scheduler");
                 }
@@ -90,7 +90,7 @@ namespace Connect2Fit.Controllers
         {
             ScheduleItem scheduleItem = db.scheduleItems.SingleOrDefault(x => x.id == id);
 
-            var attendies = (from item in scheduleItem.ApplicationUsers
+            var attendies = (from item in scheduleItem.Clients
                             select new { id = item.Id, name = item.Email }).ToDictionary
                             ( g => g.id, g => g);
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -30,9 +31,9 @@ namespace Connect2Fit.Models
         [Display(Name = "Session Time")]
         public string sessionTime { get; set; }
 
-        public bool sessionEnded { get; set; } 
+        public bool sessionEnded { get; set; }
 
-        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
+        public virtual ICollection<ApplicationUser> Clients { get; set; }
 
     }
 }
