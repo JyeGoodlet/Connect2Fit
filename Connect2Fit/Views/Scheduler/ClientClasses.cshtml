@@ -51,7 +51,13 @@
         </tbody>
 
     </table>
+    <div style="text-align:center">
+        <img style="display: block;margin-left: auto; margin-right: auto;" ng-hide="dataLoaded" src="~/Content/Scheduler/ajax-loader.gif" />
+        <span ng-show="noData && dataLoaded">No Classes</span>
 
+    </div>
+
+    <br />
 
 
 
@@ -64,6 +70,7 @@
 
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
+    <script src="~/Content/Scheduler/MyClassesCommonFunctions.js"></script>
 
 
     <script>
@@ -87,7 +94,7 @@
                 sameElse: 'L'
             }
         });
-        var app = angular.module('schedule', ['ngAnimate']);
+        var app = angular.module('schedule', ['ngAnimate', 'schedule.commonFunctions']);
         app.filter('object2Array', function () {
             return function (input) {
                 var out = [];
@@ -97,47 +104,37 @@
                 return out;
             }
         })
-        app.controller('ClientClasses', function ($scope, $http) {
+        app.controller('ClientClasses', function ($scope, $http, commonFunctions) {
             $scope.userId = "@User.Identity.GetUserId()";
 
 
-            $scope.nearTime = function (date, time) {
-                moment.locale('en-AU');
-                classDateTime = moment(date + " " + time, "DD-MM-YYYY HH:mm A");
-                if (classDateTime.isBetween(moment().subtract(1, 'hours'),moment().add(1, 'hours') )) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
+            $scope.nearTime = commonFunctions.nearTime;
 
-            }
-
-            $scope.progressbarColor = function (classItem) {
-                if (classItem.attendiesCount / classItem.maxAttendies * 100 <= 50) {
-                    return "progress-bar-success";
-                }
-                else if (classItem.attendiesCount / classItem.maxAttendies * 100 > 50 && classItem.attendiesCount / classItem.maxAttendies * 100 < 80) {
-                    return "progress-bar-warning";
-                }
-                else if (classItem.attendiesCount / classItem.maxAttendies * 100 >= 80) {
-                    return "progress-bar-danger";
-                }
-
-
-            }
+            $scope.progressbarColor = commonFunctions.progressbarColor;
 
             //hold a list of all the classes
             $scope.classes = [];
             $scope.classesDataLink = "/Scheduler/ClientsClasses";
-
+            $scope.dataLoaded = false;
             $scope.getData = function () {
+            $scope.noData = false;
                 $http({
                     url: $scope.classesDataLink,
                     method: "GET"
 
-                }).success(function (response) { $scope.classes = response });
+                }).success(function (response) {
+                    $scope.classes = response;
+                    $scope.dataLoaded = true;
+                    if (Object.keys($scope.classes).length === 0) {
+                        $scope.noData = true;
+                    }
+                    else {
+                        $scope.noData = false;
+                    }
+
+                });
             }
+
             $scope.leaveClass = function (classItem) {
 
                 $http(
@@ -159,10 +156,6 @@
                     });
 
             }
-
-
-         
-
 
 
 

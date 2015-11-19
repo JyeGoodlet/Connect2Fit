@@ -6,7 +6,7 @@
     ViewBag.Title = "Client Room";
 }
 <link href="~/Content/css/tracker.css" rel="stylesheet" />
-<div ng-app="Room" class="ng-cloak" ng-controller="roomfunctions">
+<div ng-app="Room" class="ng-cloak" ng-controller="ClientRoomController">
     <div ng-controller="webRTCVideo">
         <div class="row">
             <div class="col-md-4" id="intructorVideos">
@@ -28,12 +28,12 @@
                 </div>
             </div>
             <div id="" class="col-md-7 .col-md-offset-1">
-                
-                
+
+
                 <div ng-app="Tracking" ng-controller="TrackingPoints" id="TrackingPoints" class="row">
                     <div class="col-sm-8">
-        
-                       
+
+
                         <h3>Image frame</h3>
                         <div id="camera-error" class="alert alert-warning alert-dismissible fade in" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -55,7 +55,7 @@
             <h4>Connected Users</h4>
             <div ng-repeat="(key, value) in connectedClients">{{value}}</div>
         </div>
-        <div ng-controller="Chat">
+        <div >
             <h2>Client Classes</h2>
             <table class="table table-striped">
                 <thead>
@@ -88,7 +88,7 @@
 @section scripts {
     <script src='~/Scripts/angular.js'></script>
     <script src="~/Content/Research/assets/tracking.js"></script>
-<script src="~/Content/Research/assets/Avatar.js"></script>
+    <script src="~/Content/Research/assets/Avatar.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
     <link rel="stylesheet" type="text/css" href="~/Content/easyrtc/easyrtc.css" />
@@ -118,45 +118,131 @@
 
 
 
+        app.service('RoomFunctions', function($interval) {
 
-        //The Chat Controller allows the client to send and recieve text messages. Uses signalr
-        app.controller('Chat', function ($scope, $http, $timeout) {
-            //group id so messages are only sent to users in the same group. This is the room id
+            //end class notification
+            chat.client.endClassNotify = function() {
+
+                //show notification
+                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+
+            }
+
+
+
+            //end class 1 hour after class start. This is to prevent anyone just setting in a room forever
+            var classEndTimeout = function() {
+
+                //create time object
+                classDateTime = moment("@Model.ClassDateTime", "DD-MM-YYYY HH:mm A");
+
+                //check if an hour has passed every 5 minutes
+                endNotification = false;
+                $interval(function() {
+
+
+                    //if class has ended kick user
+                    if (classDateTime.clone().add(1,'h').isBefore(moment()) ) {
+                        $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
+                        $timeout(function() {
+                            window.location.replace("/Scheduler/MyClasses");
+                        }, 2000);
+                    }
+
+                    //if 5 minutes to class end send notification
+                    if (classDateTime.clone().add(55,'m').isBefore(moment()) && endNotification == false) {
+                        $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+                        endNotification = true;
+                    }
+
+
+
+                }, 1000 * 60  );
+
+
+            }()
+
+
+
+
+            //end class
+            chat.client.endClass = function() {
+                $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
+
+                $timeout(function() {
+                    window.location.replace("/Scheduler/MyClasses");
+                }, 2000);
+
+            }
+
+        });
+
+
+
+
+        //the chat services
+        app.service('ChatService' , function($rootScope) {
+            //signar grouid
             var groupId = @Model.id;
-            //users id
-            $scope.userId = "@User.Identity.Name";
 
+            //user id
+            this.userId = "@User.Identity.Name";
 
+            //store messages
+            var messages = [];
 
-            //hold a list of all the classes
-            $scope.messages = [];
+            this.getMessages = function() {
+                return messages;
+            }
 
-            $scope.addMessage = function () {
+            function addMessageLocal(message) {
+                messages.push(message)
+
+            }
+
+            //send a message
+            this.addMessage = function () {
                 //add message
-                var newMessage = { person: $scope.userId, text: $scope.newMessage }
-                $scope.messages.push(newMessage);
+                var newMessage = { person: this.userId, text: this.newMessage }
+                messages.push(newMessage);
                 chat.server.message(groupId, newMessage);
-                $scope.newMessage = "";
+                //$scope.newMessage = "";
             }
 
-            //onload
-            var init = function() {
-                //DO STUFF HERE
-
-            }();
-
-            //signalr functions
+            //recieve message - signalr
             chat.client.message = function (message) {
-
-                //console.log(message);
-                $scope.messages.push(message);
-                $scope.$apply();
+                addMessageLocal(message);
+                //$scope.messages.push(message);
+                if(!$rootScope.$$phase) {
+                    $rootScope.$apply();
+                }
 
             }
+
 
 
 
         });
+
+
+
+        //this controller controllers room general functions, eg end class.
+        app.controller('ClientRoomController', function ($scope, $http, $timeout, $interval, RoomFunctions, ChatService, WebRtcService) {
+
+
+                        //chat functions - start
+            $scope.userId = ChatService.userId;
+            $scope.messages = ChatService.getMessages();
+            $scope.addMessage = ChatService.addMessage;
+
+
+            //chat functions - end
+
+
+
+        });
+
+
 
 
         //the webrtc controller handles the recieving of video from the instructor and also sends the clients audio to the instructor
@@ -289,74 +375,14 @@
             }
         })
 
-        //this controller controllers room general functions, eg end class.
-        app.controller('roomfunctions', function ($scope, $http, $timeout, $interval) {
 
-            //end class notification
-            chat.client.endClassNotify = function() {
-
-
-                //show notification
-                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
-
-            }
-
-
-            //end class 1 hour after class start. This is to prevent anyone just setting in a room forever
-            var classEndTimeout = function() {
-
-                //create time object
-                classDateTime = moment("@Model.ClassDateTime", "DD-MM-YYYY HH:mm A");
-
-                //check if an hour has passed every 5 minutes
-                endNotification = false;
-                $interval(function() {
-                    
-                    
-                    //if class has ended kick user
-                    if (classDateTime.clone().add(1,'h').isBefore(moment()) ) {
-                        $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
-                        $timeout(function() {
-                            window.location.replace("/Scheduler/MyClasses");
-                        }, 2000);
-                    }
-
-                    //if 5 minutes to class end send notification
-                    if (classDateTime.clone().add(55,'m').isBefore(moment()) && endNotification == false) {
-                        $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
-                        endNotification = true;
-                    }
-
-                    
-
-                }, 1000 * 60  );
-                
-                    
-            }()
-
-
-            //end class
-            chat.client.endClass = function() {
-                $.notify("Room Closing", { globalPosition: 'top center',  className: "error", autoHideDelay: 10000,  });
-
-                $timeout(function() {
-                    window.location.replace("/Scheduler/MyClasses");
-                }, 2000);
-
-            }
-
-
-
-
-        });
 
         //load avatar data
         var avatar = new avatar('avatarDiv');
         avatar.setInitialPoints();
-
         //The trackingpoints controllers sends the clients tracking points to the instructor via signalr
         app.controller('TrackingPoints', function ($scope, $http) {
-            
+
 
 
             var trackingPoint = function (name, startX, startY) {
@@ -438,7 +464,7 @@
                 $scope.character['R Foot'] = new trackingPoint('R Foot', x(0.58), y(0.98));
                 vm = $scope;
 
-
+                //create avatar
                 avatar.paintAvatar();
 
 
@@ -472,7 +498,7 @@
 
                                 }
                             };
-                            console.log(vm.character);
+                            //update avatar
                             avatar.update(vm.character);
                         });
                     }

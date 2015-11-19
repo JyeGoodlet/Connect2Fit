@@ -353,6 +353,8 @@
     <Content Include="Content\Research\images\Reset.jpg" />
     <Content Include="Content\Research\images\Start.jpg" />
     <Content Include="Content\Research\main.css" />
+    <Content Include="Content\Scheduler\ajax-loader.gif" />
+    <Content Include="Content\Scheduler\MyClassesCommonFunctions.js" />
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />

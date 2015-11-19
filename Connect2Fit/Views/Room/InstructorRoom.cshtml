@@ -7,7 +7,7 @@
 }
 
 
-<div ng-app="Room" ng-cloak ng-controller="roomFunctions">
+<div ng-app="Room" ng-cloak ng-controller="InstructorRoomController">
     <div class="row" id="ClientAvatars">
         <div class="col-md-3" ng-repeat="client in clients">
             <!-- Wave stuff<canvas style="height:250px;" ng-init="addAvatarToUser(client)"  id="{{client.id}}" width="500" height="500"></canvas>
@@ -102,7 +102,7 @@
 
 
         //this controller controllers room general functions, eg end class.
-        app.controller('roomFunctions', function ($scope, $http, $timeout, ChatService, InstructorFunctions, AvatarService, WebRtcService) {
+        app.controller('InstructorRoomController', function ($scope, $http, $timeout, ChatService, InstructorFunctions, AvatarService, WebRtcService) {
             
             //chat functions - start
             $scope.userId = ChatService.userId;

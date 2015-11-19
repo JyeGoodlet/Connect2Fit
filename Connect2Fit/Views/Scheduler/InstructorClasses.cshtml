@@ -70,6 +70,14 @@
         </tbody>
 
     </table>
+    <div style="text-align:center">
+        <img style="display: block;margin-left: auto; margin-right: auto;" ng-hide="dataLoaded" src="~/Content/Scheduler/ajax-loader.gif" />
+        <span ng-show="noData && dataLoaded">No Classes</span>
+
+    </div>
+
+    <br />
+
     <div>
         @if (User.IsInRole("Instructor"))
         {
@@ -104,8 +112,7 @@
 
     <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
     <script src="~/signalr/hubs"></script>
-
-
+    <script src="~/Content/Scheduler/MyClassesCommonFunctions.js"></script>
 
     <script>
         
@@ -129,7 +136,8 @@
                 sameElse: 'L'
             }
         });
-        var app = angular.module('schedule', ['ngAnimate', 'ui.bootstrap']);
+
+        var app = angular.module('schedule', ['ngAnimate', 'ui.bootstrap', 'schedule.commonFunctions']);
         app.filter('object2Array', function () {
             return function (input) {
                 var out = [];
@@ -140,9 +148,9 @@
             }
         })
 
-        app.controller('instructorClasses', function ($scope, $http) {
+
+        app.controller('instructorClasses', function ($scope, $http, commonFunctions) {
             $scope.dynamicPopover = {
-                content: 'Hello, World!',
                 templateUrl: '/Content/angularjsTemplates/showUsers.html',
                 title: 'Attendies'
             };
@@ -150,43 +158,32 @@
 
             $scope.userId = "@User.Identity.GetUserId()";
 
-            $scope.progressbarColor = function (classItem) {
-                if (classItem.attendiesCount / classItem.maxAttendies * 100 <= 50) {
-                    return "progress-bar-success";
-                }
-                else if (classItem.attendiesCount / classItem.maxAttendies * 100 > 50 && classItem.attendiesCount / classItem.maxAttendies * 100 < 80) {
-                    return "progress-bar-warning";
-                }
-                else if (classItem.attendiesCount / classItem.maxAttendies * 100 >= 80) {
-                    return "progress-bar-danger";
-                }
+            $scope.progressbarColor = commonFunctions.progressbarColor;
 
 
-            }
-
-
-            $scope.nearTime = function (date, time) {
-                moment.locale('en-AU');
-                classDateTime = moment(date + " " + time, "DD-MM-YYYY HH:mm A");
-                if (classDateTime.isBetween(moment().subtract(1, 'hours'), moment().add(1, 'hours'))) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-
-            }
+            $scope.nearTime = commonFunctions.nearTime;
 
             //hold a list of all the classes
             $scope.classes = [];
             $scope.classesDataLink = "/Scheduler/InstructorsClasses";
-
+            $scope.dataLoaded = false;
+            $scope.noData = false;
             $scope.getData = function () {
                 $http({
                     url: $scope.classesDataLink,
                     method: "GET"
 
-                }).success(function (response) { $scope.classes = response });
+                }).success(function (response) {
+                    $scope.classes = response;
+                    $scope.dataLoaded = true;
+                    if (Object.keys($scope.classes).length === 0) {
+                        $scope.noData = true;
+                    }
+                    else {
+                        $scope.noData = false;
+                    }
+
+                });
             }
 
 
