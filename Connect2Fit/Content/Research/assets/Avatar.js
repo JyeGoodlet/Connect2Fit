@@ -2,6 +2,7 @@
 
     this.divName = divNme;
     this.active = true;
+    this.avType = "WireFigure";
 
     // Tracked Points
     this.trackedPoint_Head = null;
@@ -590,7 +591,7 @@
                 "<circle fill=" + this.skinColour + " cx='" + this.headCNTR.pointX + "' cy='" + this.headCNTR.pointY + "'r='50' />" +
                 // Neck
                 "<path fill=" + this.skinColour + " d='M" + this.neckTL.pointX + "," + this.neckTL.pointY + " L" + this.neckTR.pointX + "," + this.neckTR.pointY + " L" + this.neckBR.pointX + "," + this.neckBR.pointY +
-                    " L" + this.neckBL.pointX + "," + this.neckBL.pointY + " L" + this.neckTL.pointX + "," + this.neckTL.pointY + " Z' />" +                
+                    " L" + this.neckBL.pointX + "," + this.neckBL.pointY + " L" + this.neckTL.pointX + "," + this.neckTL.pointY + " Z' />" +
                 // Right Bicep
                 "<path fill=" + this.jumperColour + " d='M" + this.rBicepTR.pointX + "," + this.rBicepTR.pointY + " L" + this.rBicepBR.pointX + "," + this.rBicepBR.pointY + " C" + this.rBicepBR.pointX + "," + this.rBicepBR.pointY + " " + this.rBicepBCRV.pointX +
                     "," + this.rBicepBCRV.pointY + " " + this.rBicepBL.pointX + "," + this.rBicepBL.pointY + " L" + this.rBicepTL.pointX + "," + this.rBicepTL.pointY + " C" + this.rBicepTL.pointX + "," + this.rBicepTL.pointY + " " + this.rBicepTCRV.pointX +
@@ -615,24 +616,54 @@
                 "<path fill=" + this.skinColour + " d='M" + this.lHandTR.pointX + "," + this.lHandTR.pointY + " L" + this.lHandBR.pointX + "," + this.lHandBR.pointY + " C" + this.lHandBR.pointX + "," + this.lHandBR.pointY + " " + this.lHandBCRV.pointX +
                     "," + this.lHandBCRV.pointY + " " + this.lHandBL.pointX + "," + this.lHandBL.pointY + " L" + this.lHandTL.pointX + "," + this.lHandTL.pointY + " C" + this.lHandTL.pointX + "," + this.lHandTL.pointY + " " + this.lHandTCRV.pointX +
                     "," + this.lHandTCRV.pointY + " " + this.lHandTR.pointX + "," + this.lHandTR.pointY + " Z' />" +
+            "</svg>";
 
-                //"<circle id='startPoint' cx='" + this.trackedPoint_LeftShoulder.pointX + "' cy='" + this.trackedPoint_LeftShoulder.pointY + "' r='2' fill='green' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_LeftElbow.pointX + "' cy='" + this.trackedPoint_LeftElbow.pointY + "' r='2' fill='green' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_LeftWrist.pointX + "' cy='" + this.trackedPoint_LeftWrist.pointY + "' r='2' fill='green' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_LeftHip.pointX + "' cy='" + this.trackedPoint_LeftHip.pointY + "' r='2' fill='blue' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_LeftKnee.pointX + "' cy='" + this.trackedPoint_LeftKnee.pointY + "' r='2' fill='green' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_LeftAnkle.pointX + "' cy='" + this.trackedPoint_LeftAnkle.pointY + "' r='2' fill='green' />" +
-
-                //"<circle id='startPoint' cx='" + this.trackedPoint_RightShoulder.pointX + "' cy='" + this.trackedPoint_RightShoulder.pointY + "' r='2' fill='blue' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_RightElbow.pointX + "' cy='" + this.trackedPoint_RightElbow.pointY + "' r='2' fill='blue' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_RightWrist.pointX + "' cy='" + this.trackedPoint_RightWrist.pointY + "' r='2' fill='blue' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_RightHip.pointX + "' cy='" + this.trackedPoint_RightHip.pointY + "' r='2' fill='blue' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_RightKnee.pointX + "' cy='" + this.trackedPoint_RightKnee.pointY + "' r='2' fill='blue' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_RightAnkle.pointX + "' cy='" + this.trackedPoint_RightAnkle.pointY + "' r='2' fill='blue' />" +
-
-                //"<circle id='startPoint' cx='" + this.trackedPoint_Head.pointX + "' cy='" + this.trackedPoint_Head.pointY + "' r='2' fill='black' />" +
-                //"<circle id='startPoint' cx='" + this.trackedPoint_Body.pointX + "' cy='" + this.trackedPoint_Body.pointY + "' r='2' fill='black' />" +
-                
+            
+    }    
+    this.paintTrackPoints = function () {
+        document.getElementById(this.divName).innerHTML =
+            "<svg viewBox='0 0 500 500' preserveAspectRatio='xMinYMax meet'  height='300' width='300'>" +
+                "<circle id='leftShoulder' cx='" + this.trackedPoint_LeftShoulder.pointX + "' cy='" + this.trackedPoint_LeftShoulder.pointY + "' r='3' fill='green' />" +
+                "<circle id='leftElbow' cx='" + this.trackedPoint_LeftElbow.pointX + "' cy='" + this.trackedPoint_LeftElbow.pointY + "' r='3' fill='green' />" +
+                "<circle id='leftWrist' cx='" + this.trackedPoint_LeftWrist.pointX + "' cy='" + this.trackedPoint_LeftWrist.pointY + "' r='3' fill='green' />" +
+                "<circle id='leftHip' cx='" + this.trackedPoint_LeftHip.pointX + "' cy='" + this.trackedPoint_LeftHip.pointY + "' r='3' fill='blue' />" +
+                "<circle id='leftKnee' cx='" + this.trackedPoint_LeftKnee.pointX + "' cy='" + this.trackedPoint_LeftKnee.pointY + "' r='3' fill='green' />" +
+                "<circle id='leftAnkle' cx='" + this.trackedPoint_LeftAnkle.pointX + "' cy='" + this.trackedPoint_LeftAnkle.pointY + "' r='3' fill='green' />" +
+                "<circle id='rightShoulder' cx='" + this.trackedPoint_RightShoulder.pointX + "' cy='" + this.trackedPoint_RightShoulder.pointY + "' r='3' fill='blue' />" +
+                "<circle id='rightElbow' cx='" + this.trackedPoint_RightElbow.pointX + "' cy='" + this.trackedPoint_RightElbow.pointY + "' r='3' fill='blue' />" +
+                "<circle id='rightWrist' cx='" + this.trackedPoint_RightWrist.pointX + "' cy='" + this.trackedPoint_RightWrist.pointY + "' r='3' fill='blue' />" +
+                "<circle id='rightHip' cx='" + this.trackedPoint_RightHip.pointX + "' cy='" + this.trackedPoint_RightHip.pointY + "' r='3' fill='blue' />" +
+                "<circle id='rightKnee' cx='" + this.trackedPoint_RightKnee.pointX + "' cy='" + this.trackedPoint_RightKnee.pointY + "' r='3' fill='blue' />" +
+                "<circle id='rightAnkle' cx='" + this.trackedPoint_RightAnkle.pointX + "' cy='" + this.trackedPoint_RightAnkle.pointY + "' r='3' fill='blue' />" +
+                "<circle id='head' cx='" + this.trackedPoint_Head.pointX + "' cy='" + this.trackedPoint_Head.pointY + "' r='3' fill='black' />" +
+                "<circle id='body' cx='" + this.trackedPoint_Body.pointX + "' cy='" + this.trackedPoint_Body.pointY + "' r='3' fill='black' />" +
+            "</svg>";
+    }
+    this.paintWireFigure = function () {
+        document.getElementById(this.divName).innerHTML =
+            "<svg viewBox='0 0 500 500' preserveAspectRatio='xMinYMax meet'  height='300' width='300'>" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_LeftShoulder.pointX + "," + this.trackedPoint_LeftShoulder.pointY +
+                " L" + this.trackedPoint_LeftElbow.pointX + "," + this.trackedPoint_LeftElbow.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_LeftElbow.pointX + "," + this.trackedPoint_LeftElbow.pointY +
+                " L" + this.trackedPoint_LeftWrist.pointX + "," + this.trackedPoint_LeftWrist.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_LeftHip.pointX + "," + this.trackedPoint_LeftHip.pointY +
+                " L" + this.trackedPoint_LeftKnee.pointX + "," + this.trackedPoint_LeftKnee.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_LeftKnee.pointX + "," + this.trackedPoint_LeftKnee.pointY +
+                " L" + this.trackedPoint_LeftAnkle.pointX + "," + this.trackedPoint_LeftAnkle.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_RightShoulder.pointX + "," + this.trackedPoint_RightShoulder.pointY +
+                " L" + this.trackedPoint_RightElbow.pointX + "," + this.trackedPoint_RightElbow.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_RightElbow.pointX + "," + this.trackedPoint_RightElbow.pointY +
+                " L" + this.trackedPoint_RightWrist.pointX + "," + this.trackedPoint_RightWrist.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_RightHip.pointX + "," + this.trackedPoint_RightHip.pointY +
+                " L" + this.trackedPoint_RightKnee.pointX + "," + this.trackedPoint_RightKnee.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_RightKnee.pointX + "," + this.trackedPoint_RightKnee.pointY +
+                " L" + this.trackedPoint_RightAnkle.pointX + "," + this.trackedPoint_RightAnkle.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_LeftShoulder.pointX + "," + this.trackedPoint_LeftShoulder.pointY +
+                " L" + this.trackedPoint_RightShoulder.pointX + "," + this.trackedPoint_RightShoulder.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_LeftHip.pointX + "," + this.trackedPoint_LeftHip.pointY +
+                " L" + this.trackedPoint_RightHip.pointX + "," + this.trackedPoint_RightHip.pointY + " Z' />" +
+                "<path stroke=" + this.legColour + " stroke-width=3 d='M" + this.trackedPoint_Head.pointX + "," + this.trackedPoint_Head.pointY +
+                " L" + this.trackedPoint_Head.pointX + "," + this.trackedPoint_LeftHip.pointY + " Z' />" +
             "</svg>";
     }
 
@@ -680,7 +711,17 @@
             this.trackedPoint_RightAnkle.pointY = angularCharacter['R Foot'].y;
 
             this.adjustPaintPoints();
-            this.paintAvatar();
+            switch (this.avType) {
+                case "Avatar":
+                    this.paintAvatar();
+                    break;
+                case "TP":
+                    this.paintTrackPoints();
+                    break;
+                default:
+                    this.paintWireFigure();
+                    break;
+            }
         }
     }
     this.reset = function () {
@@ -688,9 +729,22 @@
         this.setInitialPoints();
         this.paintAvatar();
     }
-    this.reStart = function () {
+    this.reStart = function (type) {
         this.active = true;
+
+        switch (type) {
+            case "Avatar":
+                this.avType = type;
+                break;
+            case "TP":
+                this.avType = type;
+                break;
+            default:
+                this.avType = type;
+                break;
+        }
     }
+
     this.adjustPaintPoints = function () 
     {
         this.bodyTR.pointX = this.calcPaintPointX(this.bodyTR.relatedTrackPoint, this.bodyTR.parentTrackPoint, this.bodyTR.parAngle, this.bodyTR.parDist);
