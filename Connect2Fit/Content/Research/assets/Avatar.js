@@ -2,7 +2,7 @@
 
     this.divName = divNme;
     this.active = true;
-    this.avType = "WireFigure";
+    this.avType = "Avatar";
 
     // Tracked Points
     this.trackedPoint_Head = null;
