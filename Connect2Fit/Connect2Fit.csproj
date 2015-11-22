@@ -81,6 +81,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -197,12 +198,45 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="AspNetRoles.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserClaims.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserLogins.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUsers.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Connect2FitModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Connect2FitModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Connect2FitModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Connect2FitModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
+    <Compile Include="C__MigrationHistory.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetDBUsersModel_Result.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -276,19 +310,32 @@
     <Compile Include="Models\EmailNotification.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\DBUsersModel.cs" />
+    <Compile Include="Models\ManageUsersModel.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ClientPoint3d.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\ScheduledItem.cs" />
     <Compile Include="Models\UIHelperModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScheduleItems.cs">
+      <DependentUpon>Connect2FitModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\aspnet-Connect2Fit-20150918111647.mdf" />
     <Content Include="App_Data\aspnet-Connect2Fit-20150918111647_log.ldf">
       <DependentUpon>aspnet-Connect2Fit-20150918111647.mdf</DependentUpon>
+    </Content>
+    <Content Include="Connect2FitModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
+      <LastGenOutput>Connect2FitModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Connect2FitModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
+      <LastGenOutput>Connect2FitModel.cs</LastGenOutput>
     </Content>
     <Content Include="Content\angularjsTemplates\showUsers.html" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -502,6 +549,13 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\img\Fallback.ogv" />
+    <EntityDeploy Include="Connect2FitModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Connect2FitModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Connect2FitModel.edmx.diagram">
+      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\flipclock.min.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
@@ -1278,7 +1332,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1346,6 +1402,8 @@
     <Content Include="Views\Home\_ContactNavLinks.cshtml" />
     <Content Include="Views\Account\RegisterAdministrator.cshtml" />
     <Content Include="Views\Account\ManageUsers.cshtml" />
+    <Content Include="Views\Account\EditUser.cshtml" />
+    <Content Include="Views\Account\DeleteUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
@@ -1355,7 +1413,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
@@ -1408,6 +1468,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

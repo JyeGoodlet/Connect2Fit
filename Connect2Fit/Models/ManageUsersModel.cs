@@ -8,9 +8,9 @@ using System.Web;
 //this can be removed at later date
 namespace Connect2Fit.Models
 {
-    public class DBUsersModel
+    public class ManageUsersModel
     {
-        public DBUsersModel() { }
+        public ManageUsersModel() { }
 
         public string UserName { get; set; }
         public string Email { get; set; }

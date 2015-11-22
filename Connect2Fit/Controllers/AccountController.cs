@@ -23,11 +23,13 @@ namespace Connect2Fit.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationDbContext db;
+        private Connect2FitEntities dbo;
 
 
         public AccountController()
         {
             db = new ApplicationDbContext();
+            dbo = new Connect2FitEntities(); // Using EF
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -355,12 +357,68 @@ namespace Connect2Fit.Controllers
         // GET: /Account/ManageUsers
         [AllowAnonymous]
         public ActionResult ManageUsers(int pageNumber = 1)
-        {        
-            var users = db.Database.SqlQuery<DBUsersModel>("GetDBUsersModel");
+        {
+            
+            var users = dbo.GetDBUsersModel().ToList();
+            
             const int PageSize = 16;
             ViewBag.PageNumber = pageNumber;
             ViewBag.PageSize = PageSize;
             return View(users);
+        }
+
+        //
+        // GET: /Account/EditUser
+        [AllowAnonymous]
+        public ActionResult EditUser(string userID)
+        {            
+            var user = dbo.AspNetUsers.Find(userID);
+            return View(user);
+        }
+
+
+        //
+        // POST: /Account/Edit
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult EditUser(AspNetUsers model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = dbo.AspNetUsers.Find(model.Id);
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.Name = model.Name;
+                dbo.SaveChanges();
+                return RedirectToAction("ManageUsers", "Account");
+            }
+            return RedirectToAction("ManageUsers", "Account");
+        }
+
+
+        //
+        // GET: /Account/DeleteUser
+        [AllowAnonymous]
+        public ActionResult DeleteUser(string userID)
+        {
+            var user = dbo.AspNetUsers.Find(userID);
+            return View(user);
+        }
+
+        //
+        // POST: /Account/DeleteUser
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult DeleteUser(AspNetUsers model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = dbo.AspNetUsers.Find(model.Id);
+                dbo.AspNetUsers.Remove(user);
+                dbo.SaveChanges();
+                return RedirectToAction("ManageUsers", "Account");
+            }
+            return RedirectToAction("ManageUsers", "Account");
         }
 
 

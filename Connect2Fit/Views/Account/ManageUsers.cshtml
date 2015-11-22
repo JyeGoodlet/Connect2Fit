@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DBUsersModel>
+﻿@model IEnumerable<GetDBUsersModel_Result>
 @using PagedList
 @using PagedList.Mvc
 @using Connect2Fit.Models;
@@ -11,8 +11,8 @@
 
     int pageNumber = ViewBag.PageNumber;
     int pageSize = ViewBag.PageSize;
-
-    IPagedList<DBUsersModel> pagedList = new PagedList<DBUsersModel>(Model, pageNumber, pageSize);
+    var grid = new WebGrid(source: Model, rowsPerPage: 20);
+    IPagedList<GetDBUsersModel_Result> pagedList = new PagedList<GetDBUsersModel_Result>(Model, pageNumber, pageSize);
 
 
     <h2>@ViewBag.Title.</h2>
@@ -32,7 +32,7 @@
                 Account Type
             </th>
             <th>
-                Reset Password
+                
             </th>
             <th></th>
         </tr>
@@ -54,7 +54,9 @@
                     @Html.DisplayFor(modelItem => user.RoleName)                
                 </td>
                 <td>
-                    Reset Password
+                    <a href="/Account/EditUser/?UserId=@user.Id">Edit</a> |
+                    <a href="/Account/DeleteUser/?UserId=@user.Id">Delete </a> |
+                    <a href="/Account/ResetPassword/?UserId=@user.Id">Reset Password </a>
                 </td>
                 <td>
                 </td>
