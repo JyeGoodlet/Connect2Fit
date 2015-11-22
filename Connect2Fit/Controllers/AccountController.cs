@@ -303,10 +303,10 @@ namespace Connect2Fit.Controllers
                 if (result.Succeeded)
                 {
                     //check if client role exists, if not create client role
-                    var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
                     if (!roleManager.RoleExists("Client"))
                     {
-                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                        var role = new IdentityRole();
                         role.Name = "Client";
                         roleManager.Create(role);
 
