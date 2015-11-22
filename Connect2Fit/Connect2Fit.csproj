@@ -265,6 +265,10 @@
     <Compile Include="Migrations\201511180929225_cleanDatabase.Designer.cs">
       <DependentUpon>201511180929225_cleanDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511220139106_cleandatabase2.cs" />
+    <Compile Include="Migrations\201511220139106_cleandatabase2.Designer.cs">
+      <DependentUpon>201511220139106_cleandatabase2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CalendarEvent.cs" />
@@ -1397,6 +1401,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201511180929225_cleanDatabase.resx">
       <DependentUpon>201511180929225_cleanDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511220139106_cleandatabase2.resx">
+      <DependentUpon>201511220139106_cleandatabase2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -47,7 +47,7 @@ namespace Connect2Fit.Models
          .ToTable("dbo.ClientsScheduleItems"));
             */
 
-            modelBuilder.Entity<ApplicationUser>().HasMany(x => x.ScheduleItems).WithMany().Map(t => t.ToTable("ClientsScheduleItems")); ;
+           
             modelBuilder.Entity<ScheduleItem>().HasMany(x => x.Clients ).WithMany().Map(t => t.ToTable("ScheduleItemsClients"));
 
             base.OnModelCreating(modelBuilder);
