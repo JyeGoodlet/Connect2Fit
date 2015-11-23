@@ -22,7 +22,7 @@
         <div class="row">
             @if (Request.IsAuthenticated)
             {
-                <a href="#" class="btn btn-info">Back to App</a>
+                <a href=@Url.Action("Index", "Home") class="btn btn-info">Back to App</a>
             }
         </div>
     </div>
