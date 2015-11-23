@@ -47,5 +47,10 @@ namespace Connect2Fit
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDBUsersModel_Result>("GetDBUsersModel");
         }
+    
+        public virtual ObjectResult<GetDBClassesModel_Result> GetDBClassesModel()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDBClassesModel_Result>("GetDBClassesModel");
+        }
     }
 }

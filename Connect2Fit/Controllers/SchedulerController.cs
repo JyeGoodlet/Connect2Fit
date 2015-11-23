@@ -17,10 +17,12 @@ namespace Connect2Fit.Controllers
     {
 
         private ApplicationDbContext db;
+        private Connect2FitEntities dbo;
 
         public SchedulerController()
         {
             db = new ApplicationDbContext();
+            dbo = new Connect2FitEntities(); // Using EF
 
         }
 
@@ -365,15 +367,22 @@ namespace Connect2Fit.Controllers
 
                 return Json(new { message = "Error: User not in class" });
             }
-
-
-           
-
-
-            
         }
 
 
+        //
+        // GET: /Account/ManageUsers
+        [AllowAnonymous]
+        public ActionResult ManageClasses(int pageNumber = 1)
+        {
+
+            var classes = dbo.GetDBClassesModel().ToList();
+
+            const int PageSize = 16;
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.PageSize = PageSize;
+            return View(classes);
+        }
 
     }
 }
