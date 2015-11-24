@@ -183,6 +183,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetDBClassesModel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetDBUsersModel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="nvarchar" Mode="In" />
@@ -384,6 +385,7 @@
           <Parameter Name="UserID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetDBUsersModel" ReturnType="Collection(db_connect2fitModel.GetDBUsersModel_Result)" />
+          <FunctionImport Name="GetDBClassesModel" ReturnType="Collection(db_connect2fitModel.GetDBClassesModel_Result)" />
         </EntityContainer>
         <ComplexType Name="GetDBUsersModel_Result">
           <Property Type="String" Name="Id" Nullable="false" MaxLength="128" />
@@ -391,6 +393,15 @@
           <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
           <Property Type="String" Name="Name" Nullable="true" />
           <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" />
+        </ComplexType>
+        <ComplexType Name="GetDBClassesModel_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="DateTime" Name="ClassDateTime" Nullable="false" Precision="23" />
+          <Property Type="String" Name="instructor_Id" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="ClassName" Nullable="false" />
+          <Property Type="Int32" Name="maxAttendies" Nullable="false" />
+          <Property Type="String" Name="sessionTime" Nullable="true" />
+          <Property Type="Boolean" Name="sessionEnded" Nullable="false" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -492,6 +503,19 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDBClassesModel" FunctionName="db_connect2fitModel.Store.GetDBClassesModel">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="db_connect2fitModel.GetDBClassesModel_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ClassDateTime" ColumnName="ClassDateTime" />
+                <ScalarProperty Name="instructor_Id" ColumnName="instructor_Id" />
+                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
+                <ScalarProperty Name="maxAttendies" ColumnName="maxAttendies" />
+                <ScalarProperty Name="sessionTime" ColumnName="sessionTime" />
+                <ScalarProperty Name="sessionEnded" ColumnName="sessionEnded" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<GetDBClassesModel_Result>
+@using PagedList
+@using PagedList.Mvc
+@using Connect2Fit.Models;
+@{
+    ViewBag.Title = "Manage Classes";
+}
+
+@if (User.IsInRole("Administrator"))
+{
+
+    int pageNumber = ViewBag.PageNumber;
+    int pageSize = ViewBag.PageSize;
+    var grid = new WebGrid(source: Model, rowsPerPage: 20);
+    IPagedList<GetDBClassesModel_Result> pagedList = new PagedList<GetDBClassesModel_Result>(Model, pageNumber, pageSize);
+
+
+    <h2>@ViewBag.Title.</h2>
+
+    <table class="table">
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                ClassDateTime
+            </th>
+            <th>
+                Instructor
+            </th>
+            <th>
+                Class Name
+            </th>
+            <th>
+                Max Attendees
+            </th>
+            <th>
+                Session Time
+            </th>
+            <th>
+                Session Ended
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var classes in pagedList)
+        {
+            
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => classes.id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => classes.ClassDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => classes.instructor_Id)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => classes.ClassName)                
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => classes.maxAttendies)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => classes.sessionTime)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => classes.sessionEnded)
+                </td>
+                <td>
+                    <a href="/Account/EditClass/?ClassId=@classes.id">Edit</a> |
+                    <a href="/Account/DeleteClass/?ClassId=@classes.id">Delete </a>
+                    @*<a href="/Account/ResetPassword/?UserId=@user.Id">Reset Password </a>*@
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <div class="pagerDiv">
+        Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of @pagedList.PageCount
+        @Html.PagedListPager(pagedList, page => Url.Action("ManageClasses", new { pageNumber = page }))
+    </div>
+}
+else
+{
+    <h3>You are not authorised to view this page. Please log in. </h3>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

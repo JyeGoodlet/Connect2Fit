@@ -189,10 +189,10 @@ namespace Connect2Fit.Controllers
                 if (result.Succeeded)
                 {
                     //check if client role exists, if not create client role
-                    var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
                     if (!roleManager.RoleExists("Instructor"))
                     {
-                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                        var role = new IdentityRole();
                         role.Name = "Instructor";
                         roleManager.Create(role);
 
@@ -246,10 +246,10 @@ namespace Connect2Fit.Controllers
                 if (result.Succeeded)
                 {
                     //check if client role exists, if not create client role
-                    var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
                     if (!roleManager.RoleExists("Administrator"))
                     {
-                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                        var role = new IdentityRole();
                         role.Name = "Administrator";
                         roleManager.Create(role);
 
@@ -448,10 +448,10 @@ namespace Connect2Fit.Controllers
                 if (result.Succeeded)
                 {
                     //check if client role exists, if not create client role
-                    var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
                     if (!roleManager.RoleExists("Client"))
                     {
-                        var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                        var role = new IdentityRole();
                         role.Name = "Client";
                         roleManager.Create(role);
 
@@ -538,35 +538,55 @@ namespace Connect2Fit.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(string userID)
         {
-            return code == null ? View("Error") : View();
+            var user = dbo.AspNetUsers.Find(userID);
+            return View(user);
         }
 
         //
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        public ActionResult ResetPassword(AspNetUsers model)
         {
-            if (!ModelState.IsValid)
+
+            if (ModelState.IsValid)
             {
-                return View(model);
+                // Find User and generate random password
+                var user = UserManager.FindById(model.Id);
+                var password = Membership.GeneratePassword(8, 0);
+                var rnd = new Random();
+                password = Regex.Replace(password, @"[^a-zA-Z0-9]", m => (rnd.Next(0, 10).ToString()));
+
+                // Compose an email notification of a password reset
+                var body = "Hi {0}! <br />" +
+                                "Your password has been reset by an Administrator. Please let us know if you did not make this request.<br />" +
+                                "http://connect2fit.azurewebsites.net/" +
+                                "<br /><br />You username and password are as follows:<br />" +
+                                "<br />Username: {1}<br />Password: {2}";
+                EmailModel email = new EmailModel();
+                email.FromEmail = "webmaster@connect2fit.com.au";
+                email.FromName = "Webmaster - Connect2Fit";
+                email.ToEmail = user.Email;
+                email.Subject = "Connect2Fit - Password Reset";
+                email.Message = string.Format(body, user.Name, user.Email, password);
+                Notification notification = new EmailNotification(email);
+
+                // Hash the password and apply to the database
+                var hashedPassword = UserManager.PasswordHasher.HashPassword(password);
+                var pUser = dbo.AspNetUsers.Find(user.Id);
+                pUser.PasswordHash = hashedPassword;
+                dbo.SaveChanges();
+
+                // Send the email notification
+                notification.send();
+                // Redirect to "Sent" page to display message to end user that email was sent.
+                return RedirectToAction("Sent", "Home");
+
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
-            {
-                // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            AddErrors(result);
-            return View();
+            return RedirectToAction("ManageUsers", "Account");
+
         }
 
         //
