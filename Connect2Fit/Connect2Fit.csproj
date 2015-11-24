@@ -1326,11 +1326,9 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Scheduler\ClientClasses.cshtml" />
     <Content Include="Views\Scheduler\InstructorClasses.cshtml" />
-    <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Research\ArmTracker.cshtml" />
     <Content Include="Views\Room\InstructorRoom.cshtml" />
     <Content Include="Views\Room\ClientRoom.cshtml" />
-    <Content Include="Views\Room\WebRtcTest.cshtml" />
     <Content Include="Views\Research\ArmWaving.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Research\ArmTrackerAngular.cshtml" />
