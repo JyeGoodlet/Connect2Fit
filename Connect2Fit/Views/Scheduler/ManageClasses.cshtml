@@ -1,18 +1,18 @@
-﻿@model IEnumerable<GetDBClassesModel_Result>
+﻿@model IEnumerable<ScheduleItem>
 @using PagedList
 @using PagedList.Mvc
 @using Connect2Fit.Models;
 @{
     ViewBag.Title = "Manage Classes";
-}
-
-@if (User.IsInRole("Administrator"))
-{
-
     int pageNumber = ViewBag.PageNumber;
     int pageSize = ViewBag.PageSize;
     var grid = new WebGrid(source: Model, rowsPerPage: 20);
-    IPagedList<GetDBClassesModel_Result> pagedList = new PagedList<GetDBClassesModel_Result>(Model, pageNumber, pageSize);
+    IPagedList<ScheduleItem> pagedList = new PagedList<ScheduleItem>(Model.OrderBy(i => i.id), pageNumber, pageSize);
+}
+
+
+
+
 
 
     <h2>@ViewBag.Title.</h2>
@@ -54,7 +54,7 @@
                     @Html.DisplayFor(modelItem => classes.ClassDateTime)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => classes.instructor_Id)
+                    @Html.DisplayFor(modelItem => classes.instructor.Name)
                 </td>
                 <td>
 
@@ -88,11 +88,7 @@
         Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of @pagedList.PageCount
         @Html.PagedListPager(pagedList, page => Url.Action("ManageClasses", new { pageNumber = page }))
     </div>
-}
-else
-{
-    <h3>You are not authorised to view this page. Please log in. </h3>
-}
+
 
 
 @section Scripts {
