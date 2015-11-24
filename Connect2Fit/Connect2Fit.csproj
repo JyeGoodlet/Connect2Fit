@@ -198,48 +198,12 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="AspNetRoles.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AspNetUserClaims.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AspNetUserLogins.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AspNetUsers.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Connect2FitModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Connect2FitModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Connect2FitModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Connect2FitModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\SchedulerController.cs" />
-    <Compile Include="C__MigrationHistory.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetDBClassesModel_Result.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GetDBUsersModel_Result.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -320,25 +284,12 @@
     <Compile Include="Models\ScheduledItem.cs" />
     <Compile Include="Models\UIHelperModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScheduleItems.cs">
-      <DependentUpon>Connect2FitModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\aspnet-Connect2Fit-20150918111647.mdf" />
     <Content Include="App_Data\aspnet-Connect2Fit-20150918111647_log.ldf">
       <DependentUpon>aspnet-Connect2Fit-20150918111647.mdf</DependentUpon>
-    </Content>
-    <Content Include="Connect2FitModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
-      <LastGenOutput>Connect2FitModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Connect2FitModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
-      <LastGenOutput>Connect2FitModel.cs</LastGenOutput>
     </Content>
     <Content Include="Content\angularjsTemplates\showUsers.html" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -552,13 +503,6 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\img\Fallback.ogv" />
-    <EntityDeploy Include="Connect2FitModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Connect2FitModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Connect2FitModel.edmx.diagram">
-      <DependentUpon>Connect2FitModel.edmx</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\flipclock.min.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
@@ -1426,6 +1370,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201509271221025_InitialCreate.resx">
       <DependentUpon>201509271221025_InitialCreate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509290158307_expandingAccount.resx">
       <DependentUpon>201509290158307_expandingAccount.cs</DependentUpon>

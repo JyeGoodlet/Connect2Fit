@@ -23,13 +23,11 @@ namespace Connect2Fit.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private ApplicationDbContext db;
-        private Connect2FitEntities dbo;
 
 
         public AccountController()
         {
             db = new ApplicationDbContext();
-            dbo = new Connect2FitEntities(); // Using EF
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -358,8 +356,8 @@ namespace Connect2Fit.Controllers
         [AllowAnonymous]
         public ActionResult ManageUsers(int pageNumber = 1)
         {
-            
-            var users = dbo.GetDBUsersModel().ToList();
+
+            var users = db.Database.SqlQuery<ManageUsersModel>("GetDBUsersModel").ToList();
             
             const int PageSize = 16;
             ViewBag.PageNumber = pageNumber;
@@ -371,8 +369,8 @@ namespace Connect2Fit.Controllers
         // GET: /Account/EditUser
         [AllowAnonymous]
         public ActionResult EditUser(string userID)
-        {            
-            var user = dbo.AspNetUsers.Find(userID);
+        {
+            var user = db.Users.Find(userID);
             return View(user);
         }
 
@@ -381,15 +379,15 @@ namespace Connect2Fit.Controllers
         // POST: /Account/Edit
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult EditUser(AspNetUsers model)
+        public ActionResult EditUser(ApplicationUser model)
         {
             if (ModelState.IsValid)
             {
-                var user = dbo.AspNetUsers.Find(model.Id);
+                var user = db.Users.Find(model.Id);
                 user.UserName = model.UserName;
                 user.Email = model.Email;
                 user.Name = model.Name;
-                dbo.SaveChanges();
+                db.SaveChanges();
                 return RedirectToAction("ManageUsers", "Account");
             }
             return RedirectToAction("ManageUsers", "Account");
@@ -401,7 +399,7 @@ namespace Connect2Fit.Controllers
         [AllowAnonymous]
         public ActionResult DeleteUser(string userID)
         {
-            var user = dbo.AspNetUsers.Find(userID);
+            var user = db.Users.Find(userID);
             return View(user);
         }
 
@@ -409,13 +407,13 @@ namespace Connect2Fit.Controllers
         // POST: /Account/DeleteUser
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult DeleteUser(AspNetUsers model)
+        public ActionResult DeleteUser(ApplicationUser model)
         {
             if (ModelState.IsValid)
             {
-                var user = dbo.AspNetUsers.Find(model.Id);
-                dbo.AspNetUsers.Remove(user);
-                dbo.SaveChanges();
+                var user = db.Users.Find(model.Id);
+                db.Users.Remove(user);
+                db.SaveChanges();
                 return RedirectToAction("ManageUsers", "Account");
             }
             return RedirectToAction("ManageUsers", "Account");
@@ -540,7 +538,7 @@ namespace Connect2Fit.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string userID)
         {
-            var user = dbo.AspNetUsers.Find(userID);
+            var user = db.Users.Find(userID);
             return View(user);
         }
 
@@ -548,7 +546,7 @@ namespace Connect2Fit.Controllers
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult ResetPassword(AspNetUsers model)
+        public ActionResult ResetPassword(ApplicationUser model)
         {
 
             if (ModelState.IsValid)
@@ -575,9 +573,9 @@ namespace Connect2Fit.Controllers
 
                 // Hash the password and apply to the database
                 var hashedPassword = UserManager.PasswordHasher.HashPassword(password);
-                var pUser = dbo.AspNetUsers.Find(user.Id);
+                var pUser = db.Users.Find(user.Id);
                 pUser.PasswordHash = hashedPassword;
-                dbo.SaveChanges();
+                db.SaveChanges();
 
                 // Send the email notification
                 notification.send();

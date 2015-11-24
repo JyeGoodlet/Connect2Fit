@@ -17,12 +17,11 @@ namespace Connect2Fit.Controllers
     {
 
         private ApplicationDbContext db;
-        private Connect2FitEntities dbo;
+
 
         public SchedulerController()
         {
             db = new ApplicationDbContext();
-            dbo = new Connect2FitEntities(); // Using EF
 
         }
 

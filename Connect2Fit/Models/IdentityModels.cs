@@ -54,4 +54,4 @@ namespace Connect2Fit.Models
         }
 
     }
-}
+}          

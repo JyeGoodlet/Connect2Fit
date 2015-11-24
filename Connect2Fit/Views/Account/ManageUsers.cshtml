@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GetDBUsersModel_Result>
+﻿@model IEnumerable<ManageUsersModel>
 @using PagedList
 @using PagedList.Mvc
 @using Connect2Fit.Models;
@@ -11,8 +11,7 @@
 
     int pageNumber = ViewBag.PageNumber;
     int pageSize = ViewBag.PageSize;
-    var grid = new WebGrid(source: Model, rowsPerPage: 20);
-    IPagedList<GetDBUsersModel_Result> pagedList = new PagedList<GetDBUsersModel_Result>(Model, pageNumber, pageSize);
+    IPagedList<ManageUsersModel> pagedList = new PagedList<ManageUsersModel>(Model, pageNumber, pageSize);
 
 
     <h2>@ViewBag.Title.</h2>
