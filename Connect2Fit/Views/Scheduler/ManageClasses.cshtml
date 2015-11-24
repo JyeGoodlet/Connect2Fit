@@ -10,11 +10,6 @@
     IPagedList<ScheduleItem> pagedList = new PagedList<ScheduleItem>(Model.OrderBy(i => i.id), pageNumber, pageSize);
 }
 
-
-
-
-
-
     <h2>@ViewBag.Title.</h2>
 
     <table class="table">
@@ -73,9 +68,8 @@
                     @Html.DisplayFor(modelItem => classes.sessionEnded)
                 </td>
                 <td>
-                    <a href="/Account/EditClass/?ClassId=@classes.id">Edit</a> |
-                    <a href="/Account/DeleteClass/?ClassId=@classes.id">Delete </a>
-                    @*<a href="/Account/ResetPassword/?UserId=@user.Id">Reset Password </a>*@
+                    <a href="/Scheduler/EditClasses/?ClassId=@classes.id">Edit</a> |
+                    <a href="/Scheduler/DeleteClasses/?ClassId=@classes.id">Delete </a>
                 </td>
                 <td>
                 </td>

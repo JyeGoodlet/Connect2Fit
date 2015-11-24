@@ -6,6 +6,8 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -371,10 +373,10 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Account/ManageUsers
-        [Authorize(Roles = "Instructor")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult ManageClasses(int pageNumber = 1)
         {
-            if (User.IsInRole("Instructor"))
+            if (User.IsInRole("Administrator"))
             {
                 var classes = db.scheduleItems;
 
@@ -389,6 +391,84 @@ namespace Connect2Fit.Controllers
 
             }
         }
+
+        //
+        // GET: /Account/EditClasses
+        public ActionResult EditClasses(string ClassId)
+        {
+            var classX = db.scheduleItems.Find(int.Parse(ClassId));
+            var users = db.Users.ToList();
+            var roles = db.Roles.ToList();
+
+            var instructorList = new List<ApplicationUser>();
+            foreach(var role in roles)
+            {
+                if(role.Name == "Instructor")
+                {
+                    foreach(var user in users)
+                    {
+                        foreach(var r in user.Roles)
+                        {
+                            if (r.RoleId == role.Id)
+                                instructorList.Add(user);
+                        }
+                    }
+                }
+            }
+
+            ViewBag.Instructors = instructorList;//new SelectList(instructorList,"value", "text");
+            return View(classX);
+        }
+
+
+        //
+        // POST: /Account/EditClasses
+        [HttpPost]      
+        public ActionResult EditClasses(ScheduleItem item)
+        {
+            if (ModelState.IsValid)
+            {
+                var classX = db.scheduleItems.Find(item.id);
+                classX.id               = item.id;
+                classX.ClassDateTime    = item.ClassDateTime;
+                classX.instructor       = db.Users.Find(item.instructor.Id);
+                classX.ClassName        = item.ClassName;
+                classX.maxAttendies     = item.maxAttendies;
+                classX.sessionTime      = item.sessionTime;
+                classX.sessionEnded     = item.sessionEnded;
+                classX.Clients          = item.Clients;
+
+                db.SaveChanges();
+
+                return RedirectToAction("ManageClasses", "Scheduler");
+            }
+            return RedirectToAction("ManageClasses", "Scheduler");
+        }
+
+
+        //
+        // GET: /Account/DeleteClasses
+        public ActionResult DeleteClasses(string ClassId)
+        {
+            var classX = db.scheduleItems.Find(int.Parse(ClassId));
+            return View(classX);
+        }
+
+        //
+        // POST: /Account/DeleteClasses
+        [HttpPost]
+        public ActionResult DeleteClasses(ScheduleItem item)
+        {
+            if (ModelState.IsValid)
+            {
+                var classX = db.scheduleItems.Find(item.id);
+                db.scheduleItems.Remove(classX);
+                db.SaveChanges();
+                return RedirectToAction("ManageClasses", "Scheduler");
+            }
+            return RedirectToAction("ManageClasses", "Scheduler");
+        }
+
 
     }
 }

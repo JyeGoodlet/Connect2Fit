@@ -353,7 +353,6 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Account/ManageUsers
-        [AllowAnonymous]
         public ActionResult ManageUsers(int pageNumber = 1)
         {
 
@@ -367,7 +366,6 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Account/EditUser
-        [AllowAnonymous]
         public ActionResult EditUser(string userID)
         {
             var user = db.Users.Find(userID);
@@ -378,7 +376,6 @@ namespace Connect2Fit.Controllers
         //
         // POST: /Account/Edit
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult EditUser(ApplicationUser model)
         {
             if (ModelState.IsValid)
@@ -396,7 +393,6 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Account/DeleteUser
-        [AllowAnonymous]
         public ActionResult DeleteUser(string userID)
         {
             var user = db.Users.Find(userID);
@@ -406,7 +402,6 @@ namespace Connect2Fit.Controllers
         //
         // POST: /Account/DeleteUser
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult DeleteUser(ApplicationUser model)
         {
             if (ModelState.IsValid)

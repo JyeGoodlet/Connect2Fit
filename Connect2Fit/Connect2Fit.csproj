@@ -1350,6 +1350,8 @@
     <Content Include="Views\Account\EditUser.cshtml" />
     <Content Include="Views\Account\DeleteUser.cshtml" />
     <Content Include="Views\Scheduler\ManageClasses.cshtml" />
+    <Content Include="Views\Scheduler\EditClasses.cshtml" />
+    <Content Include="Views\Scheduler\DeleteClasses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\fullcalendar\lang\" />
