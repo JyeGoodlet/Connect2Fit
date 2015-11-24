@@ -252,7 +252,7 @@ namespace Connect2Fit.Controllers
         //book a class
         [HttpPost]
         [Authorize(Roles = "Instructor,Client")]
-        public JsonResult classEvent(CalendarEvent classEvent)
+        public JsonResult classEventJoin(CalendarEvent classEvent)
         {
             //check if user is logged in
             if (!User.Identity.IsAuthenticated)

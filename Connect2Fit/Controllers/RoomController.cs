@@ -19,14 +19,6 @@ namespace Connect2Fit.Controllers
 
         }
 
-
-        // GET: Room
-        [Authorize(Roles = "Instructor,Client")]
-        public ActionResult Index(int id)
-        {
-            return View(id);
-        }
-
         [Authorize(Roles = "Instructor,Client")]
         public ActionResult Room(int id = 1)
         {
@@ -78,12 +70,6 @@ namespace Connect2Fit.Controllers
 
         }
 
-
-        public ActionResult WebRtcTest(int id = 1)
-        {
-            return View(id);
-
-        }
 
         [Authorize(Roles = "Instructor,Client")]
         public JsonResult GetAttendies(int id)
