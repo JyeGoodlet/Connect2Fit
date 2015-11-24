@@ -372,16 +372,23 @@ namespace Connect2Fit.Controllers
 
         //
         // GET: /Account/ManageUsers
-        [AllowAnonymous]
+        [Authorize(Roles = "Instructor")]
         public ActionResult ManageClasses(int pageNumber = 1)
         {
+            if (User.IsInRole("Instructor"))
+            {
+                var classes = db.scheduleItems;
 
-            var classes = dbo.GetDBClassesModel().ToList();
+                const int PageSize = 16;
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = PageSize;
+                return View(classes);
+            }
+            else
+            {
+                return RedirectToAction("Calendar", "Scheduler");
 
-            const int PageSize = 16;
-            ViewBag.PageNumber = pageNumber;
-            ViewBag.PageSize = PageSize;
-            return View(classes);
+            }
         }
 
     }
