@@ -62,11 +62,11 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.sessionEnded, new { @class = "col-md-2 control-label" })
                 <div class="col-md-3">
-                    @Html.TextBoxFor(model => model.sessionEnded, new { @class = "form-control" })
+                    @Html.CheckBoxFor(model => model.sessionEnded, new { @class = "" })
                     @Html.ValidationMessageFor(model => model.sessionEnded, "", new { @class = "text-danger" })
                 </div>
             </div>
-
+            <!--
             <div class="form-group">
                 @Html.LabelFor(model => model.Clients, htmlAttributes: new { style = "display: none;" })
                 <div class="col-md-5">
@@ -74,7 +74,7 @@
                     @Html.ValidationMessageFor(model => model.Clients, "", new { @class = "text-danger" })
                 </div>
             </div>
-
+             -->
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" class="btn btn-default" value="Edit Class" />
