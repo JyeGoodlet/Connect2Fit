@@ -36,7 +36,7 @@
             <video id="box4" style="display:none"></video>
 
 
-            <button class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
+            <button ng-click="startClass()" class="btn btn-success">Start Class</button> <button ng-click="endClass()" class="btn btn-danger">End Class</button>
             <input type="checkbox" ng-model="showPoints" /> Show Points
 
         </div>
@@ -103,7 +103,7 @@
 
         //this controller controllers room general functions, eg end class.
         app.controller('InstructorRoomController', function ($scope, $http, $timeout, ChatService, InstructorFunctions, AvatarService, WebRtcService) {
-            
+
             //chat functions - start
             $scope.userId = ChatService.userId;
             $scope.messages = ChatService.getMessages();
@@ -132,7 +132,7 @@
             }
 
 
-            
+
 
 
             $scope.getUsers = function() {
@@ -150,6 +150,15 @@
 
             }();
 
+
+            $scope.startClass = function() {
+
+                $.notify("Class is now starting", { globalPosition: 'top center',  className: "success"  });
+                chat.server.startClass("@Model.id");
+
+                //TODO add more logic to starting a class.
+            }
+
             //allow instructor to end class
             $scope.endClass = function() {
 
@@ -166,7 +175,7 @@
                         easyrtc.hangupAll();
 
 
-                    } 
+                    }
 
                 });
 

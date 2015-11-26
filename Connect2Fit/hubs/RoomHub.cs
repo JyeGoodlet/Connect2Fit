@@ -31,12 +31,21 @@ namespace Connect2Fit.hubs
 
         }
 
+
+        public void startClass(string roomId)
+        {
+
+            //notify about room closing
+            Clients.OthersInGroup(roomId).startClassNotify();
+
+
+        }
+
         public void endClass(string roomId)
         {
 
 
-          
-
+         
             //notify about room closing
             Clients.OthersInGroup(roomId).endClassNotify();
 

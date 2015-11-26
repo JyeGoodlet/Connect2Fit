@@ -126,6 +126,17 @@
 
         app.service('RoomFunctions', function($interval) {
 
+
+            //start class signalr notification
+            chat.client.startClassNotify = function() {
+
+                //show notification
+                $.notify("Class has Started", { globalPosition: 'top center',  className: "success"  });
+
+
+            }
+
+
             //end class notification
             chat.client.endClassNotify = function() {
 
