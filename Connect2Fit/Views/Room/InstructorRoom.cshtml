@@ -153,14 +153,23 @@
             //allow instructor to end class
             $scope.endClass = function() {
 
-                //show notification
-                $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
+                $http.get('/Room/EndRoom/' + @Model.id).then(function(response) {
+                    if (response.data.message == "success") {
+                        //show notification
+                        $.notify("Class has ended Room will close in 5 minutes", { globalPosition: 'top center',  className: "error"  });
 
-                //send notification to other user via signalr
-                chat.server.endClass("@Model.id");
 
-                //hangup call
-                easyrtc.hangupAll();
+                        //send notification to other user via signalr
+                        chat.server.endClass("@Model.id");
+
+                        //hangup call
+                        easyrtc.hangupAll();
+
+
+                    } 
+
+                });
+
 
 
             }

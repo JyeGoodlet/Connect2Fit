@@ -70,6 +70,30 @@ namespace Connect2Fit.Controllers
 
         }
 
+        [Authorize(Roles = "Instructor,Client")]
+        public JsonResult EndRoom(int id)
+        {
+
+            //get class
+            var item = db.scheduleItems.SingleOrDefault(x => x.id == id);
+            //check if user is instructor for the class
+            if (item.instructor.Email != User.Identity.Name)
+            {
+                return Json(new { message = "Error: User Not Instructor of class" }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                item.sessionEnded = true;
+                db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { message = "success" }, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+        }
+
 
         [Authorize(Roles = "Instructor,Client")]
         public JsonResult GetAttendies(int id)

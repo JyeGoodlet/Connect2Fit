@@ -13,14 +13,6 @@ namespace Connect2Fit.hubs
     public class RoomHub : Hub
     {
 
-        private ApplicationDbContext db;
-
-        public RoomHub()
-        {
-            db = new ApplicationDbContext();
-
-        }
-
 
         public Task JoinRoom(string roomId)
         {
@@ -41,22 +33,16 @@ namespace Connect2Fit.hubs
 
         public void endClass(string roomId)
         {
+
+
+          
+
             //notify about room closing
             Clients.OthersInGroup(roomId).endClassNotify();
 
-            //set room to closed
-            int id;
-            if (int.TryParse(roomId, out id))
-            {
-                var item = db.scheduleItems.SingleOrDefault(x => x.id == id);
-                item.sessionEnded = true;
-                db.Entry(item).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
-            }
-            
             
 
-            //wait 5 minutess
+            //wait 5 minutes then send a end class signal
             Thread.Sleep(5 * 60 * 1000);
             Clients.Group(roomId).endClass();
         }
